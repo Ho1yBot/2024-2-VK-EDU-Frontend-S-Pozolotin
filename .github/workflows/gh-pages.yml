@@ -15,6 +15,8 @@ jobs:
       - name: Build app
         working-directory: my-project/simple-chat
         run: npm run build
+      - name: copy static 
+          
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:

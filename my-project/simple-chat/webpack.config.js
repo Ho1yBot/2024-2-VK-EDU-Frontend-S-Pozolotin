@@ -1,10 +1,13 @@
 'use strict';
 
+
 const path = require('path');
 
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
 
 const SRC_PATH = path.resolve(__dirname, 'src');
 const BUILD_PATH = path.resolve(__dirname, 'build');
@@ -78,6 +81,11 @@ module.exports = {
         new HTMLWebpackPlugin({
             filename: 'index.html',
             template: './index.html'
-        })
+        }),
+        new CopyWebpackPlugin({
+            patterns: [
+                { from: 'static', to: 'static' }, // Копирует папку static в build/static
+            ],
+        }),
     ]
 };
