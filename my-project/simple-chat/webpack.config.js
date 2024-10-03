@@ -16,7 +16,8 @@ module.exports = {
     },
     output: {
         path: BUILD_PATH,
-        filename: 'bundle.js'
+        filename: 'bundle.js',
+        publicPath: './',
     },
     module: {
         strictExportPresence: true,
@@ -60,11 +61,13 @@ module.exports = {
                     {
                         loader: 'file-loader',
                         options: {
-                            name: '[path][name].[ext]',
+                            name: '[name].[ext]',
+                            outputPath: 'static/images', // Указывает Webpack, куда копировать изображения
                         },
                     },
                 ],
             }
+
 
         ],
     },
