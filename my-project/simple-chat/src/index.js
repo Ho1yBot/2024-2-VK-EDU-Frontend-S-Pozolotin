@@ -105,3 +105,4 @@ function addMessageToDOM(message) {
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 
+// Проверка деплоя
