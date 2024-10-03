@@ -84,8 +84,8 @@ module.exports = {
         }),
         new CopyWebpackPlugin({
             patterns: [
-                { from: 'static', to: 'static' }, // Копирует папку static в build/static
+                { from: path.resolve(__dirname, 'static'), to: 'static' },
             ],
-        }),
+        })        
     ]
 };
