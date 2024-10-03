@@ -84,7 +84,7 @@ module.exports = {
         }),
         new CopyWebpackPlugin({
             patterns: [
-                { from: path.resolve(__dirname, 'static'), to: 'static' },
+                { from: path.resolve(__dirname, 'static'), to: '2024-2-VK-EDU-Frontend-S-Pozolotin/static' },
             ],
         })        
     ]
