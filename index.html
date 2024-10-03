@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Send a message</title>
+    <link rel="stylesheet" href="index.css">
+<link href="style.css" rel="stylesheet"></head>
+
+<body>
+    <header class="header center">
+        <button class="header_back"><img src="./../static/images/arrow-back.svg" alt="Назад"></button>
+        <button class="header_user">
+            <img class="header_user-icon" src="./../static/images/user-icon.svg" alt="Иконка пользователя">
+            <div class="header_user-info">
+                <div class="header_user-title">Дженифер</div>
+                <div class="header_user-subtitle">была 2 часа назад</div>
+            </div>
+        </button>
+        <nav class="header_nav">
+            <button class="header_search"><img src="./../static/images/search-icon.svg" alt="Поиск"></button>
+            <button class="header_menu"><div></div></button>
+        </nav>
+
+    </header>
+    <div class="center">
+        <div id="messages"></div> 
+        <form class="form" action="/">
+            <input class="form-input" name="message-text" placeholder="Введите сообщение" type="text">
+            <button type="submit">Отправить</button>
+        </form>
+    </div>
+
+    <script src="index.js"></script>
+<script type="text/javascript" src="bundle.js"></script></body>
+
+</html>
