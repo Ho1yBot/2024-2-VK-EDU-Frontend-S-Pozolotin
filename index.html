@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 
 <head>
     <meta charset="UTF-8">
     <title>Send a message</title>
     <link rel="stylesheet" href="index.css">
-<link href="./style.css" rel="stylesheet"></head>
+<link href="/style.css" rel="stylesheet"></head>
 
 <body>
     <header class="header center">
@@ -19,19 +19,19 @@
         </button>
         <nav class="header_nav">
             <button class="header_search"><img src="./../static/images/search-icon.svg" alt="Поиск"></button>
-            <button class="header_menu"><div></div></button>
+            <button  class="header_menu"><span></span></button>
         </nav>
 
     </header>
     <div class="center">
         <div id="messages"></div> 
         <form class="form" action="/">
-            <input class="form-input" name="message-text" placeholder="Введите сообщение" type="text">
-            <button type="submit">Отправить</button>
+            <textarea class="form-input" name="message-text" placeholder="Введите сообщение" type="text"></textarea>
+            <button class="attach"><img src="./../static/images/attach-file-icon.svg" alt="Добавление файла"></button>
+            <button type="submit"><img src="./../static/images/send-icon.svg" alt="Отправка сообщения"></button>
         </form>
     </div>
-
     <script src="index.js"></script>
-<script type="text/javascript" src="./bundle.js"></script></body>
+<script type="text/javascript" src="/bundle.js"></script></body>
 
 </html>

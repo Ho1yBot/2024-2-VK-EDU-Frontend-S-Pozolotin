@@ -10,6 +10,10 @@ html {
     padding: 0;
 }
 
+li {
+    list-style: none;
+}
+
 button {
     cursor: pointer;
     background-color: transparent;
@@ -99,15 +103,47 @@ header button:hover {
     height: 36px;
 }
 
+.menu {
+    position: absolute;
+    top: 50px;
+    left: -50px;
+    max-width: 90px;
+    box-shadow: 0px 0px 4px 0px rgba(34, 60, 80, 0.2);
+    border-radius: 5px;
+}
+
+.menu_list {
+    background-color: white;
+    border-radius: 5px;
+}
+
+.menu, .menu_list, .menu_item{
+    border-radius: 10px;
+}
+
+.menu_item button{
+    width: 100%;
+    text-align: start;
+    display: flex;
+    padding: 5px;
+    align-items: center;
+}
+
+.menu_item button:hover{
+    color: white; 
+    font-weight: bold;
+}
+
 .header_menu {
     height: 36px;
     width: 36px;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
 }
 
-.header_menu div, .header_menu div::after, .header_menu div::before {
+.header_menu span, .header_menu span::after, .header_menu span::before {
     width: 4px;
     height: 4px;
     border-radius: 10px;
@@ -116,14 +152,14 @@ header button:hover {
     position: relative;
 }
 
-.header_menu div::after {
+.header_menu span::after {
     content: "";
     position: absolute;
     bottom: -7px;
     left: 0;
 }
 
-.header_menu div::before {
+.header_menu span::before {
     content: "";
     position: absolute;
     top: -7px;
@@ -150,26 +186,28 @@ input {
     border: 1px solid rgba(25, 25, 25, 0.32);
     background-color: #f3f3f3;
     border-radius: 10px;
+    gap: 10px;
 }
 
 .form-input {
-    flex: 1;
-    padding: 10px;
+    display: flex;
+    padding: 5px 5px 5px 10px;
     border: 1px solid #ddd;
     border-radius: 10px;
-    margin-right: 10px;
+    resize: vertical;
+    min-height: 35px;
+    width: 100%;
 }
 
+
 button[type="submit"] {
-    padding: 10px;
-    background-color: #8E24AA;
-    color: white;
+    /* color: #8E24AA; */
     border-radius: 10px;
     transition: filter 0.3s ease;
 }
 
 button[type="submit"]:hover {
-    filter: brightness(1.1);
+    /* filter: invert(49%) sepia(55%) saturate(7032%) hue-rotate(266deg) brightness(81%) contrast(87%); */
 }
 
 #messages {
@@ -183,7 +221,7 @@ button[type="submit"]:hover {
     overflow: auto;
 }
 
-#messages::-webkit-scrollbar{
+#messages::-webkit-scrollbar {
     width: 10px;
 }
 
@@ -224,6 +262,12 @@ button[type="submit"]:hover {
 
 .message-text {
     margin-bottom: 5px;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+.message-text img{
+    width: 100%;
 }
 
 .message-time {
@@ -232,3 +276,35 @@ button[type="submit"]:hover {
     color: #757575;
     text-align: right;
 }
+
+.attach {
+    position: relative;
+}
+
+.attach_container{
+    position: absolute;
+    width: 150px;
+    background-color: white;
+    top: -120px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 0px 4px 0px rgba(34, 60, 80, 0.2);
+    
+}
+
+.attach_container, .attach_list, .attach_item, .attach_item button {
+    border-radius: 10px;
+}
+
+.attach_item button{
+    width: 100%;
+    height: 100%; 
+    padding: 10px; 
+}
+
+.attach_item button:hover {
+    background-color: #a840c5;
+    color: white; 
+    font-weight: bold;
+}
+
