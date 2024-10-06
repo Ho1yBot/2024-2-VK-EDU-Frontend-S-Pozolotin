@@ -201,7 +201,6 @@ input {
 
 
 button[type="submit"] {
-    /* color: #8E24AA; */
     border-radius: 10px;
     transition: filter 0.3s ease;
 }
