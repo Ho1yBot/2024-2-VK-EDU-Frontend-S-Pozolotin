@@ -20,7 +20,7 @@ module.exports = {
     output: {
         path: BUILD_PATH,
         filename: 'bundle.js',
-        publicPath: '/my-project/simple-chat/',
+        publicPath: '/',
     },
     module: {
         strictExportPresence: true,
