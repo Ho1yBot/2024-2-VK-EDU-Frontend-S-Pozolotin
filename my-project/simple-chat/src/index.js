@@ -48,7 +48,15 @@ function saveMessage(message) {
 
 function loadMessages() {
     const messages = JSON.parse(localStorage.getItem('messages')) || [];
-    messages.forEach(addMessageToDOM);
+    messages.forEach(message => {
+        if (message.fileUrl) {
+            // Если это сообщение с файлом (картинкой), добавляем изображение
+            addFileToChat(message.fileUrl, message.fileName);
+        } else {
+            // Если это обычное текстовое сообщение, добавляем текст
+            addMessageToDOM(message);
+        }
+    });
 }
 
 function addMessageToDOM(message) {
@@ -95,7 +103,7 @@ function openMenu() {
     divMenu.innerHTML = `<ul class="menu_list">
                     <li class="menu_item"><button>Info</button></li>
                     <li class="menu_item"><button>Mute</button></li>
-                    <li class="menu_item"><button id="clear-local-storage">Clear localStorage</button></li>
+                    <li class="menu_item"><button id="clear-local-storage">Clear messages</button></li>
                 </ul>`;
     headerMenu.appendChild(divMenu);
 
@@ -174,7 +182,7 @@ function handleClickOutsideAttach(event) {
 
 const fileInput = document.createElement('input');
 fileInput.type = 'file';
-fileInput.accept = 'image/*,video/*'; 
+fileInput.accept = 'image/*,video/*';
 fileInput.style.display = 'none';
 
 // Обработка загрузки файлов
@@ -203,5 +211,16 @@ function addFileToChat(fileUrl, fileName) {
     messageElement.appendChild(textElement);
     messagesDiv.appendChild(messageElement);
 
+    // Прокрутка вниз для отображения последнего сообщения
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+    // Сохранение сообщения с файлом в localStorage
+    const message = {
+        fileUrl: fileUrl,
+        fileName: fileName,
+        sender: 'Вы',
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    saveMessage(message);
 }

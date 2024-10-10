@@ -86,7 +86,12 @@ header button:hover {
 .header_user-title {
     font-weight: bold;
     font-size: 18px;
+    white-space: nowrap; /* Текст в одну строку */
+    overflow: hidden;    
+    text-overflow: ellipsis; /* Добавление троеточия */
+    max-width: 150px; 
 }
+
 
 .header_user-subtitle {
     color: #aeabab;
@@ -263,6 +268,7 @@ button[type="submit"]:hover {
     margin-bottom: 5px;
     word-wrap: break-word;
     word-break: break-all;
+    white-space: pre-wrap; /* Добавлено для многострочного отображения */
 }
 
 .message-text img{
