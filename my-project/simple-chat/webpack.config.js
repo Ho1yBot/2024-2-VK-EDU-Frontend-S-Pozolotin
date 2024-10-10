@@ -1,13 +1,11 @@
 'use strict';
 
-
 const path = require('path');
 
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-
 
 const SRC_PATH = path.resolve(__dirname, 'src');
 const BUILD_PATH = path.resolve(__dirname, 'build');
@@ -20,7 +18,7 @@ module.exports = {
     output: {
         path: BUILD_PATH,
         filename: 'bundle.js',
-        publicPath: './',
+        publicPath: '/',
     },
     module: {
         strictExportPresence: true,
@@ -38,17 +36,9 @@ module.exports = {
                 ],
             },
             {
-                test: /shadow\.css$/,
-                include: SRC_PATH,
-                use: [
-                    {
-                        loader: 'css-loader'
-                    },
-                ],
-            },
-            {
-                test: /index\.css$/,
-                include: SRC_PATH,
+                // Указываем путь к index.css в корне src
+                test: /\.css$/,
+                include: SRC_PATH, // Папка src
                 use: [
                     {
                         loader: MiniCSSExtractPlugin.loader,
@@ -65,13 +55,11 @@ module.exports = {
                         loader: 'file-loader',
                         options: {
                             name: '[name].[ext]',
-                            outputPath: 'static/images', // Указывает Webpack, куда копировать изображения
+                            outputPath: 'static/images', // Куда копировать изображения
                         },
                     },
                 ],
             }
-
-
         ],
     },
     plugins: [
