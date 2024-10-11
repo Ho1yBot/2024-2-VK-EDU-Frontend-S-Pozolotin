@@ -10,9 +10,34 @@ export function Header() {
     const navButtons = `
         <nav class="header_nav">
             <button class="header_search"><img src="./static/images/search-icon.svg" alt="Search"></button>
+            <button id="menu-button" style="display: none;"><img src="./static/images/menu-dots.svg" alt="Меню"></button>
+            <div id="menu-container" class="menu-container hidden"> 
+                <ul class="menu_list">
+                    <li class="menu_item"><button>Info</button></li>
+                    <li class="menu_item"><button>Mute</button></li>
+                    <li class="menu_item"><button id="clear-local-storage">Clear messages</button></li>
+                </ul>
+            </div>
         </nav>`;
 
     header.innerHTML = backButton + userInfo + navButtons;
+
+    // Обработчик открытия/закрытия меню
+    const menuButton = header.querySelector('#menu-button');
+    const menuContainer = header.querySelector('#menu-container');
+
+    menuButton.addEventListener('click', () => {
+        menuContainer.classList.toggle('hidden'); // Открытие/закрытие меню
+    });
+
+    // Закрытие меню при клике вне его области
+    document.addEventListener('click', (event) => {
+        if (!menuButton.contains(event.target) && !menuContainer.contains(event.target)) {
+            menuContainer.classList.add('hidden'); // Закрываем меню, если клик был вне его области
+        }
+    });
+
+    
 
     return header;
 }

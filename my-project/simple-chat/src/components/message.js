@@ -20,7 +20,7 @@ export function handleSubmit(event) {
 }
 
 export function handleKeyPress(event) {
-    const form = document.querySelector('form'); // Найти форму
+    const form = document.querySelector('form');
     if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
         form.dispatchEvent(new Event('submit'));
