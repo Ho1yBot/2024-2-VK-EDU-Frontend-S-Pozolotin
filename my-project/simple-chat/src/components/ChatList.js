@@ -32,11 +32,11 @@ export function ChatList() {
             <img src="${chat.avatar}" alt="Аватарка">
             <div class="chat-info">
                 <h3>${chat.title}</h3>
-                <p>${lastMessage.text}</p> <!-- Показываем последнее сообщение -->
+                <p>${lastMessage.text}</p> 
             </div>
         </div>
         <div class="chat-time">
-            <span>${lastMessage.time || ''}</span> <!-- Показываем время последнего сообщения -->
+            <span>${lastMessage.time || ''}</span> 
             ${chat.isRead ? '<span class="read-status">✓✓</span>' : ''}
         </div>`;
 
