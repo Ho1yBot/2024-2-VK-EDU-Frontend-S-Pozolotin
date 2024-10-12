@@ -19,7 +19,7 @@
 
 export default function convertBytesToHuman(bytes) {
   
-  if (typeof bytes !== 'number' || bytes < 0 || isNaN(bytes)) {
+  if (typeof bytes !== 'number' || bytes < 0 || isNaN(bytes) || bytes === Infinity) {
     return false;
   }
 

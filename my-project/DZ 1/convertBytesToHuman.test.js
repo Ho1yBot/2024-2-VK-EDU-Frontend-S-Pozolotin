@@ -10,15 +10,15 @@
 import convertBytesToHuman from './convertBytesToHuman';
 
 test('Возвращает false для неправильного типа данных', () => {
-  expect(convertBytesToHuman(-1)).toBeFalsy;
-  expect(convertBytesToHuman("string")).toBeFalsy;
-  expect(convertBytesToHuman(null)).toBeFalsy;
-  expect(convertBytesToHuman(undefined)).toBeFalsy;
-  expect(convertBytesToHuman(NaN)).toBeFalsy;
-  expect(convertBytesToHuman({})).toBeFalsy;
-  expect(convertBytesToHuman([])).toBeFalsy;
-  expect(convertBytesToHuman(Infinity).toBeFalsy);
-  expect(convertBytesToHuman("123").toBeFalsy);
+  expect(convertBytesToHuman(-1)).toBeFalsy();
+  expect(convertBytesToHuman("string")).toBeFalsy();
+  expect(convertBytesToHuman(null)).toBeFalsy();
+  expect(convertBytesToHuman(undefined)).toBeFalsy();
+  expect(convertBytesToHuman(NaN)).toBeFalsy();
+  expect(convertBytesToHuman({})).toBeFalsy();
+  expect(convertBytesToHuman([])).toBeFalsy();
+  expect(convertBytesToHuman(Infinity)).toBeFalsy();
+  expect(convertBytesToHuman("123")).toBeFalsy();
 });
 
 
