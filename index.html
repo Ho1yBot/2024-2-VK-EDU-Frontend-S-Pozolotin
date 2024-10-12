@@ -3,34 +3,17 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Send a message</title>
+    <title>Chat Application</title>
     <link rel="stylesheet" href="index.css">
 <link href="./style.css" rel="stylesheet"></head>
 
 <body>
-    <header class="header center">
-        <button class="header_back"><img src="./static/images/arrow-back.svg" alt="Назад"></button>
-        <button class="header_user">
-            <img class="header_user-icon" src="./static/images/user-icon.svg" alt="Иконка пользователя">
-            <div class="header_user-info">
-                <div class="header_user-title" title="Дженифер Энистон Куатро">Дженифер</div>
-                <div class="header_user-subtitle">была 2 часа назад</div>
-            </div>            
-        </button>
-        <nav class="header_nav">
-            <button class="header_search"><img src="./static/images/search-icon.svg" alt="Поиск"></button>
-            <button  class="header_menu"><span></span></button>
-        </nav>
+    <header id="header-component"></header>
 
-    </header>
-    <div class="center">
-        <div id="messages"></div> 
-        <form class="form" action="/">
-            <textarea class="form-input" name="message-text" placeholder="Введите сообщение" type="text"></textarea>
-            <button class="attach"><img src="./static/images/attach-file-icon.svg" alt="Добавление файла"></button>
-            <button type="submit"><img src="./static/images/send-icon.svg" alt="Отправка сообщения"></button>
-        </form>
-    </div>
+    <main id="chat-list-component" class="center"></main>
+
+    <div id="floating-button-component" class="center"></div>
+
     <script src="index.js"></script>
 <script type="text/javascript" src="./bundle.js"></script></body>
 
