@@ -1,6 +1,3 @@
-'use strict';
-
-
 const path = require('path');
 
 const HTMLWebpackPlugin = require('html-webpack-plugin');
@@ -8,9 +5,10 @@ const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-
 const SRC_PATH = path.resolve(__dirname, 'src');
 const BUILD_PATH = path.resolve(__dirname, 'build');
+
+const isProduction = process.env.NODE_ENV === 'production'; // Проверка окружения
 
 module.exports = {
     context: SRC_PATH,
@@ -20,7 +18,7 @@ module.exports = {
     output: {
         path: BUILD_PATH,
         filename: 'bundle.js',
-        publicPath: './',
+        publicPath: isProduction ? './' : '/', // Установка publicPath в зависимости от окружения
     },
     module: {
         strictExportPresence: true,
@@ -65,13 +63,11 @@ module.exports = {
                         loader: 'file-loader',
                         options: {
                             name: '[name].[ext]',
-                            outputPath: 'static/images', // Указывает Webpack, куда копировать изображения
+                            outputPath: 'static/images',
                         },
                     },
                 ],
             }
-
-
         ],
     },
     plugins: [
