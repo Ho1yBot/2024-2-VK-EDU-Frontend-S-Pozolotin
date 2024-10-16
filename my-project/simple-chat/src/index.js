@@ -122,5 +122,3 @@ function handleClickOutsideAttach(event) {
         closeAttach();
     }
 }
-
-
