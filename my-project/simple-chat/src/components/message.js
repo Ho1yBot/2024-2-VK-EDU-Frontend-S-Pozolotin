@@ -17,13 +17,39 @@ export function handleSubmit(event) {
     event.preventDefault();
     const input = document.querySelector('.form-input');
     const messageText = input.value.trim();
-    if (!messageText) return;
+    const fileInput = document.querySelector('.file-input'); // Поле для выбора файла
+    const attachedFile = fileInput.files[0]; // Получаем прикрепленный файл
 
-    const message = {
-        text: messageText,
-        sender: 'Вы',
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
+    if (!messageText && !attachedFile) return; // Если нет текста и файла, не отправляем
+
+    const chatId = localStorage.getItem('currentChat');
+
+    if (attachedFile) {
+        // Если файл прикреплен, конвертируем его в Base64
+        const reader = new FileReader();
+        reader.readAsDataURL(attachedFile);
+        reader.onload = function () {
+            const message = {
+                text: messageText || '', // Если нет текста, отправляем только файл
+                sender: 'Вы',
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                file: reader.result // Сохраняем файл как Base64 строку
+            };
+
+            saveMessage(chatId, message); // Сохраняем сообщение с файлом
+            addMessageToDOM(message); // Отображаем сообщение в DOM
+
+            input.value = ''; // Очищаем поле текста
+            fileInput.value = ''; // Очищаем поле выбора файла
+        };
+    } else {
+        // Если файла нет, отправляем только текст
+        const message = {
+            text: messageText,
+            sender: 'Вы',
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            file: null // Нет файла
+        };
 
     const chatId = localStorage.getItem('currentChat');
     saveMessage(chatId, message);
@@ -67,6 +93,7 @@ export function updateLastMessage(chatId, message) {
     }
 }
 
+
 export function handleKeyPress(event) {
     if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
@@ -82,9 +109,7 @@ export function handleKeyPress(event) {
     }
 }
 
-export function addMessageToDOM(message) {
-    const messagesDiv = document.querySelector('.messages-container');
-
+export function addMessageToDOM(message, messagesDiv) {
     const messageElement = document.createElement('div');
     messageElement.classList.add('message-container');
 
@@ -124,7 +149,7 @@ export function addMessageToDOM(message) {
     messageElement.appendChild(timeElement);
 
     messagesDiv.appendChild(messageElement);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    messagesDiv.scrollTop = messagesDiv.scrollHeight; // Прокрутка к последнему сообщению
 }
 
 
