@@ -1,0 +1,12 @@
+.form {
+    width: 100%;
+    display: flex;
+    gap: 5px;
+    position: relative;
+}
+
+.form-input {
+    width: 100%;
+    padding: 5px;
+
+}
