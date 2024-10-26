@@ -1,7 +1,13 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import "./Message.css";
 
 export function Messages({ messages }) {
+  const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   return (
     <div className="messages-container">
       {messages.map((message, index) => (
@@ -18,6 +24,7 @@ export function Messages({ messages }) {
           )}
         </div>
       ))}
+      <div ref={messagesEndRef} />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./ChatList.css";
+import styles from "./ChatList.module.scss"; 
 import { loadMessages, saveMessage } from "./../Storage/Storage";
 import { Messages } from "./../Message/Message";
 import { MessageForm } from "./../MessageForm/MessageForm";
@@ -16,7 +16,15 @@ const ChatList = ({ currentChatId, onOpenChat }) => {
       time: "14:23",
       isRead: true,
     },
-    // Добавь больше чатов по необходимости
+    {
+      id: 2,
+      avatar: "./images/user-icon.svg",
+      title: "Chat with Max",
+      lastMessage: "Last message...",
+      time: "16:27",
+      isRead: true,
+    },
+    
   ]);
 
   // Загрузка сообщений при открытии нового чата
@@ -28,11 +36,11 @@ const ChatList = ({ currentChatId, onOpenChat }) => {
   }, [currentChatId]);
 
   return (
-    <div className="chat-container">
+    <div className={styles['chat-container']}>
       {/* Список чатов */}
       <div
         id="chat-list-component"
-        className="chat-list-component"
+        className={styles['chat-list-component']}
         style={{ display: currentChatId ? "none" : "flex" }}
       >
         {chats.map((chat) => {
@@ -44,19 +52,19 @@ const ChatList = ({ currentChatId, onOpenChat }) => {
           return (
             <button
               key={chat.id}
-              className="chat-item"
+              className={styles['chat-item']}
               onClick={() => onOpenChat(chat.id, chat.title)}
             >
-              <div className="chat-info-wrp">
+              <div className={styles['chat-info-wrp']}>
                 <img src={chat.avatar} alt="Avatar" />
-                <div className="chat-info">
+                <div className={styles['chat-info']}>
                   <h3>{chat.title}</h3>
                   <p>{lastMessage.text}</p>
                 </div>
               </div>
-              <div className="chat-time">
+              <div className={styles['chat-time']}>
                 <span>{lastMessage.time || ""}</span>
-                {chat.isRead && <span className="read-status">✓✓</span>}
+                {chat.isRead && <span className={styles['read-status']}>✓✓</span>}
               </div>
             </button>
           );
@@ -65,7 +73,7 @@ const ChatList = ({ currentChatId, onOpenChat }) => {
 
       {/* Окно чата */}
       {currentChatId && (
-        <div className="chat-window">
+        <div className={styles['chat-window']}>
           {/* Сообщения */}
           <Messages messages={messages} />
 

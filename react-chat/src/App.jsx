@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import ChatList from "./components/ChatList/ChatList";
 import Header from "./components/Header/Header";
+import "./App.css";
+import FloatingButton from "./components/FloatingButton/FloatingButton";
 
 const App = () => {
   const [currentChatId, setCurrentChatId] = useState(null); // Текущий чат
@@ -21,14 +23,17 @@ const App = () => {
   return (
     <div className="app-container">
       {/* Header с передачей текущего названия чата и функции возврата */}
-      <Header currentChatTitle={currentChatTitle} onBackClick={closeChat} />
+      <Header
+        currentChatTitle={currentChatTitle}
+        chatId={currentChatId}
+        onBackClick={closeChat}
+      />
 
       {/* Список чатов и чат. Передаем функцию открытия чата */}
-      <ChatList
-        currentChatId={currentChatId}
-        onOpenChat={openChat}
-      />
+      <ChatList currentChatId={currentChatId} onOpenChat={openChat} />
+      <FloatingButton />
     </div>
+    
   );
 };
 
