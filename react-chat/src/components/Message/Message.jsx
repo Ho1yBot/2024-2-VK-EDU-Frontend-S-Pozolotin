@@ -1,3 +1,4 @@
+// components/Message/Message.jsx
 import React, { useEffect, useRef } from "react";
 import "./Message.css";
 
@@ -28,3 +29,5 @@ export function Messages({ messages }) {
     </div>
   );
 }
+
+export default Messages;

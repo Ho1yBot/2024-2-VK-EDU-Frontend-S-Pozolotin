@@ -1,39 +1,49 @@
 import React, { useState } from "react";
 import ChatList from "./components/ChatList/ChatList";
 import Header from "./components/Header/Header";
+import { clearMessages } from "./components/Storage/Storage"; 
 import "./App.css";
 import FloatingButton from "./components/FloatingButton/FloatingButton";
 
 const App = () => {
-  const [currentChatId, setCurrentChatId] = useState(null); // Текущий чат
-  const [currentChatTitle, setCurrentChatTitle] = useState(""); // Название текущего чата
+  const [currentChatId, setCurrentChatId] = useState(null); 
+  const [currentChatTitle, setCurrentChatTitle] = useState("");
+  const [clearTrigger, setClearTrigger] = useState(false); // Триггер для перерисовки
 
-  // Открытие чата
   const openChat = (chatId, chatTitle) => {
     setCurrentChatId(chatId);
     setCurrentChatTitle(chatTitle);
   };
 
-  // Закрытие чата и возврат к списку
   const closeChat = () => {
     setCurrentChatId(null);
-    setCurrentChatTitle(""); // Возвращаем Messenger в хедере
+    setCurrentChatTitle(""); 
+  };
+
+  const handleClearMessages = () => {
+    if (currentChatId) {
+      clearMessages(currentChatId); 
+      setClearTrigger((prev) => !prev); // Обновление триггера
+      console.log(`Messages cleared for chat ID ${currentChatId}`);
+    }
   };
 
   return (
     <div className="app-container">
-      {/* Header с передачей текущего названия чата и функции возврата */}
       <Header
         currentChatTitle={currentChatTitle}
         chatId={currentChatId}
         onBackClick={closeChat}
+        onClearMessages={handleClearMessages} 
       />
-
-      {/* Список чатов и чат. Передаем функцию открытия чата */}
-      <ChatList currentChatId={currentChatId} onOpenChat={openChat} />
-      <FloatingButton />
+      <ChatList 
+        currentChatId={currentChatId}
+        onOpenChat={openChat}
+        onClearMessages={clearTrigger} 
+      />
+      {/* FloatingButton отображается только если нет открытого чата */}
+      {!currentChatId && <FloatingButton />}
     </div>
-    
   );
 };
 

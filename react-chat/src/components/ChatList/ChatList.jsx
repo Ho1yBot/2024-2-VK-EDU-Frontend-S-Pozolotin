@@ -1,13 +1,13 @@
+// components/ChatList/ChatList.jsx
 import React, { useState, useEffect } from "react";
-import styles from "./ChatList.module.scss"; 
-import { loadMessages, saveMessage } from "./../Storage/Storage";
+import styles from "./ChatList.module.scss";
+import { loadMessages } from "./../Storage/Storage";
 import { Messages } from "./../Message/Message";
 import { MessageForm } from "./../MessageForm/MessageForm";
 
-const ChatList = ({ currentChatId, onOpenChat }) => {
-  const [messages, setMessages] = useState([]); // Сообщения чата
+const ChatList = ({ currentChatId, onOpenChat, onClearMessages }) => {
+  const [messages, setMessages] = useState([]);
   const [chats, setChats] = useState([
-    // Моки чатов
     {
       id: 1,
       avatar: "./images/user-icon.svg",
@@ -24,10 +24,8 @@ const ChatList = ({ currentChatId, onOpenChat }) => {
       time: "16:27",
       isRead: true,
     },
-    
   ]);
 
-  // Загрузка сообщений при открытии нового чата
   useEffect(() => {
     if (currentChatId) {
       const loadedMessages = loadMessages(currentChatId);
@@ -35,9 +33,13 @@ const ChatList = ({ currentChatId, onOpenChat }) => {
     }
   }, [currentChatId]);
 
+  useEffect(() => {
+    // Очищаем список сообщений после вызова onClearMessages
+    setMessages([]);
+  }, [onClearMessages]);
+
   return (
     <div className={styles['chat-container']}>
-      {/* Список чатов */}
       <div
         id="chat-list-component"
         className={styles['chat-list-component']}
@@ -71,13 +73,9 @@ const ChatList = ({ currentChatId, onOpenChat }) => {
         })}
       </div>
 
-      {/* Окно чата */}
       {currentChatId && (
         <div className={styles['chat-window']}>
-          {/* Сообщения */}
           <Messages messages={messages} />
-
-          {/* Форма отправки сообщений */}
           <MessageForm
             chatId={currentChatId}
             onMessageSend={(newMessage) => {

@@ -1,8 +1,9 @@
+// components/Header/Header.jsx
 import React, { useState, useEffect } from "react";
-import styles from "./Header.module.scss"; // Импортируем SCSS-модули
+import styles from "./Header.module.scss";
 import Menu from "./../Menu/Menu";
 
-const Header = ({ currentChatTitle, chatId, onBackClick }) => {
+const Header = ({ currentChatTitle, chatId, onBackClick, onClearMessages }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -10,44 +11,39 @@ const Header = ({ currentChatTitle, chatId, onBackClick }) => {
   };
 
   useEffect(() => {
-    setMenuOpen(false); // Закрываем меню при смене чата
+    setMenuOpen(false);
   }, [currentChatTitle]);
 
   return (
     <header className={styles.header}>
-      {/* Кнопка бургер-меню, отображается только в списке чатов */}
       {!currentChatTitle && (
-        <button className={styles["header__burger-menu"]} id="menu-button">
+        <button className={styles["header__burger-menu"]} id="menu-button" onClick={toggleMenu}>
           <img src="./images/burger-menu.svg" alt="Кнопка меню" />
         </button>
       )}
 
-      {/* Название чата или Messenger */}
       <button className={styles.header__title}>
         <div className={styles["header__title-text"]}>
           {currentChatTitle ? currentChatTitle : "Messenger"}
         </div>
       </button>
 
-      {/* Навигационные кнопки */}
       <nav className={styles.header__nav}>
-        {/* Кнопка поиска */}
-        <button className={styles["header__nav"].searchButton}>
+        <button className={styles["header__nav-searchButton"]}>
           <img src="./images/search-icon.svg" alt="Search" />
         </button>
 
-        {/* Кнопка меню, отображается только в конкретном чате */}
+        {/* Передаем onClearMessages в Menu */}
         {currentChatTitle && (
-          <Menu chatId={chatId} />  // Передача chatId в компонент Menu
+          <Menu chatId={chatId} onClearMessages={onClearMessages} />
         )}
       </nav>
 
-      {/* Кнопка назад при нахождении в чате */}
       {currentChatTitle && (
-        <button className={styles['back_button']} onClick={onBackClick}>
+        <button className={styles.back_button} onClick={onBackClick}>
           <img src="./images/arrow-back.svg" alt="Back to chat list" />
         </button>
-      )} 
+      )}
     </header>
   );
 };
