@@ -1,21 +1,29 @@
-.floating-button {
-  position: absolute;
-  display: block;
-  bottom: 20px;
-  right: 20px;
-  background-color: rgb(142, 36, 170);
-  border: none;
-  color: white;
-  padding: 15px;
-  border-radius: 50%;
-  box-shadow: 0 0 0 rgba(142, 36, 170, 0.4);
-  transition: transform 0.3s ease;
+.floating {
+  &-button {
+    position: absolute;
+    display: block;
+    bottom: 20px;
+    right: 20px;
+    background-color: rgb(142, 36, 170);
+    border: none;
+    color: white;
+    padding: 15px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 rgba(142, 36, 170, 0.4);
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.1);
+      animation: pulse 2s infinite;
+    }
+
+    & img {
+      display: block;
+    }
+  }
 }
 
-.floating-button:hover {
-  transform: scale(1.1);
-  animation: pulse 2s infinite;
-}
+
 
 
 @-webkit-keyframes pulse {
@@ -49,6 +57,3 @@
   }
 }
 
-.floating-button img {
-  display: block;
-}

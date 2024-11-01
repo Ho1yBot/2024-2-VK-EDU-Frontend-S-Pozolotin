@@ -1,6 +1,6 @@
 // components/Menu/Menu.jsx
 import React, { useState, useEffect, useRef } from "react";
-import "./Menu.css";
+import styles from "./Menu.module.scss";
 
 const Menu = ({ chatId, onClearMessages }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,20 +35,20 @@ const Menu = ({ chatId, onClearMessages }) => {
   }, [isOpen]);
 
   return (
-    <div className="header_menu" ref={menuRef}>
+    <div className={styles["header_menu"]} ref={menuRef}>
       <button onClick={toggleMenu}>
         <img src="./images/menu-dots.svg" alt="Меню чата" />
       </button>
       {isOpen && (
-        <div className="menu">
-          <ul className="menu_list">
-            <li className="menu_item">
+        <div className={styles.menu}>
+          <ul className={styles["menu_list"]}>
+            <li className={styles["menu_item"]}>
               <button>Info</button>
             </li>
-            <li className="menu_item">
+            <li className={styles["menu_item"]}>
               <button>Mute</button>
             </li>
-            <li className="menu_item">
+            <li className={styles["menu_item"]}>
               <button onClick={handleClearMessages}>
                 Clear messages
               </button>

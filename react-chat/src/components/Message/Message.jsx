@@ -1,6 +1,6 @@
 // components/Message/Message.jsx
 import React, { useEffect, useRef } from "react";
-import "./Message.css";
+import styles from "./Message.module.scss";
 
 export function Messages({ messages }) {
   const messagesEndRef = useRef(null);
@@ -10,14 +10,14 @@ export function Messages({ messages }) {
   }, [messages]);
 
   return (
-    <div className="messages-container">
+    <div className={styles['messages-container']}>
       {messages.map((message, index) => (
-        <div key={index} className="message-container">
-          <div className="message-sender">{message.sender}</div>
-          <div className="message-text">{message.text}</div>
-          <div className="message-time">{message.time}</div>
+        <div key={index} className={styles['message-container']}>
+          <div className={styles['message-sender']}>{message.sender}</div>
+          <div className={styles['message-text']}>{message.text}</div>
+          <div className={styles['message-time']}>{message.time}</div>
           {message.file && (
-            <div className="message-file">
+            <div className={styles['message-file']}>
               <a href={message.file} download>
                 Скачать файл
               </a>

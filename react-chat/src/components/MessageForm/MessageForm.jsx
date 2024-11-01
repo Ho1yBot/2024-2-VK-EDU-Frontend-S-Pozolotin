@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { saveMessage } from "./../Storage/Storage";
 import AttachFile from "./../AttachFile/AttachFile";
-import "./MessageForm.css";
+import styles from "./MessageForm.module.scss";
 
 export function MessageForm({ chatId, onMessageSend }) {
   const [messageText, setMessageText] = useState("");
   const [attachedFile, setAttachedFile] = useState(null);
 
-  // Функция для отправки сообщения
   const sendMessage = (text, file) => {
     const message = {
       text: text || "",
@@ -78,22 +77,22 @@ export function MessageForm({ chatId, onMessageSend }) {
   };
 
   return (
-    <form className="form" onSubmit={handleSubmit}>
+    <form className={styles.form} onSubmit={handleSubmit}>
       <textarea
-        className="form-input"
+        className={styles["form-input"]}
         value={messageText}
         onChange={(e) => setMessageText(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="Введите сообщение"
       />
       {attachedFile && (
-        <div className="attached-file-info">
+        <div className={styles["attached-file-info"]}>
           Файл: {attachedFile.name} прикреплен
         </div>
       )}
-      <div className="form-buttons">
+      <div className={styles["form-buttons"]}>
         <AttachFile onFileSelect={handleFileSelect} />
-        <button type="submit" className="send-button">
+        <button type="submit" className={styles["send-button"]}>
           <img src="./images/send-icon.svg" alt="Отправить сообщение" />
         </button>
       </div>
