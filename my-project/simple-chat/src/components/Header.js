@@ -1,3 +1,5 @@
+import { clearLocalStorage } from './storage';
+
 export function Header() {
     const header = document.createElement('div');
     header.classList.add('header', 'center');
@@ -22,10 +24,11 @@ export function Header() {
 
     header.innerHTML = backButton + userInfo + navButtons;
 
-    // Обработчик открытия/закрытия меню
     const menuButton = header.querySelector('#menu-button');
     const menuContainer = header.querySelector('#menu-container');
+    const clearStorageButton = header.querySelector('#clear-local-storage');
 
+    // Обработчик открытия/закрытия меню
     menuButton.addEventListener('click', () => {
         menuContainer.classList.toggle('hidden'); // Открытие/закрытие меню
     });
@@ -37,7 +40,20 @@ export function Header() {
         }
     });
 
-    
+    // Обработчик кнопки очистки локального хранилища
+    clearStorageButton.addEventListener('click', () => {
+        clearLocalStorage();
+        clearMessagesFromDOM();
+        menuContainer.classList.add('hidden'); // Закрываем меню после очистки
+    });
 
     return header;
+}
+
+// Функция очистки сообщений из DOM
+function clearMessagesFromDOM() {
+    const messagesDiv = document.querySelector('.messages-container'); // Здесь указать точный ID контейнера с сообщениями
+    if (messagesDiv) {
+        messagesDiv.innerHTML = '';
+    }
 }

@@ -12,12 +12,41 @@ export function handleSubmit(event) {
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
-    // Получаем текущий chatId и сохраняем сообщение в локальное хранилище
     const chatId = localStorage.getItem('currentChat');
     saveMessage(chatId, message);
+
+    // Добавляем сообщение в DOM
     addMessageToDOM(message);
+
+    // Обновляем кнопку чата с последним сообщением
+    updateLastMessage(chatId, message);
+
+    // Очищаем поле ввода и прокручиваем окно чата к последнему сообщению
     input.value = '';
+    const chatWindow = document.querySelector('.chat-window');
+    if (chatWindow) {
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
 }
+
+export function updateLastMessage(chatId, message) {
+    const chatButton = document.querySelector(`.chat-item[data-chat-id="${chatId}"]`);
+    if (chatButton) {
+        const lastMessageText = chatButton.querySelector('.chat-info p');
+        const lastMessageTime = chatButton.querySelector('.chat-time span');
+
+        if (lastMessageText && lastMessageTime) {
+            lastMessageText.textContent = message.text;
+            lastMessageTime.textContent = message.time;
+        } else {
+            console.error("Unable to find elements for last message or time within the chat button.");
+        }
+    } else {
+        console.error("Chat button not found for chat ID:", chatId);
+    }
+}
+
+
 
 export function handleKeyPress(event) {
     const form = document.querySelector('form');
@@ -29,29 +58,50 @@ export function handleKeyPress(event) {
 
 
 export function addMessageToDOM(message) {
-    const messagesDiv = document.querySelector('.messages-container'); // Находим контейнер сообщений
+    const messagesDiv = document.querySelector('.messages-container');
 
     const messageElement = document.createElement('div');
     messageElement.classList.add('message-container');
 
     const senderElement = document.createElement('div');
     senderElement.classList.add('message-sender');
-    senderElement.textContent = message.sender;
-
-    const textElement = document.createElement('div');
-    textElement.classList.add('message-text');
-    textElement.textContent = message.text;
+    senderElement.textContent = message.sender || 'Вы';
 
     const timeElement = document.createElement('div');
     timeElement.classList.add('message-time');
     timeElement.textContent = message.time;
 
+    const contentElement = document.createElement('div');
+    contentElement.classList.add('message-content');
+
+    // Проверка на тип содержимого сообщения
+    if (message.isImage) {
+        // Если это изображение
+        const imgElement = document.createElement('img');
+        imgElement.src = message.content;
+        imgElement.alt = message.name;
+        imgElement.classList.add('message-image');
+        contentElement.appendChild(imgElement);
+    } else if (message.content && message.type) {
+        // Если это файл, но не изображение
+        const fileLink = document.createElement('a');
+        fileLink.href = message.content;
+        fileLink.textContent = message.name;
+        fileLink.download = message.name;
+        contentElement.appendChild(fileLink);
+    } else {
+        // Если это обычное текстовое сообщение
+        contentElement.textContent = message.text || '';
+    }
+
     messageElement.appendChild(senderElement);
-    messageElement.appendChild(textElement);
+    messageElement.appendChild(contentElement);
     messageElement.appendChild(timeElement);
 
-    messagesDiv.appendChild(messageElement); // Добавляем сообщение в контейнер
-    messagesDiv.scrollTop = messagesDiv.scrollHeight; // Прокручиваем к последнему сообщению
+    messagesDiv.appendChild(messageElement);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
+
+
 
 

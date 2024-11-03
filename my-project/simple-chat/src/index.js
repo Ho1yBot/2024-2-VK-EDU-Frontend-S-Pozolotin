@@ -7,7 +7,6 @@ import { ChatList } from './components/ChatList';
 import { FloatingButton } from './components/FloatingButton';
 import { handleSubmit, handleKeyPress, addMessageToDOM } from './components/message';
 
-
 // Загружаем компоненты в DOM
 const headerComponent = document.getElementById('header-component');
 const chatListComponent = document.getElementById('chat-list-component');
@@ -18,18 +17,23 @@ headerComponent.appendChild(Header());
 chatListComponent.appendChild(ChatList());
 floatingButtonComponent.appendChild(FloatingButton());
 
-// Загрузка сообщений из локального хранилища
-loadMessages();
-
-// События формы отправки сообщений
-const form = document.querySelector('form');
-const input = document.querySelector('.form-input');
-
-form.addEventListener('submit', handleSubmit);
-form.addEventListener('keypress', handleKeyPress);
-
-
 // Загрузка сообщений при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+    loadMessagesToDOM();
+
+    // События формы отправки сообщений
+    const form = document.querySelector('form');
+    const input = document.querySelector('.form-input');
+
+    if (form && input) {
+        form.addEventListener('submit', handleSubmit);
+        form.addEventListener('keypress', handleKeyPress);
+    } else {
+        console.error("Форма или поле ввода не найдены.");
+    }
+});
+
+// Функция загрузки сообщений в DOM
 function loadMessagesToDOM() {
     const messages = loadMessages();
     messages.forEach(addMessageToDOM);
@@ -122,5 +126,4 @@ function handleClickOutsideAttach(event) {
         closeAttach();
     }
 }
-
 

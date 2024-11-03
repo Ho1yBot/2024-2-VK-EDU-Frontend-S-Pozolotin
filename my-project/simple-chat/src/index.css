@@ -2,6 +2,10 @@ html {
     box-sizing: border-box;
 }
 
+*{
+    box-sizing: border-box;
+}
+
 *,
 *::before,
 *::after {
@@ -196,7 +200,6 @@ header button:hover {
 
 .read-status {
     color: #8E24AA;
-    margin-left: 5px;
 }
 
 #floating-button-component {
@@ -220,9 +223,10 @@ header button:hover {
 }
 
 .form {
-    width: 100%;
+    max-width: 500px;
     display: flex;
     gap: 5px;
+    background: white;
 }
 
 .form-input {
@@ -265,8 +269,7 @@ header button:hover {
     width: 100%;
     display: flex;
     flex-direction: column;
-    margin: 10px 0;
-    height: 100%;
+    gap: 10px;
 }
 
 .message-container {
@@ -276,7 +279,6 @@ header button:hover {
     align-items: flex-end;
     background-color: #F3E5F5;
     padding: 10px 10px 0 10px;
-    margin: 5px;
     border-radius: 10px;
     max-width: 80%;
     min-width: 40%;
