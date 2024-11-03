@@ -11,7 +11,7 @@ const AttachFile = ({ onFileSelect }) => {
 
   return (
     <div>
-      <button className={styles.attach} onClick={(e) => { e.preventDefault(); toggleAttach(); }}><img src="./images/attach-file-icon.svg" alt="Прикрепить файл" /></button>
+      <button className={styles.attach} onClick={(e) => { e.preventDefault(); toggleAttach(); }}><img src="/images/attach-file-icon.svg" alt="Прикрепить файл" /></button>
       {isAttachOpen && (
         <div className={styles.attach_container}>
           <ul className="attach_list">

@@ -11,7 +11,7 @@ const Menu = ({ chatId, onClearMessages }) => {
   };
 
   const handleClearMessages = () => {
-    onClearMessages(); // Вызываем функцию очистки сообщений
+    onClearMessages(); 
     toggleMenu(); 
     
   };
@@ -37,7 +37,7 @@ const Menu = ({ chatId, onClearMessages }) => {
   return (
     <div className={styles["header_menu"]} ref={menuRef}>
       <button onClick={toggleMenu}>
-        <img src="./images/menu-dots.svg" alt="Меню чата" />
+        <img src="/images/menu-dots.svg" alt="Меню чата" />
       </button>
       {isOpen && (
         <div className={styles.menu}>

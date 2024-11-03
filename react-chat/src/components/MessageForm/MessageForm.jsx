@@ -93,7 +93,7 @@ export function MessageForm({ chatId, onMessageSend }) {
       <div className={styles["form-buttons"]}>
         <AttachFile onFileSelect={handleFileSelect} />
         <button type="submit" className={styles["send-button"]}>
-          <img src="./images/send-icon.svg" alt="Отправить сообщение" />
+          <img src="/images/send-icon.svg" alt="Отправить сообщение" />
         </button>
       </div>
     </form>

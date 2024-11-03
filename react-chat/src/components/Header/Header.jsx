@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./Header.module.scss";
 import Menu from "./../Menu/Menu";
 
-const Header = ({ currentChatTitle, chatId, onBackClick, onClearMessages }) => {
+const Header = ({ currentChatTitle, chatId, onBackClick, onClearMessages, onOpenProfile }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -14,34 +14,33 @@ const Header = ({ currentChatTitle, chatId, onBackClick, onClearMessages }) => {
     setMenuOpen(false);
   }, [currentChatTitle]);
 
+  const handleTitleClick = () => {
+    if (currentChatTitle && onOpenProfile) {
+      onOpenProfile(chatId); // Открываем профиль для текущего чата
+    }
+  };
+
   return (
     <header className={styles.header}>
       {!currentChatTitle && (
-        <button className={styles["header__burger-menu"]} id="menu-button" onClick={toggleMenu}>
-          <img src="./images/burger-menu.svg" alt="Кнопка меню" />
+        <button className={styles["header__burger-menu"]} onClick={toggleMenu}>
+          <img src="/images/burger-menu.svg" alt="Кнопка меню" />
         </button>
       )}
-
-      <button className={styles.header__title}>
+      <button className={styles.header__title} onClick={handleTitleClick}>
         <div className={styles["header__title-text"]}>
-          {currentChatTitle ? currentChatTitle : "Messenger"}
+          {currentChatTitle ? `Chat with ${currentChatTitle}`: "Messenger"}
         </div>
       </button>
-
       <nav className={styles.header__nav}>
         <button className={styles["header__nav-searchButton"]}>
-          <img src="./images/search-icon.svg" alt="Search" />
+          <img src="/images/search-icon.svg" alt="Search" />
         </button>
-
-        {/* Передаем onClearMessages в Menu */}
-        {currentChatTitle && (
-          <Menu chatId={chatId} onClearMessages={onClearMessages} />
-        )}
+        {currentChatTitle && <Menu chatId={chatId} onClearMessages={onClearMessages} />}
       </nav>
-
       {currentChatTitle && (
         <button className={styles.back_button} onClick={onBackClick}>
-          <img src="./images/arrow-back.svg" alt="Back to chat list" />
+          <img src="/images/arrow-back.svg" alt="Back to chat list" />
         </button>
       )}
     </header>
