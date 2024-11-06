@@ -9,9 +9,11 @@ export function initFileUpload() {
     fileInput.addEventListener('change', handleFileUpload);
 }
 
+import { updateLastMessage } from './message.js';
+
 export function handleFileUpload(event) {
     const file = event.target.files[0];
-    if (!file) return; // Проверка на наличие файла
+    if (!file) return;
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -21,16 +23,23 @@ export function handleFileUpload(event) {
             content: reader.result,
             type: file.type,
             time: new Date().toLocaleTimeString(),
-            isImage: file.type.startsWith('image/') // Проверка, является ли файл изображением
+            isImage: file.type.startsWith('image/')
         };
 
-        saveMessage(currentChatId, fileData); // Сохраняем файл в localStorage
-        addMessageToDOM(fileData); // Добавляем файл в интерфейс
-        fileInput.value = ''; // Сбрасываем значение input для возможности загрузки следующего файла
+        // Сохраняем сообщение в хранилище
+        let messages = JSON.parse(localStorage.getItem(`messages_${currentChatId}`)) || [];
+        messages.push(fileData);
+        localStorage.setItem(`messages_${currentChatId}`, JSON.stringify(messages));
+
+        // Обновляем последний элемент в chat-info p
+        updateLastMessage(currentChatId, fileData);
     };
-    
-    reader.readAsDataURL(file); // Преобразуем файл в base64
+    reader.readAsDataURL(file);
 }
+
+
+
+
 
 function getCurrentChat() {
     return localStorage.getItem('currentChat');

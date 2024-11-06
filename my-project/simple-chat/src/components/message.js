@@ -1,4 +1,17 @@
-import { saveMessage } from './storage';
+import { saveMessage, loadMessages } from './storage';
+
+export function clearMessages(chatId) {
+    localStorage.removeItem(`messages_${chatId}`);
+    const messagesDiv = document.querySelector('.messages-container');
+    if (messagesDiv) {
+        messagesDiv.innerHTML = ''; // Очищаем окно чата
+    }
+    // Обновляем интерфейс для последнего сообщения
+    updateLastMessage(chatId, null); // Передаем null, чтобы показать "Нет сообщений"
+}
+
+
+
 
 export function handleSubmit(event) {
     event.preventDefault();
@@ -21,7 +34,6 @@ export function handleSubmit(event) {
     // Обновляем кнопку чата с последним сообщением
     updateLastMessage(chatId, message);
 
-    // Очищаем поле ввода и прокручиваем окно чата к последнему сообщению
     input.value = '';
     const chatWindow = document.querySelector('.chat-window');
     if (chatWindow) {
@@ -36,15 +48,28 @@ export function updateLastMessage(chatId, message) {
         const lastMessageTime = chatButton.querySelector('.chat-time span');
 
         if (lastMessageText && lastMessageTime) {
-            lastMessageText.textContent = message.text;
-            lastMessageTime.textContent = message.time;
-        } else {
-            console.error("Unable to find elements for last message or time within the chat button.");
+            if (message) {
+                if (message.isImage) {
+                    lastMessageText.textContent = `Изображение: ${message.name}`;
+                } else if (message.content && message.type) {
+                    lastMessageText.textContent = `Файл: ${message.name}`;
+                } else if (message.text) {
+                    lastMessageText.textContent = message.text;
+                } else {
+                    lastMessageText.textContent = 'Нет сообщений';
+                }
+                lastMessageTime.textContent = message.time || '';
+            } else {
+                lastMessageText.textContent = 'Нет сообщений';
+                lastMessageTime.textContent = '';
+            }
         }
-    } else {
-        console.error("Chat button not found for chat ID:", chatId);
     }
 }
+
+
+
+
 
 
 

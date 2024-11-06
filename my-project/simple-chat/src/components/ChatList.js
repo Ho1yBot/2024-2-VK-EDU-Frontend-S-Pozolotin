@@ -47,7 +47,7 @@ export function ChatList() {
         chatContainer.appendChild(chatItem);
     });
 
-    
+
     // Функция для открытия чата
     function openChat(chatId, chatTitle) {
         setCurrentChat(chatId);
@@ -70,6 +70,8 @@ export function ChatList() {
             <div class="messages-container"></div>
         `;
 
+
+
         // Добавляем компонент окна чата после заголовка
         const header = document.getElementById('header-component');
         header.insertAdjacentElement('afterend', chatComponent);
@@ -82,6 +84,15 @@ export function ChatList() {
             <button class="attach"><img src="./static/images/attach-file-icon.svg" alt="Добавление файла"></button>
             <button type="submit"><img src="./static/images/send-icon.svg" alt="Отправка сообщения"></button>
         `;
+
+        // Вызовите clearMessages при нажатии на кнопку "Очистить сообщения"
+        const clearButton = chatComponent.querySelector('.clear-button');
+        if (clearButton) {
+            clearButton.addEventListener('click', () => {
+                clearMessages(chatId);
+            });
+        }
+
 
         // Добавляем обработчики для формы
         formElement.addEventListener('submit', (event) => {
@@ -143,7 +154,7 @@ export function ChatList() {
         messages.forEach((message) => addMessageToDOM(message, messagesDiv));
 
         document.querySelector('.chat-window').scrollTop = messagesDiv.scrollHeight;
-        
+
     }
 
     // Функция для сохранения текущего чата
