@@ -1,47 +1,43 @@
-// // components/Chat.jsx
-// import React, { useState, useEffect } from 'react';
-// import { loadMessages, saveMessage, clearAllLocalStorage } from './../Storage/Storage';
+// src/components/Chat/Chat.jsx
+import { Centrifuge } from 'centrifuge';
+import { getAuthHeaders } from '../utils/api';
 
-// const Chat = () => {
-//   const [messages, setMessages] = useState([]);
+const connectToWebSocket = (userId) => {
+  console.log('Connecting to WebSocket with userId:', userId); // Проверка перед подключением
 
-//   // Загружаем сообщения при первом рендере
-//   useEffect(() => {
-//     const loadedMessages = loadMessages();
-//     setMessages(loadedMessages);
-//   }, []);
+  const centrifuge = new Centrifuge('wss://vkedu-fullstack-div2.ru/connection/websocket/', {
+    getToken: (ctx) => {
+      console.log('Requesting connection token with context:', ctx); // Проверка перед запросом токена
+      return fetch(`${API_URL}/centrifugo/connect/`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(ctx),
+      }).then((res) => res.json().then((data) => {
+        console.log('Received connection token:', data.token); // Проверка полученного токена
+        return data.token;
+      }));
+    },
+  });
 
-//   // Функция для добавления нового сообщения
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     const message = e.target.messageInput.value;
-//     if (message) {
-//       saveMessage(message);
-//       setMessages([...messages, message]);
-//       e.target.messageInput.value = '';
-//     }
-//   };
+  const subscription = centrifuge.newSubscription(userId, {
+    getToken: (ctx) => {
+      console.log('Requesting subscription token with context:', ctx); // Проверка перед запросом токена подписки
+      return fetch(`${API_URL}/centrifugo/subscribe/`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(ctx),
+      }).then((res) => res.json().then((data) => {
+        console.log('Received subscription token:', data.token); // Проверка полученного токена подписки
+        return data.token;
+      }));
+    },
+  });
 
-//   // Функция для очистки сообщений
-//   const handleClear = () => {
-//     clearAllLocalStorage();
-//     setMessages([]);
-//   };
+  subscription.on('publication', function (ctx) {
+    console.log('New message received from WebSocket:', ctx.data); // Проверка полученного сообщения
+  });
 
-//   return (
-//     <div>
-//       <ul>
-//         {messages.map((msg, index) => (
-//           <li key={index}>{msg}</li>
-//         ))}
-//       </ul>
-//       <form onSubmit={handleSubmit}>
-//         <input name="messageInput" placeholder="Enter your message" />
-//         <button type="submit">Send</button>
-//       </form>
-//       <button onClick={handleClear}>Clear Messages</button>
-//     </div>
-//   );
-// };
-
-// export default Chat;
+  subscription.subscribe();
+  centrifuge.connect();
+  console.log('WebSocket connection established');
+};
