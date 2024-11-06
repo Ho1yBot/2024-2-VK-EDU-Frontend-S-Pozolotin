@@ -1,9 +1,11 @@
+// src/components/ChatList/ChatList.jsx
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styles from "./ChatList.module.scss";
 import { loadMessages } from "./../Storage/Storage";
 import { Messages } from "./../Message/Message";
 import { MessageForm } from "./../MessageForm/MessageForm";
+import useWebSocket from "../../hooks/useWebSocket"; 
 
 const ChatList = ({ currentChatId, onOpenChat, onClearMessages }) => {
   const { chatId } = useParams();
@@ -17,7 +19,7 @@ const ChatList = ({ currentChatId, onOpenChat, onClearMessages }) => {
       lastMessage: "Last message...",
       time: "14:23",
       isRead: true,
-      userId: 101, // Добавляем уникальный ID пользователя
+      userId: 101,
     },
     {
       id: 2,
@@ -26,19 +28,36 @@ const ChatList = ({ currentChatId, onOpenChat, onClearMessages }) => {
       lastMessage: "Last message...",
       time: "16:27",
       isRead: true,
-      userId: 102, // Добавляем уникальный ID пользователя
+      userId: 102,
     },
   ]);
 
+  // Подключаемся к WebSocket с помощью useWebSocket и получаем новые сообщения
+  const newMessages = useWebSocket(chatId);
+  console.log(newMessages);
+
   useEffect(() => {
     if (chatId) {
+      console.log('Loading messages for chatId:', chatId); // Проверка перед загрузкой сообщений
       const loadedMessages = loadMessages(chatId);
       setMessages(loadedMessages);
+      console.log('Loaded messages:', loadedMessages); // Проверка загруженных сообщений
+
       const chat = chats.find((c) => c.id === Number(chatId));
-      if (chat) onOpenChat(chat.id, chat.title);
+      if (chat) {
+        console.log('Opening chat:', chat); // Проверка найденного чата
+        onOpenChat(chat.id, chat.title);
+      }
     }
   }, [chatId, onClearMessages]);
-  
+
+  // Добавляем новые сообщения из WebSocket в список сообщений
+  useEffect(() => {
+    if (newMessages.length > 0) {
+      setMessages((prevMessages) => [...prevMessages, ...newMessages]);
+    }
+  }, [newMessages]);
+
   return (
     <div className={styles["chat-container"]}>
       <div
@@ -50,17 +69,15 @@ const ChatList = ({ currentChatId, onOpenChat, onClearMessages }) => {
           <button
             key={chat.id}
             className={styles["chat-item"]}
-            onClick={() => navigate(`/chat/${chat.id}`)}
+            onClick={() => {
+              console.log('Navigating to chat:', chat.id); // Проверка перехода в чат
+              navigate(`/chat/${chat.id}`);
+            }}
           >
             <div className={styles["chat-info-wrp"]}>
-              <img
-                src={chat.avatar}
-                alt="Avatar"
-              />
+              <img src={chat.avatar} alt="Avatar" />
               <div className={styles["chat-info"]}>
-                <h3>
-                  {chat.title}
-                </h3>
+                <h3>{chat.title}</h3>
                 <p>{chat.lastMessage}</p>
               </div>
             </div>
@@ -77,6 +94,7 @@ const ChatList = ({ currentChatId, onOpenChat, onClearMessages }) => {
           <MessageForm
             chatId={currentChatId}
             onMessageSend={(newMessage) => {
+              console.log('New message sent:', newMessage); // Проверка отправленного сообщения
               setMessages((prevMessages) => [...prevMessages, newMessage]);
             }}
           />
