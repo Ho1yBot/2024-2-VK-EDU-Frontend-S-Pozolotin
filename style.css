@@ -2,6 +2,10 @@ html {
     box-sizing: border-box;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 *,
 *::before,
 *::after {
@@ -91,19 +95,14 @@ header button:hover {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     width: 80%;
+    display: flex;
+    gap: 33px;
+    flex-direction: column;
 }
 
 .chat-window {
     display: flex;
-    justify-content: space-between;
-    min-height: 500px;
-    padding: 10px;
-    background-color: #fafafa;
-    border-radius: 10px;
-    flex-direction: column;
-    height: 500px;
-    overflow: auto;
-    align-items: flex-end;
+    justify-content: space-between
 }
 
 .chat-wrapper {
@@ -120,15 +119,11 @@ header button:hover {
     padding: 10px;
     border-bottom: 1px solid #ddd;
     width: 100%;
+    transition: ease 0.2s;
 }
 
-.chat-item {
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.chat-item:hover {
-    background-color: #f0f0f0;
-    transform: scale(1.02);
+.chat-item:hover{
+    background-color:rgba(34, 60, 80, 0.2)
 }
 
 .chat-item img {
@@ -140,7 +135,22 @@ header button:hover {
 .chat-info-wrp {
     display: flex;
     gap: 10px;
+    width: 77%;
+}
 
+.header_user-title {
+    font-weight: bold;
+    font-size: 18px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+
+.header_user-subtitle {
+    color: #aeabab;
+    font-size: 12px;
 }
 
 .chat-info-wrp img {
@@ -152,11 +162,22 @@ header button:hover {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    width: 80%;
+}
+
+.chat-info div {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .chat-time {
     display: flex;
     align-items: center;
+}
+
+.chat-window {
+    min-height: 500px;
 }
 
 .chat-header {
@@ -192,7 +213,6 @@ header button:hover {
 
 .read-status {
     color: #8E24AA;
-    margin-left: 5px;
 }
 
 #floating-button-component {
@@ -201,59 +221,25 @@ header button:hover {
 
 .floating-button {
     position: absolute;
-    display: block;
     bottom: 20px;
     right: 20px;
-    background-color: rgb(142, 36, 170);
+    background-color: #8E24AA;
     border: none;
     color: white;
     padding: 15px;
     border-radius: 50%;
-    box-shadow: 0 0 0 rgba(142, 36, 170, 0.4);
-    transition: transform 0.3s ease;
+    cursor: pointer;
 }
-
-.floating-button:hover{
-    transform: scale(1.1);
-    animation: pulse 2s infinite;
-}
-
-
-@-webkit-keyframes pulse {
-    0% {
-      -webkit-box-shadow: 0 0 0 0 rgba(142, 36, 170, 0.4);
-    }
-    70% {
-        -webkit-box-shadow: 0 0 0 10px rgba(142, 36, 170, 0);
-    }
-    100% {
-        -webkit-box-shadow: 0 0 0 0 rgba(142, 36, 170, 0);
-    }
-  }
-  @keyframes pulse {
-    0% {
-      -moz-box-shadow: 0 0 0 0 rgba(142, 36, 170, 0.4);
-      box-shadow: 0 0 0 0 rgba(142, 36, 170, 0.4);
-    }
-    70% {
-        -moz-box-shadow: 0 0 0 10px rgba(142, 36, 170, 0);
-        box-shadow: 0 0 0 10px rgba(142, 36, 170, 0);
-    }
-    100% {
-        -moz-box-shadow: 0 0 0 0 rgba(142, 36, 170, 0);
-        box-shadow: 0 0 0 0 rgba(142, 36, 170, 0);
-    }
-  }
 
 .floating-button img {
     display: block;
 }
 
 .form {
-    width: 100%;
+    max-width: 500px;
     display: flex;
     gap: 5px;
-    position: relative;
+    background: white;
 }
 
 .form-input {
@@ -262,33 +248,41 @@ header button:hover {
 
 }
 
-.messages-container {
-    width: 100%;
+.chat-window {
+    padding: 10px;
+    background-color: #fafafa;
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
-    margin: 10px 0;
-    height: 100%;
+    height: 500px;
     overflow: auto;
-    overflow-x: hidden;
+    align-items: flex-end;
 }
 
-.messages-container::-webkit-scrollbar {
+.chat-window::-webkit-scrollbar {
     width: 10px;
 }
 
-.messages-container::-webkit-scrollbar-track {
+.chat-window::-webkit-scrollbar-track {
     background: #fafafa;
     border-radius: 10px;
 }
 
-.messages-container::-webkit-scrollbar-thumb {
+.chat-window::-webkit-scrollbar-thumb {
     background-color: #cdb3b3;
     border-radius: 10px;
     border: 2px solid #fafafa;
 }
 
-.messages-container::-webkit-scrollbar-thumb:hover {
+.chat-window::-webkit-scrollbar-thumb:hover {
     background-color: #8a6e6e;
+}
+
+.messages-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .message-container {
@@ -298,27 +292,13 @@ header button:hover {
     align-items: flex-end;
     background-color: #F3E5F5;
     padding: 10px 10px 0 10px;
-    margin: 5px;
     border-radius: 10px;
     max-width: 80%;
     min-width: 40%;
+    max-height: 300px;
     align-self: flex-end;
     box-shadow: 0px 0px 4px 0px rgba(34, 60, 80, 0.2);
-    opacity: 0;
-    transform: translateX(100%);
-    animation: slideIn 0.5s ease-out forwards;
     gap: 5px;
-}
-
-@keyframes slideIn {
-    0% {
-        opacity: 0;
-        transform: translateX(100%);
-    }
-    100% {
-        opacity: 1;
-        transform: translateX(0);
-    }
 }
 
 .message-sender {
@@ -326,14 +306,23 @@ header button:hover {
     color: #1976D2;
 }
 
-.message-text {
+.message-content {
+    max-width: 100%;
+    min-width: 40%;
+    overflow: hidden;
+    display: flex;
+    justify-content: end;
+}
+
+.message-content img {
+    height: 100%;
+    width: auto;
+}
+
+.message-content {
     word-wrap: break-word;
     word-break: break-all;
     white-space: pre-wrap;
-}
-
-.message-text img {
-    width: 100%;
 }
 
 .message-time {
@@ -409,11 +398,4 @@ header button:hover {
 .menu_item button:hover {
     color: white;
     font-weight: bold;
-}
-
-.attached-image {
-    max-width: 100%; /* Ограничиваем ширину изображения */
-    height: auto;    /* Автоматическая высота */
-    display: block;  /* Убираем inline-стили для корректного отображения */
-    margin-top: 10px; /* Отступ сверху */
 }
