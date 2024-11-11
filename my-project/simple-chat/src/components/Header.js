@@ -40,10 +40,10 @@ export function Header() {
             menuContainer.classList.add('hidden'); // Закрываем меню, если клик был вне его области
         }
     });
-
-    const chatId = getCurrentChat();
+    
     // Обработчик кнопки очистки локального хранилища
     clearStorageButton.addEventListener('click', () => {
+        const chatId = getCurrentChat();
         clearLocalStorage(chatId);
         clearMessagesFromDOM();
         menuContainer.classList.add('hidden'); // Закрываем меню после очистки

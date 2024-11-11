@@ -24,6 +24,7 @@ export function clearMessages(chatId) {
 
 // Очистка чат
 export function clearLocalStorage(chatId) {
+    
     localStorage.removeItem(`messages_${chatId}`);
     // Выводим обновление в очищенном чате
     document.querySelector(`[data-currentChat="${chatId}"]`).textContent = 'Нет сообщений';
