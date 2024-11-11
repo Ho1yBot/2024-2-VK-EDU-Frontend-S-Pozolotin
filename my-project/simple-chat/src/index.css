@@ -2,7 +2,7 @@ html {
     box-sizing: border-box;
 }
 
-*{
+* {
     box-sizing: border-box;
 }
 
@@ -95,6 +95,9 @@ header button:hover {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     width: 80%;
+    display: flex;
+    gap: 33px;
+    flex-direction: column;
 }
 
 .chat-window {
@@ -116,6 +119,11 @@ header button:hover {
     padding: 10px;
     border-bottom: 1px solid #ddd;
     width: 100%;
+    transition: ease 0.2s;
+}
+
+.chat-item:hover{
+    background-color:rgba(34, 60, 80, 0.2)
 }
 
 .chat-item img {
@@ -127,17 +135,15 @@ header button:hover {
 .chat-info-wrp {
     display: flex;
     gap: 10px;
-
+    width: 77%;
 }
 
 .header_user-title {
     font-weight: bold;
     font-size: 18px;
     white-space: nowrap;
-    /* Текст в одну строку */
     overflow: hidden;
     text-overflow: ellipsis;
-    /* Добавление троеточия */
     max-width: 150px;
 }
 
@@ -156,6 +162,13 @@ header button:hover {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    width: 80%;
+}
+
+.chat-info div {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .chat-time {
@@ -282,6 +295,7 @@ header button:hover {
     border-radius: 10px;
     max-width: 80%;
     min-width: 40%;
+    max-height: 300px;
     align-self: flex-end;
     box-shadow: 0px 0px 4px 0px rgba(34, 60, 80, 0.2);
     gap: 5px;
@@ -292,14 +306,23 @@ header button:hover {
     color: #1976D2;
 }
 
-.message-text {
+.message-content {
+    max-width: 100%;
+    min-width: 40%;
+    overflow: hidden;
+    display: flex;
+    justify-content: end;
+}
+
+.message-content img {
+    height: 100%;
+    width: auto;
+}
+
+.message-content {
     word-wrap: break-word;
     word-break: break-all;
     white-space: pre-wrap;
-}
-
-.message-text img {
-    width: 100%;
 }
 
 .message-time {

@@ -4,7 +4,7 @@ import { handleSubmit, handleKeyPress, addMessageToDOM } from './message';
 import { fileInput, initFileUpload } from './fileUpload.js';
 
 export function ChatList() {
-    initFileUpload();
+    initFileUpload()
 
     const chatContainer = document.createElement('div');
     chatContainer.classList.add('chat-container');
@@ -14,13 +14,30 @@ export function ChatList() {
             id: 1,
             avatar: './static/images/user-icon.svg',
             title: 'Чат с Андреем',
-            lastMessage: 'Последнее сообщение...',
+            lastMessage: '',
+            time: '14:23',
+            isRead: true,
+        },
+        {
+            id: 2,
+            avatar: './static/images/user-icon.svg',
+            title: 'Чат с Max',
+            lastMessage: '',
+            time: '14:23',
+            isRead: true,
+        },
+        {
+            id: 3,
+            avatar: './static/images/user-icon.svg',
+            title: 'Чат с Андреем',
+            lastMessage: '',
             time: '14:23',
             isRead: true,
         }
     ];
 
     chats.forEach((chat) => {
+
         const chatItem = document.createElement('button');
         chatItem.classList.add('chat-item');
         chatItem.setAttribute('data-chat-id', chat.id);
@@ -34,7 +51,7 @@ export function ChatList() {
             <img src="${chat.avatar}" alt="Аватарка">
             <div class="chat-info">
                 <h3>${chat.title}</h3>
-                <p>${lastMessage.text}</p> 
+                <div data-currentChat=${chat.id}>${lastMessage.name || lastMessage.text}</div> 
             </div>
         </div>
         <div class="chat-time">
@@ -69,8 +86,6 @@ export function ChatList() {
             </div>
             <div class="messages-container"></div>
         `;
-
-
 
         // Добавляем компонент окна чата после заголовка
         const header = document.getElementById('header-component');
@@ -154,17 +169,11 @@ export function ChatList() {
         messages.forEach((message) => addMessageToDOM(message, messagesDiv));
 
         document.querySelector('.chat-window').scrollTop = messagesDiv.scrollHeight;
-
     }
 
     // Функция для сохранения текущего чата
     function setCurrentChat(chatId) {
         localStorage.setItem('currentChat', chatId);
-    }
-
-    // Функция для получения текущего чата
-    function getCurrentChat() {
-        return localStorage.getItem('currentChat');
     }
 
     return chatContainer;

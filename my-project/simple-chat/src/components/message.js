@@ -44,15 +44,15 @@ export function handleSubmit(event) {
 export function updateLastMessage(chatId, message) {
     const chatButton = document.querySelector(`.chat-item[data-chat-id="${chatId}"]`);
     if (chatButton) {
-        const lastMessageText = chatButton.querySelector('.chat-info p');
+        const lastMessageText = chatButton.querySelector('.chat-info div');
         const lastMessageTime = chatButton.querySelector('.chat-time span');
 
         if (lastMessageText && lastMessageTime) {
             if (message) {
                 if (message.isImage) {
-                    lastMessageText.textContent = `Изображение: ${message.name}`;
+                    lastMessageText.textContent = `${message.name}`;
                 } else if (message.content && message.type) {
-                    lastMessageText.textContent = `Файл: ${message.name}`;
+                    lastMessageText.textContent = `${message.name}`;
                 } else if (message.text) {
                     lastMessageText.textContent = message.text;
                 } else {
@@ -67,12 +67,6 @@ export function updateLastMessage(chatId, message) {
     }
 }
 
-
-
-
-
-
-
 export function handleKeyPress(event) {
     const form = document.querySelector('form');
     if (event.key === 'Enter' && !event.shiftKey) {
@@ -80,7 +74,6 @@ export function handleKeyPress(event) {
         form.dispatchEvent(new Event('submit'));
     }
 }
-
 
 export function addMessageToDOM(message) {
     const messagesDiv = document.querySelector('.messages-container');

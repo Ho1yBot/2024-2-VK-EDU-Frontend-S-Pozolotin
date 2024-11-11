@@ -22,9 +22,9 @@ export function clearMessages(chatId) {
     updateLastMessage(chatId); // Обновляем chat-info для чата
 }
 
-// Очищаем все сообщения и обновляем все чаты
-export function clearLocalStorage() {
-    localStorage.clear();
-    // Вызываем обновление для всех чатов, если нужно (можно добавить перебор всех id чатов)
-    document.querySelectorAll('.chat-info').forEach(info => info.textContent = 'Нет сообщений');
+// Очистка чат
+export function clearLocalStorage(chatId) {
+    localStorage.removeItem(`messages_${chatId}`);
+    // Выводим обновление в очищенном чате
+    document.querySelector(`[data-currentChat="${chatId}"]`).textContent = 'Нет сообщений';
 }

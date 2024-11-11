@@ -1,4 +1,5 @@
 import { clearLocalStorage } from './storage';
+import { getCurrentChat } from './fileUpload'
 
 export function Header() {
     const header = document.createElement('div');
@@ -40,9 +41,10 @@ export function Header() {
         }
     });
 
+    const chatId = getCurrentChat();
     // Обработчик кнопки очистки локального хранилища
     clearStorageButton.addEventListener('click', () => {
-        clearLocalStorage();
+        clearLocalStorage(chatId);
         clearMessagesFromDOM();
         menuContainer.classList.add('hidden'); // Закрываем меню после очистки
     });

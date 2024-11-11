@@ -1,5 +1,4 @@
 import './index.css';
-// import './styles/chatList.css';
 import { saveMessage, loadMessages, clearLocalStorage } from './components/storage';
 import { handleFileUpload, fileInput, initFileUpload } from './components/fileUpload';
 import { Header } from './components/Header';
@@ -28,9 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (form && input) {
         form.addEventListener('submit', handleSubmit);
         form.addEventListener('keypress', handleKeyPress);
-    } else {
-        console.error("Форма или поле ввода не найдены.");
-    }
+    } 
 });
 
 // Функция загрузки сообщений в DOM

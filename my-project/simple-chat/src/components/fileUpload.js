@@ -1,5 +1,5 @@
-import { saveMessage } from './storage.js';
 import { addMessageToDOM } from './message.js';
+import { updateLastMessage } from './message.js';
 
 export const fileInput = document.createElement('input');
 fileInput.type = 'file';
@@ -9,10 +9,9 @@ export function initFileUpload() {
     fileInput.addEventListener('change', handleFileUpload);
 }
 
-import { updateLastMessage } from './message.js';
-
 export function handleFileUpload(event) {
     const file = event.target.files[0];
+    
     if (!file) return;
 
     const reader = new FileReader();
@@ -31,16 +30,14 @@ export function handleFileUpload(event) {
         messages.push(fileData);
         localStorage.setItem(`messages_${currentChatId}`, JSON.stringify(messages));
 
-        // Обновляем последний элемент в chat-info p
+        // Добавляем последний файл в DOM
+        addMessageToDOM(messages[messages.length-1]);
+        // Обновляем последний элемент в chat-info div
         updateLastMessage(currentChatId, fileData);
     };
     reader.readAsDataURL(file);
 }
 
-
-
-
-
-function getCurrentChat() {
+export function getCurrentChat() {
     return localStorage.getItem('currentChat');
 }
