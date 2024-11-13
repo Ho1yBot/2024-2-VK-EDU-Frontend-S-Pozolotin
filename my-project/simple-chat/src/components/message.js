@@ -68,10 +68,17 @@ export function updateLastMessage(chatId, message) {
 }
 
 export function handleKeyPress(event) {
-    const form = document.querySelector('form');
     if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
-        form.dispatchEvent(new Event('submit'));
+        
+        // Создаем событие submit с отменяемым поведением
+        const submitEvent = new Event('submit', { cancelable: true });
+        
+        // Отправляем событие на форму
+        const form = document.querySelector('form');
+        if (form) {
+            form.dispatchEvent(submitEvent);
+        }
     }
 }
 
