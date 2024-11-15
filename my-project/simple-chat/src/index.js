@@ -1,98 +1,48 @@
 import './index.css';
+import { saveMessage, loadMessages, clearLocalStorage } from './components/storage';
+import { handleFileUpload, fileInput, initFileUpload } from './components/fileUpload';
+import { Header } from './components/Header';
+import { ChatList } from './components/ChatList';
+import { FloatingButton } from './components/FloatingButton';
+import { handleSubmit, handleKeyPress, addMessageToDOM } from './components/message';
 
-const form = document.querySelector('form');
-const input = document.querySelector('.form-input');
-const messagesDiv = document.getElementById('messages');
-const headerMenu = document.querySelector('.header_menu');
-const attachButton = document.querySelector('.attach'); // Кнопка для открытия меню прикрепления
+// Загружаем компоненты в DOM
+const headerComponent = document.getElementById('header-component');
+const chatListComponent = document.getElementById('chat-list-component');
+const floatingButtonComponent = document.getElementById('floating-button-component');
 
-form.addEventListener('submit', handleSubmit);
-form.addEventListener('keypress', handleKeyPress);
+// Добавляем компоненты
+headerComponent.appendChild(Header());
+chatListComponent.appendChild(ChatList());
+floatingButtonComponent.appendChild(FloatingButton());
 
-// Загрузка сообщений из localStorage при загрузке страницы
-window.addEventListener('DOMContentLoaded', loadMessages);
+// Загрузка сообщений при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+    loadMessagesToDOM();
 
-function handleSubmit(event) {
-    event.preventDefault();
+    // События формы отправки сообщений
+    const form = document.querySelector('form');
+    const input = document.querySelector('.form-input');
 
-    const messageText = input.value.trim();
-    if (!messageText) return; // Игнорируем пустые сообщения
+    if (form && input) {
+        form.addEventListener('submit', handleSubmit);
+        form.addEventListener('keypress', handleKeyPress);
+    } 
+});
 
-    const message = {
-        text: messageText,
-        sender: 'Вы',
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
-
-    saveMessage(message);
-    addMessageToDOM(message);
-    input.value = ''; // Очистка поля ввода после отправки
+// Функция загрузки сообщений в DOM
+function loadMessagesToDOM() {
+    const messages = loadMessages();
+    messages.forEach(addMessageToDOM);
 }
 
-function handleKeyPress(event) {
-    if (event.key === 'Enter' && !event.shiftKey) {
-        event.preventDefault();
-        form.dispatchEvent(new Event('submit'));
-    }
-}
-
-function saveMessage(message) {
-    let messages = JSON.parse(localStorage.getItem('messages')) || [];
-
-    // Добавляем новое сообщение
-    messages.push(message);
-
-    // Сохраняем обновленные данные обратно в localStorage
-    localStorage.setItem('messages', JSON.stringify(messages));
-}
-
-function loadMessages() {
-    const messages = JSON.parse(localStorage.getItem('messages')) || [];
-    messages.forEach(message => {
-        if (message.fileUrl) {
-            // Если это сообщение с файлом (картинкой), добавляем изображение
-            addFileToChat(message.fileUrl, message.fileName);
-        } else {
-            // Если это обычное текстовое сообщение, добавляем текст
-            addMessageToDOM(message);
-        }
-    });
-}
-
-function addMessageToDOM(message) {
-    const messageElement = document.createElement('div');
-    messageElement.classList.add('message-container');
-
-    const senderElement = document.createElement('div');
-    senderElement.classList.add('message-sender');
-    senderElement.textContent = message.sender;
-
-    const textElement = document.createElement('div');
-    textElement.classList.add('message-text');
-    textElement.textContent = message.text;
-
-    const timeElement = document.createElement('div');
-    timeElement.classList.add('message-time');
-    timeElement.textContent = message.time;
-
-    messageElement.appendChild(senderElement);
-    messageElement.appendChild(textElement);
-    messageElement.appendChild(timeElement);
-
-    messagesDiv.appendChild(messageElement);
-
-    // Прокрутка вниз для отображения последнего сообщения
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-}
-
+// --- Логика меню ---
 let menuOpen = false;
 let attachFile = false;
 let divMenu = null;
 let divAttachFile = null;
 
-// Переключение основного меню
-headerMenu?.addEventListener("click", toggleMenu);
-
+// Открытие/закрытие основного меню
 function toggleMenu() {
     menuOpen ? closeMenu() : openMenu();
 }
@@ -100,21 +50,22 @@ function toggleMenu() {
 function openMenu() {
     divMenu = document.createElement('div');
     divMenu.classList.add('menu');
-    divMenu.innerHTML = `<ul class="menu_list">
-                    <li class="menu_item"><button>Info</button></li>
-                    <li class="menu_item"><button>Mute</button></li>
-                    <li class="menu_item"><button id="clear-local-storage">Clear messages</button></li>
-                </ul>`;
-    headerMenu.appendChild(divMenu);
+    divMenu.innerHTML = `
+        <ul class="menu_list">
+            <li class="menu_item"><button>Info</button></li>
+            <li class="menu_item"><button>Mute</button></li>
+            <li class="menu_item"><button id="clear-local-storage">Clear localStorage</button></li>
+        </ul>`;
+    document.querySelector('.header_menu').appendChild(divMenu);
 
     document.addEventListener('click', handleClickOutsideMenu);
-    document.getElementById('clear-local-storage').addEventListener('click', clearLocalStorage);
+    document.getElementById('clear-local-storage').addEventListener('click', clearLocalStorageFromDOM);
     menuOpen = true;
 }
 
 function closeMenu() {
     if (divMenu) {
-        headerMenu.removeChild(divMenu);
+        document.querySelector('.header_menu').removeChild(divMenu);
         divMenu = null;
         document.removeEventListener('click', handleClickOutsideMenu);
         menuOpen = false;
@@ -122,24 +73,18 @@ function closeMenu() {
 }
 
 function handleClickOutsideMenu(event) {
-    if (!divMenu.contains(event.target) && !headerMenu.contains(event.target)) {
+    if (divMenu && !divMenu.contains(event.target) && !document.querySelector('.header_menu').contains(event.target)) {
         closeMenu();
     }
 }
 
-function clearLocalStorage() {
-    localStorage.clear();
+function clearLocalStorageFromDOM() {
+    clearLocalStorage();
     clearMessagesFromDOM();
-    loadMessages();
+    loadMessagesToDOM();
 }
 
-function clearMessagesFromDOM() {
-    messagesDiv.innerHTML = '';
-}
-
-// Переключение меню прикрепления файлов
-attachButton?.addEventListener('click', toggleAttach);
-
+// --- Логика прикрепления файлов ---
 function toggleAttach(event) {
     event.preventDefault(); // Чтобы не отправлялась форма при нажатии на кнопку прикрепления
     attachFile ? closeAttach() : openAttach();
@@ -153,9 +98,8 @@ function openAttach() {
             <li class="attach_item"><button id="photoVideo">Photo or video</button></li>
             <li class="attach_item"><button id="gallery">Choose from gallery</button></li>
             <li class="attach_item"><button id="file">File</button></li>
-        </ul>
-    `;
-    attachButton.appendChild(divAttachFile);
+        </ul>`;
+    document.querySelector('.attach').appendChild(divAttachFile);
 
     document.addEventListener('click', handleClickOutsideAttach);
     document.getElementById('photoVideo').addEventListener('click', () => fileInput.click());
@@ -167,7 +111,7 @@ function openAttach() {
 
 function closeAttach() {
     if (divAttachFile) {
-        attachButton.removeChild(divAttachFile);
+        document.querySelector('.attach').removeChild(divAttachFile);
         divAttachFile = null;
         document.removeEventListener('click', handleClickOutsideAttach);
         attachFile = false;
@@ -175,52 +119,8 @@ function closeAttach() {
 }
 
 function handleClickOutsideAttach(event) {
-    if (divAttachFile && !divAttachFile.contains(event.target) && !attachButton.contains(event.target)) {
+    if (divAttachFile && !divAttachFile.contains(event.target) && !document.querySelector('.attach').contains(event.target)) {
         closeAttach();
     }
 }
 
-const fileInput = document.createElement('input');
-fileInput.type = 'file';
-fileInput.accept = 'image/*,video/*';
-fileInput.style.display = 'none';
-
-// Обработка загрузки файлов
-fileInput.addEventListener('change', handleFileUpload);
-
-function handleFileUpload(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            const fileUrl = e.target.result;
-            addFileToChat(fileUrl, file.name);
-        };
-        reader.readAsDataURL(file);
-    }
-}
-
-function addFileToChat(fileUrl, fileName) {
-    const messageElement = document.createElement('div');
-    messageElement.classList.add('message-container');
-
-    const textElement = document.createElement('div');
-    textElement.classList.add('message-text');
-    textElement.innerHTML = `<img src="${fileUrl}" alt="${fileName}" class="attached-image">`;
-
-    messageElement.appendChild(textElement);
-    messagesDiv.appendChild(messageElement);
-
-    // Прокрутка вниз для отображения последнего сообщения
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-    // Сохранение сообщения с файлом в localStorage
-    const message = {
-        fileUrl: fileUrl,
-        fileName: fileName,
-        sender: 'Вы',
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
-
-    saveMessage(message);
-}

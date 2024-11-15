@@ -1,3 +1,5 @@
+'use strict';
+
 const path = require('path');
 
 const HTMLWebpackPlugin = require('html-webpack-plugin');
@@ -36,17 +38,9 @@ module.exports = {
                 ],
             },
             {
-                test: /shadow\.css$/,
-                include: SRC_PATH,
-                use: [
-                    {
-                        loader: 'css-loader'
-                    },
-                ],
-            },
-            {
-                test: /index\.css$/,
-                include: SRC_PATH,
+                // Указываем путь к index.css в корне src
+                test: /\.css$/,
+                include: SRC_PATH, // Папка src
                 use: [
                     {
                         loader: MiniCSSExtractPlugin.loader,
@@ -63,7 +57,7 @@ module.exports = {
                         loader: 'file-loader',
                         options: {
                             name: '[name].[ext]',
-                            outputPath: 'static/images',
+                            outputPath: 'static/images', // Куда копировать изображения
                         },
                     },
                 ],
