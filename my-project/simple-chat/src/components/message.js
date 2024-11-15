@@ -11,45 +11,17 @@ export function clearMessages(chatId) {
 }
 
 
-
-
 export function handleSubmit(event) {
     event.preventDefault();
     const input = document.querySelector('.form-input');
     const messageText = input.value.trim();
-    const fileInput = document.querySelector('.file-input'); // Поле для выбора файла
-    const attachedFile = fileInput.files[0]; // Получаем прикрепленный файл
+    if (!messageText) return;
 
-    if (!messageText && !attachedFile) return; // Если нет текста и файла, не отправляем
-
-    const chatId = localStorage.getItem('currentChat');
-
-    if (attachedFile) {
-        // Если файл прикреплен, конвертируем его в Base64
-        const reader = new FileReader();
-        reader.readAsDataURL(attachedFile);
-        reader.onload = function () {
-            const message = {
-                text: messageText || '', // Если нет текста, отправляем только файл
-                sender: 'Вы',
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                file: reader.result // Сохраняем файл как Base64 строку
-            };
-
-            saveMessage(chatId, message); // Сохраняем сообщение с файлом
-            addMessageToDOM(message); // Отображаем сообщение в DOM
-
-            input.value = ''; // Очищаем поле текста
-            fileInput.value = ''; // Очищаем поле выбора файла
-        };
-    } else {
-        // Если файла нет, отправляем только текст
-        const message = {
-            text: messageText,
-            sender: 'Вы',
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            file: null // Нет файла
-        };
+    const message = {
+        text: messageText,
+        sender: 'Вы',
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
 
     const chatId = localStorage.getItem('currentChat');
     saveMessage(chatId, message);
@@ -65,6 +37,7 @@ export function handleSubmit(event) {
     if (chatWindow) {
         chatWindow.scrollTop = chatWindow.scrollHeight;
     }
+
 }
 
 export function updateLastMessage(chatId, message) {
@@ -97,10 +70,10 @@ export function updateLastMessage(chatId, message) {
 export function handleKeyPress(event) {
     if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
-        
+
         // Создаем событие submit с отменяемым поведением
         const submitEvent = new Event('submit', { cancelable: true });
-        
+
         // Отправляем событие на форму
         const form = document.querySelector('form');
         if (form) {
