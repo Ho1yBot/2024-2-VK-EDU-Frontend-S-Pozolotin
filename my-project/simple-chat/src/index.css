@@ -152,7 +152,22 @@ header button:hover {
 .chat-info-wrp {
     display: flex;
     gap: 10px;
+    width: 77%;
 
+}
+
+.header_user-title {
+    font-weight: bold;
+    font-size: 18px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+.header_user-subtitle {
+    color: #aeabab;
+    font-size: 12px;
 }
 
 .chat-info-wrp img {
@@ -293,6 +308,7 @@ header button:hover {
     height: 100%;
     overflow: auto;
     overflow-x: hidden;
+    gap: 10px;
 }
 
 .messages-container::-webkit-scrollbar {
@@ -350,13 +366,18 @@ header button:hover {
     color: #1976D2;
 }
 
-.message-text {
+.message-content {
     word-wrap: break-word;
     word-break: break-all;
     white-space: pre-wrap;
+    max-width: 100%;
+    min-width: 40%;
+    overflow: hidden;
+    display: flex;
+    justify-content: end;
 }
 
-.message-text img {
+.message-content img {
     width: 100%;
 }
 

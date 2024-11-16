@@ -38,9 +38,7 @@ function loadMessagesToDOM() {
 
 // --- Логика меню ---
 let menuOpen = false;
-let attachFile = false;
 let divMenu = null;
-let divAttachFile = null;
 
 // Открытие/закрытие основного меню
 function toggleMenu() {
@@ -84,42 +82,3 @@ function clearLocalStorageFromDOM() {
     loadMessagesToDOM();
 }
 
-// --- Логика прикрепления файлов ---
-function toggleAttach(event) {
-    event.preventDefault(); // Чтобы не отправлялась форма при нажатии на кнопку прикрепления
-    attachFile ? closeAttach() : openAttach();
-}
-
-function openAttach() {
-    divAttachFile = document.createElement('div');
-    divAttachFile.classList.add('attach_container');
-    divAttachFile.innerHTML = `
-        <ul class="attach_list">
-            <li class="attach_item"><button id="photoVideo">Photo or video</button></li>
-            <li class="attach_item"><button id="gallery">Choose from gallery</button></li>
-            <li class="attach_item"><button id="file">File</button></li>
-        </ul>`;
-    document.querySelector('.attach').appendChild(divAttachFile);
-
-    document.addEventListener('click', handleClickOutsideAttach);
-    document.getElementById('photoVideo').addEventListener('click', () => fileInput.click());
-    document.getElementById('gallery').addEventListener('click', () => fileInput.click());
-    document.getElementById('file').addEventListener('click', () => fileInput.click());
-
-    attachFile = true;
-}
-
-function closeAttach() {
-    if (divAttachFile) {
-        document.querySelector('.attach').removeChild(divAttachFile);
-        divAttachFile = null;
-        document.removeEventListener('click', handleClickOutsideAttach);
-        attachFile = false;
-    }
-}
-
-function handleClickOutsideAttach(event) {
-    if (divAttachFile && !divAttachFile.contains(event.target) && !document.querySelector('.attach').contains(event.target)) {
-        closeAttach();
-    }
-}

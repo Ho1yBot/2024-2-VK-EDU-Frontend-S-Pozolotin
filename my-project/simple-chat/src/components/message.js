@@ -82,7 +82,9 @@ export function handleKeyPress(event) {
     }
 }
 
-export function addMessageToDOM(message, messagesDiv) {
+export function addMessageToDOM(message) {
+    const messagesDiv = document.querySelector('.messages-container');
+
     const messageElement = document.createElement('div');
     messageElement.classList.add('message-container');
 
@@ -122,7 +124,7 @@ export function addMessageToDOM(message, messagesDiv) {
     messageElement.appendChild(timeElement);
 
     messagesDiv.appendChild(messageElement);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight; // Прокрутка к последнему сообщению
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 
 
