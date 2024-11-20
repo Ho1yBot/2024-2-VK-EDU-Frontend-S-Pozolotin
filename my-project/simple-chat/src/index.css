@@ -32,7 +32,7 @@ body {
     background-color: #f0f0f0;
 }
 
-button  {
+button {
     background: transparent;
     border: none;
     cursor: pointer;
@@ -55,7 +55,6 @@ button  {
     margin-top: 20px;
 }
 
-.header_title {
 .header_title {
     color: white;
 }
@@ -472,8 +471,12 @@ header button:hover {
 }
 
 .attached-image {
-    max-width: 100%; /* Ограничиваем ширину изображения */
-    height: auto;    /* Автоматическая высота */
-    display: block;  /* Убираем inline-стили для корректного отображения */
-    margin-top: 10px; /* Отступ сверху */
+    max-width: 100%;
+    /* Ограничиваем ширину изображения */
+    height: auto;
+    /* Автоматическая высота */
+    display: block;
+    /* Убираем inline-стили для корректного отображения */
+    margin-top: 10px;
+    /* Отступ сверху */
 }
