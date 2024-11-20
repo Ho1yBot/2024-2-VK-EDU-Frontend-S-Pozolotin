@@ -1,4 +1,4 @@
-
+// Сохраняем сообщение для указанного чата
 export function saveMessage(chatId, message) {
     let messages = JSON.parse(localStorage.getItem(`messages_${chatId}`)) || [];
     messages.push(message);
@@ -14,16 +14,27 @@ export function saveMessage(chatId, message) {
 }
 
 
+// Загружаем все сообщения для указанного чата
 export function loadMessages(chatId) {
-    return JSON.parse(localStorage.getItem(`messages_${chatId}`)) || []; // Загружаем сообщения для указанного чата
+    return JSON.parse(localStorage.getItem(`messages_${chatId}`)) || [];
 }
 
-
-export function clearLocalStorage() {
-    localStorage.clear();
-    clearMessagesFromDOM();
+// Загружаем последнее сообщение для указанного чата
+export function loadLastMessage(chatId) {
+    const messages = loadMessages(chatId);
+    return messages.length ? messages[messages.length - 1] : null;
 }
 
-function clearMessagesFromDOM() {
-    messagesDiv.innerHTML = '';
+// Очищаем сообщения и обновляем chat-info
+export function clearMessages(chatId) {
+    localStorage.removeItem(`messages_${chatId}`);
+    updateLastMessage(chatId); // Обновляем chat-info для чата
+}
+
+// Очистка чат
+export function clearLocalStorage(chatId) {
+    
+    localStorage.removeItem(`messages_${chatId}`);
+    // Выводим обновление в очищенном чате
+    document.querySelector(`[data-currentChat="${chatId}"]`).textContent = 'Нет сообщений';
 }
