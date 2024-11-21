@@ -7,6 +7,7 @@ import FloatingButton from "./components/FloatingButton/FloatingButton";
 import Profile from "./components/Profile/Profile";
 import { clearMessages } from "./components/Storage/Storage";
 import styles from "./App.module.scss";
+import { LoginPage } from "./components/LoginPage/LoginPage";
 
 const AppContent = () => {
   const navigate = useNavigate();
@@ -63,6 +64,7 @@ const AppContent = () => {
           onClearMessages={handleClearMessages}
           onOpenProfile={openProfile}
         />
+        
       )}
       <Routes>
         <Route
@@ -93,7 +95,8 @@ const AppContent = () => {
 
 const App = () => (
   <HashRouter>
-    <AppContent />
+    <LoginPage />
+    {/* <AppContent /> */}
   </HashRouter>
 );
 

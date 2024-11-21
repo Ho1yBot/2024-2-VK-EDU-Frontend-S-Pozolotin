@@ -1,5 +1,5 @@
 // src/utils/api.js
-const API_URL = '/api';
+const API_URL = 'https://vkedu-fullstack-div2.ru/api';
 
 export const registerUser = async (data) => {
     const response = await fetch(`${API_URL}/register/`, {
@@ -13,7 +13,8 @@ export const registerUser = async (data) => {
 };
 
 export const loginUser = async (data) => {
-    const response = await fetch(`${API_URL}/login/`, {
+    console.log(data);
+    const response = await fetch(`${API_URL}/auth/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -21,7 +22,7 @@ export const loginUser = async (data) => {
         body: JSON.stringify(data),
     });
     const result = await response.json();
-    localStorage.setItem('accessToken', result.accessToken);
+    localStorage.setItem('accessToken', result.access);
     return result;
 };
 
@@ -33,17 +34,16 @@ export const getAuthHeaders = () => ({
 
 export const fetchChatMessages = async (chatId) => {
     const response = await fetch(`${API_URL}/chats/${chatId}/messages/`, {
-      headers: getAuthHeaders(),
+        headers: getAuthHeaders(),
     });
     return response.json();
-  };
-  
-  export const sendMessage = async (chatId, message) => {
+};
+
+export const sendMessage = async (chatId, message) => {
     const response = await fetch(`${API_URL}/chats/${chatId}/messages/`, {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({ text: message }),
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ text: message }),
     });
     return response.json();
-  };
-  
+};

@@ -34,18 +34,14 @@ const ChatList = ({ currentChatId, onOpenChat, onClearMessages }) => {
 
   // Подключаемся к WebSocket с помощью useWebSocket и получаем новые сообщения
   const newMessages = useWebSocket(chatId);
-  console.log(newMessages);
 
   useEffect(() => {
     if (chatId) {
-      console.log('Loading messages for chatId:', chatId); // Проверка перед загрузкой сообщений
       const loadedMessages = loadMessages(chatId);
       setMessages(loadedMessages);
-      console.log('Loaded messages:', loadedMessages); // Проверка загруженных сообщений
 
       const chat = chats.find((c) => c.id === Number(chatId));
       if (chat) {
-        console.log('Opening chat:', chat); // Проверка найденного чата
         onOpenChat(chat.id, chat.title);
       }
     }
@@ -60,17 +56,12 @@ const ChatList = ({ currentChatId, onOpenChat, onClearMessages }) => {
 
   return (
     <div className={styles["chat-container"]}>
-      <div
-        id="chat-list-component"
-        className={styles["chat-list-component"]}
-        style={{ display: currentChatId ? "none" : "flex" }}
-      >
+      <div id="chat-list-component" className={styles["chat-list-component"]} style={{ display: currentChatId ? "none" : "flex" }}>
         {chats.map((chat) => (
           <button
             key={chat.id}
             className={styles["chat-item"]}
             onClick={() => {
-              console.log('Navigating to chat:', chat.id); // Проверка перехода в чат
               navigate(`/chat/${chat.id}`);
             }}
           >
@@ -94,7 +85,6 @@ const ChatList = ({ currentChatId, onOpenChat, onClearMessages }) => {
           <MessageForm
             chatId={currentChatId}
             onMessageSend={(newMessage) => {
-              console.log('New message sent:', newMessage); // Проверка отправленного сообщения
               setMessages((prevMessages) => [...prevMessages, newMessage]);
             }}
           />
@@ -103,5 +93,14 @@ const ChatList = ({ currentChatId, onOpenChat, onClearMessages }) => {
     </div>
   );
 };
+
+// export const GetMessage = async () => {
+//   const response = await fetch(`https://vkedu-fullstack-div2.ru/api/user/1`);
+//   const data = await response.json();
+//   console.log(data);
+//   return data;
+// };
+
+// GetMessage()
 
 export default ChatList;
