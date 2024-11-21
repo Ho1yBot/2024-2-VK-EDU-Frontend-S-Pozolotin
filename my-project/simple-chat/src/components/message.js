@@ -1,4 +1,15 @@
-import { saveMessage } from './storage';
+import { saveMessage, loadMessages } from './storage';
+
+export function clearMessages(chatId) {
+    localStorage.removeItem(`messages_${chatId}`);
+    const messagesDiv = document.querySelector('.messages-container');
+    if (messagesDiv) {
+        messagesDiv.innerHTML = ''; // Очищаем окно чата
+    }
+    // Обновляем интерфейс для последнего сообщения
+    updateLastMessage(chatId, null); // Передаем null, чтобы показать "Нет сообщений"
+}
+
 
 export function handleSubmit(event) {
     event.preventDefault();
@@ -10,72 +21,107 @@ export function handleSubmit(event) {
     if (!messageText && !attachedFile) return; // Если нет текста и файла, не отправляем
 
     const chatId = localStorage.getItem('currentChat');
+    saveMessage(chatId, message);
 
-    if (attachedFile) {
-        // Если файл прикреплен, конвертируем его в Base64
-        const reader = new FileReader();
-        reader.readAsDataURL(attachedFile);
-        reader.onload = function () {
-            const message = {
-                text: messageText || '', // Если нет текста, отправляем только файл
-                sender: 'Вы',
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                file: reader.result // Сохраняем файл как Base64 строку
-            };
+    // Добавляем сообщение в DOM
+    addMessageToDOM(message);
 
-            saveMessage(chatId, message); // Сохраняем сообщение с файлом
-            addMessageToDOM(message); // Отображаем сообщение в DOM
+    // Обновляем кнопку чата с последним сообщением
+    updateLastMessage(chatId, message);
 
-            input.value = ''; // Очищаем поле текста
-            fileInput.value = ''; // Очищаем поле выбора файла
-        };
-    } else {
-        // Если файла нет, отправляем только текст
-        const message = {
-            text: messageText,
-            sender: 'Вы',
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            file: null // Нет файла
-        };
+    input.value = '';
+    const chatWindow = document.querySelector('.chat-window');
+    if (chatWindow) {
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
 
-        saveMessage(chatId, message);
-        addMessageToDOM(message);
-        input.value = ''; // Очищаем поле
+}
+
+export function updateLastMessage(chatId, message) {
+    const chatButton = document.querySelector(`.chat-item[data-chat-id="${chatId}"]`);
+    if (chatButton) {
+        const lastMessageText = chatButton.querySelector('.chat-info div');
+        const lastMessageTime = chatButton.querySelector('.chat-time span');
+
+        if (lastMessageText && lastMessageTime) {
+            if (message) {
+                if (message.isImage) {
+                    lastMessageText.textContent = `${message.name}`;
+                } else if (message.content && message.type) {
+                    lastMessageText.textContent = `${message.name}`;
+                } else if (message.text) {
+                    lastMessageText.textContent = message.text;
+                } else {
+                    lastMessageText.textContent = 'Нет сообщений';
+                }
+                lastMessageTime.textContent = message.time || '';
+            } else {
+                lastMessageText.textContent = 'Нет сообщений';
+                lastMessageTime.textContent = '';
+            }
+        }
     }
 }
 
 
 export function handleKeyPress(event) {
-    const form = document.querySelector('form');
     if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
-        form.dispatchEvent(new Event('submit'));
+
+        // Создаем событие submit с отменяемым поведением
+        const submitEvent = new Event('submit', { cancelable: true });
+
+        // Отправляем событие на форму
+        const form = document.querySelector('form');
+        if (form) {
+            form.dispatchEvent(submitEvent);
+        }
     }
 }
 
+export function addMessageToDOM(message) {
+    const messagesDiv = document.querySelector('.messages-container');
 
-export function addMessageToDOM(message, messagesDiv) {
     const messageElement = document.createElement('div');
     messageElement.classList.add('message-container');
 
     const senderElement = document.createElement('div');
     senderElement.classList.add('message-sender');
-    senderElement.textContent = message.sender;
-
-    const textElement = document.createElement('div');
-    textElement.classList.add('message-text');
-    textElement.textContent = message.text;
+    senderElement.textContent = message.sender || 'Вы';
 
     const timeElement = document.createElement('div');
     timeElement.classList.add('message-time');
     timeElement.textContent = message.time;
 
+    const contentElement = document.createElement('div');
+    contentElement.classList.add('message-content');
+
+    // Проверка на тип содержимого сообщения
+    if (message.isImage) {
+        // Если это изображение
+        const imgElement = document.createElement('img');
+        imgElement.src = message.content;
+        imgElement.alt = message.name;
+        imgElement.classList.add('message-image');
+        contentElement.appendChild(imgElement);
+    } else if (message.content && message.type) {
+        // Если это файл, но не изображение
+        const fileLink = document.createElement('a');
+        fileLink.href = message.content;
+        fileLink.textContent = message.name;
+        fileLink.download = message.name;
+        contentElement.appendChild(fileLink);
+    } else {
+        // Если это обычное текстовое сообщение
+        contentElement.textContent = message.text || '';
+    }
+
     messageElement.appendChild(senderElement);
-    messageElement.appendChild(textElement);
+    messageElement.appendChild(contentElement);
     messageElement.appendChild(timeElement);
 
     messagesDiv.appendChild(messageElement);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight; // Прокрутка к последнему сообщению
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 
 
