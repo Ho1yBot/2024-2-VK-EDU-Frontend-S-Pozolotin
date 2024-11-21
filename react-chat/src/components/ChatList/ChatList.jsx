@@ -5,7 +5,7 @@ import styles from "./ChatList.module.scss";
 import { loadMessages } from "./../Storage/Storage";
 import { Messages } from "./../Message/Message";
 import { MessageForm } from "./../MessageForm/MessageForm";
-import useWebSocket from "../../hooks/useWebSocket"; 
+import useWebSocket from "../../hooks/useWebSocket";
 
 const ChatList = ({ currentChatId, onOpenChat, onClearMessages }) => {
   const { chatId } = useParams();
@@ -37,13 +37,12 @@ const ChatList = ({ currentChatId, onOpenChat, onClearMessages }) => {
 
   useEffect(() => {
     if (chatId) {
-      console.log('Loading messages for chatId:', chatId); // Проверка перед загрузкой сообщений
+      console.log("Loading messages for chatId:", chatId); // Проверка перед загрузкой сообщений
       const loadedMessages = loadMessages(chatId);
       setMessages(loadedMessages);
-
-      const chat = chats.find((c) => c.id === Number(chatId));
-      if (chat) {
-      
+    }
+    const chat = chats.find((c) => c.id === Number(chatId));
+    if (chat) {
       const chat = chats.find((c) => c.id === Number(chatId));
       if (chat) {
         onOpenChat(chat.id, chat.title);
@@ -60,7 +59,11 @@ const ChatList = ({ currentChatId, onOpenChat, onClearMessages }) => {
 
   return (
     <div className={styles["chat-container"]}>
-      <div id="chat-list-component" className={styles["chat-list-component"]} style={{ display: currentChatId ? "none" : "flex" }}>
+      <div
+        id="chat-list-component"
+        className={styles["chat-list-component"]}
+        style={{ display: currentChatId ? "none" : "flex" }}
+      >
         {chats.map((chat) => (
           <button
             key={chat.id}
@@ -89,7 +92,7 @@ const ChatList = ({ currentChatId, onOpenChat, onClearMessages }) => {
           <MessageForm
             chatId={currentChatId}
             onMessageSend={(newMessage) => {
-              console.log('New message sent:', newMessage); // Проверка отправленного сообщения
+              console.log("New message sent:", newMessage); // Проверка отправленного сообщения
               setMessages((prevMessages) => [...prevMessages, newMessage]);
             }}
           />
