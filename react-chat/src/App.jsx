@@ -1,6 +1,13 @@
 // App.jsx
 import React, { useState, useEffect } from "react";
-import {HashRouter, Routes, Route, Navigate, useNavigate, useLocation} from "react-router-dom";
+import {
+  HashRouter,
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 import ChatList from "./components/ChatList/ChatList";
 import Header from "./components/Header/Header";
 import FloatingButton from "./components/FloatingButton/FloatingButton";
@@ -53,6 +60,25 @@ const AppContent = () => {
   // Проверка, находится ли пользователь на странице профиля
   const isProfilePage = location.pathname.startsWith("/profile");
 
+  // Обновляем токен при каждом перерендеривании приложения
+  useEffect(() => {
+    fetch(`https://vkedu-fullstack-div2.ru/api/auth/refresh/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ refresh: localStorage.getItem("refreshToken") }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        localStorage.setItem("accessToken", result.access);
+        localStorage.setItem("refreshToken", result.refresh);
+      })
+      .catch((error) => {
+        console.error("Ошибка обновления токена:", error);
+      });
+  }, []);
+
   return (
     <div className={styles["app-container"]}>
       {/* Показ Header только если это не страница профиля */}
@@ -64,7 +90,6 @@ const AppContent = () => {
           onClearMessages={handleClearMessages}
           onOpenProfile={openProfile}
         />
-        
       )}
       <Routes>
         <Route
@@ -93,11 +118,25 @@ const AppContent = () => {
   );
 };
 
-const App = () => (
-  <HashRouter>
-    <LoginPage />
-    {/* <AppContent /> */}
-  </HashRouter>
-);
+const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Проверяем, есть ли токен при загрузке приложения
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      setIsAuthenticated(true);
+    }
+  }, []);
+  return (
+    <HashRouter>
+      {isAuthenticated ? (
+        <AppContent />
+      ) : (
+        <LoginPage onLoginSuccess={() => setIsAuthenticated(true)} />
+      )}
+    </HashRouter>
+  );
+};
 
 export default App;

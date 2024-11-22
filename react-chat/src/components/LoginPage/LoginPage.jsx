@@ -4,7 +4,7 @@ import { registerUser, loginUser } from './../../utils/api';
 import styles from './LoginPage.module.scss'
 
 
-export const LoginPage = () => {
+export const LoginPage = ({ onLoginSuccess }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
@@ -16,6 +16,7 @@ export const LoginPage = () => {
 
     if (result && result.access) {
       console.log('Access token received:', result.access);
+      onLoginSuccess(); // Уведомляем родительский компонент об успешной авторизации
     } else {
       console.log('Login failed, no access token received');
     }

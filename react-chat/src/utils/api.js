@@ -23,6 +23,7 @@ export const loginUser = async (data) => {
     });
     const result = await response.json();
     localStorage.setItem('accessToken', result.access);
+    localStorage.setItem('refreshToken', result.refresh);
     return result;
 };
 

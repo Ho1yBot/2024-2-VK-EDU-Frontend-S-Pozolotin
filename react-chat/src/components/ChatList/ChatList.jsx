@@ -6,6 +6,7 @@ import { loadMessages } from "./../Storage/Storage";
 import { Messages } from "./../Message/Message";
 import { MessageForm } from "./../MessageForm/MessageForm";
 import useWebSocket from "../../hooks/useWebSocket";
+import { getAuthHeaders } from "../../utils/api";
 
 const ChatList = ({ currentChatId, onOpenChat, onClearMessages }) => {
   const { chatId } = useParams();
@@ -102,13 +103,13 @@ const ChatList = ({ currentChatId, onOpenChat, onClearMessages }) => {
   );
 };
 
-// export const GetMessage = async () => {
-//   const response = await fetch(`https://vkedu-fullstack-div2.ru/api/user/1`);
-//   const data = await response.json();
-//   console.log(data);
-//   return data;
-// };
+export const GetMessage = async () => {
+  const response = await fetch(`https://vkedu-fullstack-div2.ru/api/users/`, {headers: getAuthHeaders()});
+  const data = await response.json();
+  console.log(data);
+  return data;
+};
 
-// GetMessage()
+GetMessage()
 
 export default ChatList;
