@@ -27,7 +27,7 @@ const FriendsMenu = ({ chats, setChats }) => {
 
   const addChat = (friend) => {
     setChats((prevChats) => [friend, ...prevChats]);
-  };
+  }; 
 
   return (
     <article className={styles["friends-menu"]}>
