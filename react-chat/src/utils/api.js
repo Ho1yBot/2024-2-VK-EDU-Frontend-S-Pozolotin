@@ -13,7 +13,6 @@ export const registerUser = async (data) => {
 };
 
 export const loginUser = async (data) => {
-    console.log(data);
     const response = await fetch(`${API_URL}/auth/`, {
         method: 'POST',
         headers: {

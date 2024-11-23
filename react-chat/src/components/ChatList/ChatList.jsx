@@ -7,109 +7,79 @@ import { Messages } from "./../Message/Message";
 import { MessageForm } from "./../MessageForm/MessageForm";
 import useWebSocket from "../../hooks/useWebSocket";
 import { getAuthHeaders } from "../../utils/api";
+import FloatingButton from "../FloatingButton/FloatingButton";
 
 const ChatList = ({ currentChatId, onOpenChat, onClearMessages }) => {
-  const { chatId } = useParams();
-  const navigate = useNavigate();
-  const [messages, setMessages] = useState([]);
-  const [chats, setChats] = useState([
-    {
-      id: 1,
-      avatar: "/images/user-icon.svg",
-      title: "Andrew",
-      lastMessage: "Last message...",
-      time: "14:23",
-      isRead: true,
-      userId: 101,
-    },
-    {
-      id: 2,
-      avatar: "/images/user-icon.svg",
-      title: "Max",
-      lastMessage: "Last message...",
-      time: "16:27",
-      isRead: true,
-      userId: 102,
-    },
-  ]);
+   const { chatId } = useParams();
+   const navigate = useNavigate();
+   const [messages, setMessages] = useState([]);
+   const [chats, setChats] = useState(JSON.parse(localStorage.getItem("friendsChat")) || []);
 
-  // Подключаемся к WebSocket с помощью useWebSocket и получаем новые сообщения
-  const newMessages = useWebSocket(chatId);
+   useEffect(() => {
+      localStorage.setItem("friendsChat", JSON.stringify(chats))
+   }, [chats])
 
-  useEffect(() => {
-    if (chatId) {
-      console.log("Loading messages for chatId:", chatId); // Проверка перед загрузкой сообщений
-      const loadedMessages = loadMessages(chatId);
-      setMessages(loadedMessages);
-    }
-    const chat = chats.find((c) => c.id === Number(chatId));
-    if (chat) {
+   // Подключаемся к WebSocket с помощью useWebSocket и получаем новые сообщения
+   const newMessages = useWebSocket(chatId);
+   useEffect(() => {
+      if (chatId) {
+         console.log("Loading messages for chatId:", chatId); // Проверка перед загрузкой сообщений
+         const loadedMessages = loadMessages(chatId);
+         setMessages(loadedMessages);
+      }
       const chat = chats.find((c) => c.id === Number(chatId));
       if (chat) {
-        onOpenChat(chat.id, chat.title);
+         onOpenChat(chat.id, chat.title);
       }
-    }
-  }, [chatId, onClearMessages]);
+   }, [chatId, onClearMessages]);
 
-  // Добавляем новые сообщения из WebSocket в список сообщений
-  useEffect(() => {
-    if (newMessages.length > 0) {
-      setMessages((prevMessages) => [...prevMessages, ...newMessages]);
-    }
-  }, [newMessages]);
+   // Добавляем новые сообщения из WebSocket в список сообщений
+   useEffect(() => {
+      if (newMessages.length > 0) {
+         setMessages((prevMessages) => [...prevMessages, ...newMessages]);
+      }
+   }, [newMessages]);
 
-  return (
-    <div className={styles["chat-container"]}>
-      <div
-        id="chat-list-component"
-        className={styles["chat-list-component"]}
-        style={{ display: currentChatId ? "none" : "flex" }}
-      >
-        {chats.map((chat) => (
-          <button
-            key={chat.id}
-            className={styles["chat-item"]}
-            onClick={() => {
-              navigate(`/chat/${chat.id}`);
-            }}
-          >
-            <div className={styles["chat-info-wrp"]}>
-              <img src={chat.avatar} alt="Avatar" />
-              <div className={styles["chat-info"]}>
-                <h3>{chat.title}</h3>
-                <p>{chat.lastMessage}</p>
-              </div>
+   return (
+      <div className={styles["chat-container"]}>
+         <div id="chat-list-component" className={styles["chat-list-component"]} style={{ display: currentChatId ? "none" : "flex" }}>
+            {chats.map((chat) => (
+               <button
+                  key={chat.id}
+                  className={styles["chat-item"]}
+                  onClick={() => {
+                     navigate(`/chat/${chat.id}`);
+                  }}
+               >
+                  <div className={styles["chat-info-wrp"]}>
+                     <img src={chat.avatar || "./images/user-icon.svg"} alt="Avatar" />
+                     <div className={styles["chat-info"]}>
+                        <h3>{chat.username}</h3>
+                        <p>{chat.lastMessage}</p>
+                     </div>
+                  </div>
+                  <div className={styles["chat-time"]}>
+                     <span>{chat.last_online_at}</span>
+                     {chat.isRead && <span className={styles["read-status"]}>✓✓</span>}
+                  </div>
+               </button>
+            ))}
+         </div>
+         <FloatingButton chats={chats} setChats={setChats} />
+         {currentChatId && (
+            <div className={styles["chat-window"]}>
+               <Messages messages={messages} />
+               <MessageForm
+                  chatId={currentChatId}
+                  onMessageSend={(newMessage) => {
+                     console.log("New message sent:", newMessage); // Проверка отправленного сообщения
+                     setMessages((prevMessages) => [...prevMessages, newMessage]);
+                  }}
+               />
             </div>
-            <div className={styles["chat-time"]}>
-              <span>{chat.time}</span>
-              {chat.isRead && <span className={styles["read-status"]}>✓✓</span>}
-            </div>
-          </button>
-        ))}
+         )}
       </div>
-      {currentChatId && (
-        <div className={styles["chat-window"]}>
-          <Messages messages={messages} />
-          <MessageForm
-            chatId={currentChatId}
-            onMessageSend={(newMessage) => {
-              console.log("New message sent:", newMessage); // Проверка отправленного сообщения
-              setMessages((prevMessages) => [...prevMessages, newMessage]);
-            }}
-          />
-        </div>
-      )}
-    </div>
-  );
+   );
 };
-
-export const GetMessage = async () => {
-  const response = await fetch(`https://vkedu-fullstack-div2.ru/api/users/`, {headers: getAuthHeaders()});
-  const data = await response.json();
-  console.log(data);
-  return data;
-};
-
-GetMessage()
 
 export default ChatList;

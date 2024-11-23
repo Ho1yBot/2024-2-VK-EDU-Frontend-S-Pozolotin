@@ -1,13 +1,6 @@
 // App.jsx
 import React, { useState, useEffect } from "react";
-import {
-  HashRouter,
-  Routes,
-  Route,
-  Navigate,
-  useNavigate,
-  useLocation,
-} from "react-router-dom";
+import { HashRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import ChatList from "./components/ChatList/ChatList";
 import Header from "./components/Header/Header";
 import FloatingButton from "./components/FloatingButton/FloatingButton";
@@ -92,10 +85,7 @@ const AppContent = () => {
         />
       )}
       <Routes>
-        <Route
-          path="/"
-          element={<ChatList currentChatId={null} onOpenChat={openChat} />}
-        />
+        <Route path="/" element={<ChatList currentChatId={null} onOpenChat={openChat} />} />
         <Route
           path="/chat/:chatId"
           element={
@@ -113,7 +103,7 @@ const AppContent = () => {
         />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-      {!currentChatId && <FloatingButton />}
+      {/* {!currentChatId && <FloatingButton />} */}
     </div>
   );
 };
@@ -124,19 +114,11 @@ const App = () => {
   // Проверяем, есть ли токен при загрузке приложения
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
-    if (accessToken) {
+    if (accessToken && accessToken !== "undefined") {
       setIsAuthenticated(true);
     }
   }, []);
-  return (
-    <HashRouter>
-      {isAuthenticated ? (
-        <AppContent />
-      ) : (
-        <LoginPage onLoginSuccess={() => setIsAuthenticated(true)} />
-      )}
-    </HashRouter>
-  );
+  return <HashRouter>{isAuthenticated ? <AppContent /> : <LoginPage onLoginSuccess={() => setIsAuthenticated(true)} />}</HashRouter>;
 };
 
 export default App;
