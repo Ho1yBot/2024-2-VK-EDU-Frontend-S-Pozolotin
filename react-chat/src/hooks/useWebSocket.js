@@ -1,33 +1,33 @@
-// src/hooks/useWebSocket.js
-import { useEffect, useState } from 'react';
-import { Centrifuge } from 'centrifuge';
-import { getAuthHeaders } from './../utils/api';
+import { useEffect, useState } from "react";
+import { Centrifuge } from "centrifuge";
+import { getAuthHeaders } from "./../utils/api";
 
-const useWebSocket = (ID) => {
+const useWebSocket = (chatId) => {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    if (!ID) return;
+    if (!chatId) return;
 
-    const centrifuge = new Centrifuge('wss://vkedu-fullstack-div2.ru/connection/websocket/', {
-      getToken: (ctx) => fetch(`https://vkedu-fullstack-div2.ru/api/centrifugo/connect/`, {
-        method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify(ctx),
-      }).then((res) => res.json().then((data) => data.token)),
+    const centrifuge = new Centrifuge("wss://vkedu-fullstack-div2.ru/connection/websocket/", {
+      getToken: (ctx) =>
+        fetch("https://vkedu-fullstack-div2.ru/api/centrifugo/connect/", {
+          method: "POST",
+          headers: getAuthHeaders(),
+          body: JSON.stringify(ctx),
+        }).then((res) => res.json().then((data) => data.token)),
     });
 
-    const subscription = centrifuge.newSubscription(ID, {
-      getToken: (ctx) => fetch(`https://vkedu-fullstack-div2.ru/api/centrifugo/subscribe/`, {
-        method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify(ctx),
-      }).then((res) => res.json().then((data) => data.token)),
+    const subscription = centrifuge.newSubscription(chatId, {
+      getToken: (ctx) =>
+        fetch("https://vkedu-fullstack-div2.ru/api/centrifugo/subscribe/", {
+          method: "POST",
+          headers: getAuthHeaders(),
+          body: JSON.stringify(ctx),
+        }).then((res) => res.json().then((data) => data.token)),
     });
 
-    subscription.on('publication', (ctx) => {
-      console.log(ctx);
-      setMessages((prev) => [...prev, ctx.data]); // Добавляем новое сообщение
+    subscription.on("publication", (ctx) => {
+      setMessages((prev) => [...prev, ctx.data]);
     });
 
     subscription.subscribe();
@@ -36,7 +36,7 @@ const useWebSocket = (ID) => {
     return () => {
       centrifuge.disconnect();
     };
-  }, [ID]);
+  }, [chatId]);
 
   return messages;
 };

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { saveMessage } from "./../Storage/Storage";
 import AttachFile from "./../AttachFile/AttachFile";
 import styles from "./MessageForm.module.scss";
+import { getAuthHeaders, fetchMessagesFromBackend, sendMessageToBackend } from "../../utils/api";
 
 export function MessageForm({ chatId, onMessageSend }) {
   const [messageText, setMessageText] = useState("");
@@ -26,7 +27,7 @@ export function MessageForm({ chatId, onMessageSend }) {
   };
 
   // Отправка сообщения при отправке формы
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (!messageText && !attachedFile) return;
 
@@ -36,16 +37,23 @@ export function MessageForm({ chatId, onMessageSend }) {
       reader.onload = () => {
         const fileContent = reader.result;
         const isImage = attachedFile.type.startsWith("image/");
-        
+
         // Проверка, является ли файл изображением или обычным файлом
-        sendMessage(
-          messageText,
-          isImage ? { type: "image", content: fileContent } : { type: "file", content: fileContent, name: attachedFile.name }
-        );
+        sendMessage(messageText, isImage ? { type: "image", content: fileContent } : { type: "file", content: fileContent, name: attachedFile.name });
       };
     } else {
       sendMessage(messageText);
     }
+    const files = attachedFile ? [attachedFile] : [];
+    try {
+      const newMessage = await sendMessageToBackend(chatId, messageText, files);
+      onMessageSend(newMessage);
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+
+    setMessageText("");
+    setAttachedFile(null);
   };
 
   // Обработка выбора файла
@@ -57,12 +65,9 @@ export function MessageForm({ chatId, onMessageSend }) {
     reader.onload = () => {
       const fileContent = reader.result;
       const isImage = file.type.startsWith("image/");
-      
+
       // Отправка файла сразу в чат
-      sendMessage(
-        "",
-        isImage ? { type: "image", content: fileContent } : { type: "file", content: fileContent, name: file.name }
-      );
+      sendMessage("", isImage ? { type: "image", content: fileContent } : { type: "file", content: fileContent, name: file.name });
     };
 
     setAttachedFile(null);
@@ -85,11 +90,7 @@ export function MessageForm({ chatId, onMessageSend }) {
         onKeyDown={handleKeyDown}
         placeholder="Введите сообщение"
       />
-      {attachedFile && (
-        <div className={styles["attached-file-info"]}>
-          Файл: {attachedFile.name} прикреплен
-        </div>
-      )}
+      {attachedFile && <div className={styles["attached-file-info"]}>Файл: {attachedFile.name} прикреплен</div>}
       <div className={styles["form-buttons"]}>
         <AttachFile onFileSelect={handleFileSelect} />
         <button type="submit" className={styles["send-button"]}>

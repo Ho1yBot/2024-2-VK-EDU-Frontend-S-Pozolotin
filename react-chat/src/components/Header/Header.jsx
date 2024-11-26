@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./Header.module.scss";
 import Menu from "./../Menu/Menu";
 
-const Header = ({ currentChatTitle, chatId, onBackClick, onClearMessages, onOpenProfile }) => {
+const Header = ({ chatId, currentChatTitle, onBackClick, onClearMessages, onOpenProfile }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -12,33 +12,33 @@ const Header = ({ currentChatTitle, chatId, onBackClick, onClearMessages, onOpen
 
   useEffect(() => {
     setMenuOpen(false);
-  }, [currentChatTitle]);
+  }, [chatId]);
 
   const handleTitleClick = () => {
-    if (currentChatTitle && onOpenProfile) {
+    if (chatId && onOpenProfile) {
       onOpenProfile(chatId); // Открываем профиль для текущего чата
     }
   };
 
   return (
     <header className={styles.header}>
-      {!currentChatTitle && (
+      {!chatId && (
         <button className={styles["header__burger-menu"]} onClick={toggleMenu}>
           <img src="/images/burger-menu.svg" alt="Кнопка меню" />
         </button>
       )}
       <button className={styles.header__title} onClick={handleTitleClick}>
         <div className={styles["header__title-text"]}>
-          {currentChatTitle ? `Chat with ${currentChatTitle}`: "Messenger"}
+          {chatId ? `Chat with ${currentChatTitle}`: "Messenger"}
         </div>
       </button>
       <nav className={styles.header__nav}>
         <button className={styles["header__nav-searchButton"]}>
           <img src="/images/search-icon.svg" alt="Search" />
         </button>
-        {currentChatTitle && <Menu chatId={chatId} onClearMessages={onClearMessages} />}
+        {chatId && <Menu chatId={chatId} onClearMessages={onClearMessages} />}
       </nav>
-      {currentChatTitle && (
+      {chatId && (
         <button className={styles.back_button} onClick={onBackClick}>
           <img src="/images/arrow-back.svg" alt="Back to chat list" />
         </button>
