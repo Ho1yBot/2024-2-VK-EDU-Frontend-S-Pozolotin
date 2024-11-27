@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styles from "./FriendsMenu.module.scss";
-import { getAuthHeaders } from "../../utils/api";
+import { createChat, getAuthHeaders, getCurrentUser } from "../../utils/api";
 
 const FriendsMenu = ({ chats, setChats }) => {
   const [listFriends, setListFriends] = useState([]);
@@ -37,6 +37,12 @@ const FriendsMenu = ({ chats, setChats }) => {
     setChats((prevChats) => [friend, ...prevChats]);
   };
 
+  const getCurrentUserId = async () => {
+    const myId = await getCurrentUser();
+    
+    return myId.id
+  }
+
   return (
     <article className={styles["friends-menu"]}>
       <input
@@ -50,7 +56,12 @@ const FriendsMenu = ({ chats, setChats }) => {
           <button
             key={friend.id}
             className={styles["friends-button"]}
-            onClick={() => addChat(friend)}
+            onClick={() => {addChat(friend); createChat({
+              members: [friend.id],
+              is_private: true,
+              title: friend.first_name,
+              avatar: null
+            })}}
           >
             <div className={styles["friend-info"]}>
               <img

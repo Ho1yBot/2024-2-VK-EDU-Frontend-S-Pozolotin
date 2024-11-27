@@ -1,4 +1,4 @@
-const API_URL = 'https://vkedu-fullstack-div2.ru/api';
+export const API_URL = 'https://vkedu-fullstack-div2.ru/api';
 
 // Регистрация пользователя
 export const registerUser = async (data) => {
@@ -55,6 +55,15 @@ export const refreshToken = async () => {
     }
 };
 
+// Получаем свой ID
+export const getCurrentUser = async () => {
+    const response = await fetch(`${API_URL}/user/current/`, {
+        headers: getAuthHeaders()
+    })
+
+    return response.json()
+}
+
 // Получение сообщений из чата
 export const fetchChatMessages = async () => {
     const response = await fetch(`${API_URL}/messages/`, {
@@ -84,63 +93,68 @@ export const createChat = async (data) => {
     return response.json();
 };
 
+export const getAllChats = async (page, page_size, search) =>{
+    const response = await fetch(`${API_URL}/chats/`,
+        {
+            method: 'GET',
+            headers: getAuthHeaders()
+        }
+    )
+    // const data = await ;
+    return response.json()
+}
+
 // Удаление сообщения
-export const deleteMessage = async (chatId, messageId) => {
-    const response = await fetch(`${API_URL}/chats/${chatId}/messages/${messageId}/`, {
-        method: 'DELETE',
-        headers: getAuthHeaders(),
-    });
-    if (!response.ok) {
-        throw new Error('Failed to delete message');
-    }
-    return response.status;
-};
+// export const deleteMessage = async (chatId, messageId) => {
+//     const response = await fetch(`${API_URL}/chats/${chatId}/messages/${messageId}/`, {
+//         method: 'DELETE',
+//         headers: getAuthHeaders(),
+//     });
+//     if (!response.ok) {
+//         throw new Error('Failed to delete message');
+//     }
+//     return response.status;
+// };
 
 // Отправка сообщения на сервер
-export const sendMessageToBackend = async (chat, text = null, files = [], voice = null) => {
-    const formData = new FormData();
-    formData.append('chat', chat);
-    if (text) formData.append('text', text);
-    if (voice) formData.append('voice', voice);
-    if (files.length > 0) {
-        files.forEach((file) => formData.append('files', file));
-    }
+// export const sendMessageToBackend = async (chat, text = null, files = [], voice = null) => {
+//     const formData = new FormData();
+//     formData.append('chat', chat);
+//     if (text) formData.append('text', text);
+//     if (voice) formData.append('voice', voice);
+//     if (files.length > 0) {
+//         files.forEach((file) => formData.append('files', file));
+//     }
 
-    const response = await fetch(`${API_URL}/messages/`, {
-        method: 'POST',
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`, // Только заголовок авторизации
-        },
-        body: formData,
-    });
+//     const response = await fetch(`${API_URL}/messages/`, {
+//         method: 'POST',
+//         // headers: {
+//         //     Authorization: `Bearer ${localStorage.getItem('accessToken')}`, // Только заголовок авторизации
+//         // },
+//         headers: getAuthHeaders(),
+//         body: formData,
+//     });
 
-    if (!response.ok) {
-        console.error("Send message error details:", await response.text());
-        throw new Error('Failed to send message');
-    }
+//     if (!response.ok) {
+//         throw new Error('Failed to send message');
+//     }
 
-    return response.json(); // Возвращает объект сообщения
-};
+//     return response.json(); // Возвращает объект сообщения
+// };
 
 
 // Загрузка сообщений с сервера
-export const fetchMessagesFromBackend = async (chat, page = 1, pageSize = 20) => {
-    const queryParams = new URLSearchParams({
-        chat,
-        page: page.toString(),
-        page_size: pageSize.toString(),
-    });
+// export const fetchMessagesFromBackend = async (chat, page = 1, pageSize = 20) => {
+//     
+//     const response = await fetch(`${API_URL}/messages/?chat=${chat}`, {
+//         method: 'GET',
+//         headers: getAuthHeaders(),
+//     });
 
-    const response = await fetch(`${API_URL}/messages/?${queryParams.toString()}`, {
-        method: 'GET',
-        headers: getAuthHeaders(),
-    });
+//     if (!response.ok) {
+//         throw new Error('Failed to fetch messages');
+//     }
 
-    if (!response.ok) {
-        console.error("Fetch error details:", await response.text());
-        throw new Error('Failed to fetch messages');
-    }
-
-    return response.json(); // Возвращает объект с count, next, previous, results
-};
+//     return response.json(); // Возвращает объект с count, next, previous, results
+// };
 

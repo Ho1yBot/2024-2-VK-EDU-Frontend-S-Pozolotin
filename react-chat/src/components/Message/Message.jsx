@@ -1,4 +1,3 @@
-// components/Message/Message.jsx
 import React, { useEffect, useRef } from "react";
 import styles from "./Message.module.scss";
 
@@ -14,16 +13,23 @@ export function Messages({ messages }) {
       {messages.map((message, index) => (
         <div key={index} className={styles["message-container"]}>
           <div className={styles["message-sender"]}>{message.sender}</div>
-          <div className={styles["message-text"]}>{message.text}</div>
+          <div className={styles["message-text"]}>
+            {message.text.startsWith("http") ? (
+              <a href={message.text} target="_blank" rel="noopener noreferrer">
+                {message.text}
+              </a>
+            ) : (
+              message.text
+            )}
+          </div>
+          {message.file && message.file.type === "image" && (
+            <img
+              src={message.file.content}
+              alt="Отправленное изображение"
+              className={styles["message-image"]}
+            />
+          )}
           <div className={styles["message-time"]}>{message.time}</div>
-          {message.files &&
-            message.files.map((file, idx) => (
-              <div key={idx} className={styles["message-file"]}>
-                <a href={file.item} download>
-                  Скачать файл
-                </a>
-              </div>
-            ))}
         </div>
       ))}
       <div ref={messagesEndRef} />

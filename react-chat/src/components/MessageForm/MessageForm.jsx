@@ -2,101 +2,97 @@ import React, { useState } from "react";
 import { saveMessage } from "./../Storage/Storage";
 import AttachFile from "./../AttachFile/AttachFile";
 import styles from "./MessageForm.module.scss";
-import { getAuthHeaders, fetchMessagesFromBackend, sendMessageToBackend } from "../../utils/api";
+// import { sendMessageToBackend } from "../../utils/api";
 
 export function MessageForm({ chatId, onMessageSend }) {
   const [messageText, setMessageText] = useState("");
   const [attachedFile, setAttachedFile] = useState(null);
 
-  const sendMessage = (text, file) => {
-    const message = {
-      text: text || "",
-      sender: "Вы",
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      file: file || null,
-    };
-
-    saveMessage(chatId, message);
-    onMessageSend(message);
-
-    setMessageText("");
-    setAttachedFile(null);
-  };
-
-  // Отправка сообщения при отправке формы
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (!messageText && !attachedFile) return;
-
-    if (attachedFile) {
-      const reader = new FileReader();
-      reader.readAsDataURL(attachedFile);
-      reader.onload = () => {
-        const fileContent = reader.result;
-        const isImage = attachedFile.type.startsWith("image/");
-
-        // Проверка, является ли файл изображением или обычным файлом
-        sendMessage(messageText, isImage ? { type: "image", content: fileContent } : { type: "file", content: fileContent, name: attachedFile.name });
-      };
-    } else {
-      sendMessage(messageText);
-    }
-    const files = attachedFile ? [attachedFile] : [];
+  const sendMessage = async (chatId, text, file) => {
+    const files = file ? [file] : [];
     try {
-      const newMessage = await sendMessageToBackend(chatId, messageText, files);
+      const newMessage = await sendMessageToBackend(chatId, text, files);
       onMessageSend(newMessage);
+      setMessageText("");
+      setAttachedFile(null);
     } catch (error) {
       console.error("Error sending message:", error);
     }
-
-    setMessageText("");
-    setAttachedFile(null);
   };
 
-  // Обработка выбора файла
+  const handleLocationClick = () => {
+    if (!navigator.geolocation) {
+      alert("Ваш браузер не поддерживает геолокацию.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        const mapLink = `https://www.openstreetmap.org/#map=18/${latitude}/${longitude}`;
+        sendMessage(mapLink);
+      },
+      (error) => {
+        let errorMessage = "Не удалось получить геолокацию.";
+        switch (error.code) {
+          case 1: // PERMISSION_DENIED
+            errorMessage = "Вы запретили доступ к геолокации.";
+            break;
+          case 2: // POSITION_UNAVAILABLE
+            errorMessage = "Ваше местоположение недоступно.";
+            break;
+          case 3: // TIMEOUT
+            errorMessage = "Истекло время ожидания ответа от службы геолокации.";
+            break;
+          default:
+            errorMessage = "Произошла неизвестная ошибка при получении геолокации.";
+        }
+        console.error("Error getting location:", error);
+        alert(errorMessage);
+      },
+    );
+  };
+
   const handleFileSelect = (file) => {
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      const fileContent = reader.result;
-      const isImage = file.type.startsWith("image/");
-
-      // Отправка файла сразу в чат
-      sendMessage("", isImage ? { type: "image", content: fileContent } : { type: "file", content: fileContent, name: file.name });
-    };
-
-    setAttachedFile(null);
+    setAttachedFile(file);
   };
 
-  // Обработка нажатия Enter для отправки сообщения
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter" && !event.shiftKey) {
-      event.preventDefault();
-      handleSubmit(event);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!messageText && !attachedFile) return;
+    sendMessage(messageText, attachedFile);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    if (e.dataTransfer.files.length > 0) {
+      const file = e.dataTransfer.files[0];
+      handleFileSelect(file);
     }
   };
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
+    <form className={styles.form} onSubmit={handleSubmit} onDragOver={handleDragOver} onDrop={handleDrop}>
       <textarea
         className={styles["form-input"]}
         value={messageText}
         onChange={(e) => setMessageText(e.target.value)}
-        onKeyDown={handleKeyDown}
         placeholder="Введите сообщение"
       />
-      {attachedFile && <div className={styles["attached-file-info"]}>Файл: {attachedFile.name} прикреплен</div>}
       <div className={styles["form-buttons"]}>
+        <button type="button" onClick={handleLocationClick}>
+          Отправить локацию
+        </button>
         <AttachFile onFileSelect={handleFileSelect} />
         <button type="submit" className={styles["send-button"]}>
-          <img src="/images/send-icon.svg" alt="Отправить сообщение" />
+          <img src="/images/send-icon.svg" alt="Отправить" />
         </button>
       </div>
+      {attachedFile && <div className={styles["attached-file"]}>Файл: {attachedFile.name}</div>}
     </form>
   );
 }
