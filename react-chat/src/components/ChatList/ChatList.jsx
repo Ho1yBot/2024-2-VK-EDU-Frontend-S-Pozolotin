@@ -11,7 +11,7 @@ import FloatingButton from "../FloatingButton/FloatingButton";
 
 const ChatList = ({ currentChatId, currentChatTitle, onOpenChat, onClearMessages }) => {
   const { chatId } = useParams();
-  const navigate = useNavigate();
+  const navigate = useNavigate("/");
   const [messages, setMessages] = useState([]);
   const [chats, setChats] = useState(JSON.parse(localStorage.getItem("friendsChat")) || []);
   const [allChats, setAllChats] = useState([]);

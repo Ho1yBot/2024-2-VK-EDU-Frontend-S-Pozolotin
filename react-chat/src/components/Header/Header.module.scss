@@ -111,3 +111,36 @@
     border: 1px solid #8e24aa;
   }
 }
+
+.burger {
+  &-menu-container {
+    position: absolute; 
+    background-color: rgba(142, 36, 170, 0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    min-height: 31em; 
+    top: 47px;
+    left: 0;
+    max-width: 300px; 
+    width: 100%; 
+    padding: 20px 20px 10px;
+    z-index: 1000; 
+    transition: transform 0.3s ease-in-out; 
+    transform: translateX(-100%); 
+  }
+
+  &-menu-container.open {
+    transform: translateX(0); 
+  }
+
+  &-menu {
+    display: flex;
+    justify-content: center;
+    max-width: 100px;
+    padding: 10px 20px;
+    border: none;
+    color: black;
+    text-align: left;
+  }
+}
