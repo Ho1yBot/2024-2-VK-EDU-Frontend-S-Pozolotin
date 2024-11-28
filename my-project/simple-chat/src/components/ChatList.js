@@ -64,7 +64,6 @@ export function ChatList() {
         chatContainer.appendChild(chatItem);
     });
 
-
     // Функция для открытия чата
     function openChat(chatId, chatTitle) {
         setCurrentChat(chatId);
@@ -86,6 +85,9 @@ export function ChatList() {
             </div>
             <div class="messages-container"></div>
         `;
+
+        const headerTitle = document.querySelector(".header_title-text");
+        headerTitle.textContent = chatTitle;
 
         // Добавляем компонент окна чата после заголовка
         const header = document.getElementById('header-component');
@@ -136,9 +138,11 @@ export function ChatList() {
         if (addChatButton) {
             addChatButton.style.display = 'none';
         }
+        
+        const messagesDiv = document.querySelector('.messages-container');
+        document.querySelector('.chat-window').scrollTop = messagesDiv.scrollHeight;
     }
 
-    // Функция для закрытия чата
     function closeChat() {
         const chatComponent = document.querySelector('.chat-window');
         const formElement = document.querySelector('.form');
@@ -166,10 +170,12 @@ export function ChatList() {
     function loadMessagesToDOM(chatId) {
         const messages = loadMessages(chatId);
         const messagesDiv = document.querySelector('.messages-container');
-        messages.forEach((message) => addMessageToDOM(message, messagesDiv));
+        messages.forEach((message) => addMessageToDOM(message, messagesDiv)); // Добавляем каждое сообщение в DOM
 
+        // Прокручиваем контейнер к последнему сообщению
         document.querySelector('.chat-window').scrollTop = messagesDiv.scrollHeight;
     }
+
 
     // Функция для сохранения текущего чата
     function setCurrentChat(chatId) {
@@ -177,4 +183,6 @@ export function ChatList() {
     }
 
     return chatContainer;
+
+
 }

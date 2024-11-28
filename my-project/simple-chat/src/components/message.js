@@ -11,8 +11,6 @@ export function clearMessages(chatId) {
 }
 
 
-
-
 export function handleSubmit(event) {
     event.preventDefault();
     const input = document.querySelector('.form-input');
@@ -39,6 +37,7 @@ export function handleSubmit(event) {
     if (chatWindow) {
         chatWindow.scrollTop = chatWindow.scrollHeight;
     }
+
 }
 
 export function updateLastMessage(chatId, message) {
@@ -67,13 +66,14 @@ export function updateLastMessage(chatId, message) {
     }
 }
 
+
 export function handleKeyPress(event) {
     if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
-        
+
         // Создаем событие submit с отменяемым поведением
         const submitEvent = new Event('submit', { cancelable: true });
-        
+
         // Отправляем событие на форму
         const form = document.querySelector('form');
         if (form) {
