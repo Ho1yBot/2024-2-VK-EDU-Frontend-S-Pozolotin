@@ -44,10 +44,6 @@ const ChatList = ({ currentChatId, onOpenChat, onClearMessages }) => {
     }
   };
 
-  // useEffect(() => {
-  //   localStorage.setItem("friendsChat", JSON.stringify(chats));
-  // }, [chats]);
-
   // Подключаемся к WebSocket с помощью useWebSocket и получаем новые сообщения
   const newMessages = useWebSocket(chatId);
 

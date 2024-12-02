@@ -7,7 +7,6 @@ export function MessageForm({ chatId, droppedFile, onMessageSend }) {
   const [messageText, setMessageText] = useState("");
   const [attachedFile, setAttachedFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false); // Состояние для отображения эффекта перетаскивания
-  const [renderMessages, setRenderMessages] = useState();
 
   useEffect(() => {
     if (droppedFile) {
