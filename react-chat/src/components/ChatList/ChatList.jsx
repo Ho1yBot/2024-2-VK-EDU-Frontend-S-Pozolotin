@@ -2,27 +2,47 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styles from "./ChatList.module.scss";
-import { loadMessages } from "./../Storage/Storage";
 import { Messages } from "./../Message/Message";
 import { MessageForm } from "./../MessageForm/MessageForm";
 import useWebSocket from "../../hooks/useWebSocket";
-import { getAuthHeaders, getAllChats } from "../../utils/api";
+import { getAuthHeaders, getAllChats, fetchMessagesFromBackend } from "../../utils/api";
 import FloatingButton from "../FloatingButton/FloatingButton";
 
-const ChatList = ({ currentChatId, currentChatTitle, onOpenChat, onClearMessages }) => {
+const ChatList = ({ currentChatId, onOpenChat, onClearMessages }) => {
   const { chatId } = useParams();
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [chats, setChats] = useState(JSON.parse(localStorage.getItem("friendsChat")) || []);
   const [allChats, setAllChats] = useState([]);
+  const [dragging, setDragging] = useState(false);
+  const [droppedFile, setDroppedFile] = useState(null);
   useEffect(() => {
     const checkChats = async () => {
       const allChats = await getAllChats();
-      setAllChats(allChats.results);
+      setAllChats(allChats);
     };
 
     checkChats();
   }, []);
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragging(false);
+    if (e.dataTransfer.files.length > 0) {
+      const file = e.dataTransfer.files[0];
+      setDroppedFile(file); // Передаём файл в MessageForm через состояние
+    }
+  };
 
   // useEffect(() => {
   //   localStorage.setItem("friendsChat", JSON.stringify(chats));
@@ -32,18 +52,13 @@ const ChatList = ({ currentChatId, currentChatTitle, onOpenChat, onClearMessages
   const newMessages = useWebSocket(chatId);
 
   useEffect(() => {
-    if (chatId) {
-      const loadedMessages = loadMessages(chatId);
-      setMessages(loadedMessages);
+    if (chatId && allChats[0]?.results.length > 0) {
+      const chat = allChats[0]?.results.find((c) => c.id === chatId);
+      if (chat) {
+        onOpenChat(chat.id, chat.title);
+      }
     }
-    const chat = allChats.find((c) => {
-      return c.id === chatId;
-    });
-
-    if (chat) {
-      onOpenChat(allChats.id, `${allChats.first_name} ${allChats.last_name}`);
-    }
-  }, [chatId, onClearMessages]);
+  }, [chatId, allChats, onClearMessages]);
 
   // Добавляем новые сообщения из WebSocket в список сообщений
   useEffect(() => {
@@ -52,28 +67,29 @@ const ChatList = ({ currentChatId, currentChatTitle, onOpenChat, onClearMessages
     }
   }, [newMessages]);
 
-  // useEffect(() => {
-  //   const loadChatMessages = async () => {
-  //     try {
-  //       const response = await fetchMessagesFromBackend(chatId);
-  //       setMessages(response.results); // Используем только массив сообщений
-  //     } catch (error) {
-  //       console.error("Error loading messages:", error);
-  //     }
-  //   };
+  useEffect(() => {
+    const loadChatMessages = async () => {
+      try {
+        const response = await fetchMessagesFromBackend(chatId);
+        setMessages(response.results.reverse());
+      } catch (error) {
+        console.error("Error loading messages:", error);
+      }
+    };
 
-  //   if (chatId) {
-  //     loadChatMessages();
-  //   }
-  // }, [chatId]);
+    if (chatId) {
+      loadChatMessages();
+    }
+  }, [chatId]);
+
   return (
-    <div className={styles["chat-container"]}>
+    <div className={styles["chat-container"]} onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
       {allChats.length === 0 ? (
-        <div>Loading...</div> 
+        <div>Loading...</div>
       ) : (
         <>
           <div id="chat-list-component" className={styles["chat-list-component"]} style={{ display: currentChatId ? "none" : "flex" }}>
-            {allChats.map((chat) => (
+            {allChats[0].results.map((chat) => (
               <button
                 key={chat.id}
                 className={styles["chat-item"]}
@@ -101,10 +117,10 @@ const ChatList = ({ currentChatId, currentChatTitle, onOpenChat, onClearMessages
               <Messages messages={messages} />
               <MessageForm
                 chatId={currentChatId}
-                onMessageSend={(newMessage) => {
-                  setMessages((prevMessages) => [...prevMessages, newMessage]);
-                }}
+                droppedFile={droppedFile} // Передаём файл в MessageForm
+                onMessageSend={(newMessage) => setMessages((prevMessages) => [...prevMessages, newMessage])} // Обновляем состояние
               />
+              {dragging && <div className={styles["drag-overlay"]}>Отпустите файл для загрузки</div>}
             </div>
           )}
         </>

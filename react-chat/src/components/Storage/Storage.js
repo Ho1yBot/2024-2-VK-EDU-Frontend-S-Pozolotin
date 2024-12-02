@@ -16,9 +16,9 @@ export function saveMessage(chatId, message) {
 }
 
 // Функция загрузки сообщений из localStorage для указанного чата
-export function loadMessages(chatId) {
-    return JSON.parse(localStorage.getItem(`messages_${chatId}`)) || [];
-}
+// export function loadMessages(chatId) {
+//     return JSON.parse(localStorage.getItem(`messages_${chatId}`)) || [];
+// }
 
 // Функция для очистки сообщений конкретного чата в localStorage
 export function clearMessages(chatId) {

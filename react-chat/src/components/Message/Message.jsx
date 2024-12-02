@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./Message.module.scss";
 
 export function Messages({ messages }) {
@@ -12,7 +12,7 @@ export function Messages({ messages }) {
     <div className={styles["messages-container"]}>
       {messages.map((message, index) => (
         <div key={index} className={styles["message-container"]}>
-          <div className={styles["message-sender"]}>{message.sender}</div>
+          <div className={styles["message-sender"]}>{`${message.sender.first_name} ${message.sender.last_name}`}</div>
           <div className={styles["message-text"]}>
             {message.text.startsWith("http") ? (
               <a href={message.text} target="_blank" rel="noopener noreferrer">

@@ -1,30 +1,58 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
+import styles from "./FileUpload.module.scss";
 
 const FileUpload = ({ onFileSelect }) => {
+  const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      console.log('Файл загружен:', file.name);
+      console.log("Файл загружен через input:", file.name);
       onFileSelect(file);
     }
   };
 
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true); // Показываем визуальный эффект
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false); // Убираем визуальный эффект
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false); // Убираем визуальный эффект
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const file = e.dataTransfer.files[0];
+      console.log("Файл загружен через Drop:", file.name);
+      onFileSelect(file);
+      e.dataTransfer.clearData();
+    }
+  };
+
   const handleButtonClick = () => {
-    // Программно вызываем клик по скрытому инпуту
-    fileInputRef.current.click();
+    fileInputRef.current.click(); // Открываем диалоговое окно выбора файла
   };
 
   return (
-    <div>
+    <div
+      className={`${styles.fileUpload} ${isDragging ? styles.dragging : ""}`}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
       <button onClick={handleButtonClick}>Загрузить файл</button>
-      <input 
-        type="file" 
-        ref={fileInputRef} 
-        style={{ display: 'none' }} 
-        onChange={handleFileChange} 
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: "none" }}
+        onChange={handleFileChange}
       />
+      {isDragging && <div className={styles.dragOverlay}>Отпустите файл для загрузки</div>}
     </div>
   );
 };

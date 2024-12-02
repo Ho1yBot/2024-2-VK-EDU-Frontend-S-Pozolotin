@@ -1,20 +1,28 @@
-import React, { useState } from "react";
-import { saveMessage } from "./../Storage/Storage";
+import React, { useState, useEffect } from "react";
 import AttachFile from "./../AttachFile/AttachFile";
 import styles from "./MessageForm.module.scss";
-// import { sendMessageToBackend } from "../../utils/api";
+import { sendMessageToBackend } from "../../utils/api";
 
-export function MessageForm({ chatId, onMessageSend }) {
+export function MessageForm({ chatId, droppedFile, onMessageSend }) {
   const [messageText, setMessageText] = useState("");
   const [attachedFile, setAttachedFile] = useState(null);
+  const [isDragging, setIsDragging] = useState(false); // Состояние для отображения эффекта перетаскивания
+  const [renderMessages, setRenderMessages] = useState();
 
-  const sendMessage = async (chatId, text, file) => {
+  useEffect(() => {
+    if (droppedFile) {
+      setAttachedFile(droppedFile); // Устанавливаем файл, переданный из `ChatList`
+    }
+  }, [droppedFile]);
+
+  const sendMessage = async (chatId, text, file, voice) => {
     const files = file ? [file] : [];
+
     try {
-      const newMessage = await sendMessageToBackend(chatId, text, files);
-      onMessageSend(newMessage);
+      const newMessage = await sendMessageToBackend(chatId, text, files, voice);
       setMessageText("");
       setAttachedFile(null);
+      onMessageSend(newMessage);
     } catch (error) {
       console.error("Error sending message:", error);
     }
@@ -30,18 +38,18 @@ export function MessageForm({ chatId, onMessageSend }) {
       (position) => {
         const { latitude, longitude } = position.coords;
         const mapLink = `https://www.openstreetmap.org/#map=18/${latitude}/${longitude}`;
-        sendMessage(mapLink);
+        sendMessage(chatId, mapLink, attachedFile, null);        
       },
       (error) => {
         let errorMessage = "Не удалось получить геолокацию.";
         switch (error.code) {
-          case 1: // PERMISSION_DENIED
+          case 1:
             errorMessage = "Вы запретили доступ к геолокации.";
             break;
-          case 2: // POSITION_UNAVAILABLE
+          case 2:
             errorMessage = "Ваше местоположение недоступно.";
             break;
-          case 3: // TIMEOUT
+          case 3:
             errorMessage = "Истекло время ожидания ответа от службы геолокации.";
             break;
           default:
@@ -49,7 +57,7 @@ export function MessageForm({ chatId, onMessageSend }) {
         }
         console.error("Error getting location:", error);
         alert(errorMessage);
-      },
+      }
     );
   };
 
@@ -60,23 +68,38 @@ export function MessageForm({ chatId, onMessageSend }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (!messageText && !attachedFile) return;
-    sendMessage(messageText, attachedFile);
+    sendMessage(chatId, messageText, attachedFile, null);
+    setRenderMessages()
   };
 
+  // Drag-and-drop event handlers
   const handleDragOver = (e) => {
     e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
+    setIsDragging(false);
     if (e.dataTransfer.files.length > 0) {
       const file = e.dataTransfer.files[0];
-      handleFileSelect(file);
+      setAttachedFile(file);
     }
   };
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit} onDragOver={handleDragOver} onDrop={handleDrop}>
+    <form
+      className={`${styles.form} ${isDragging ? styles["dragging"] : ""}`} // Добавляем класс при перетаскивании
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+      onSubmit={handleSubmit}
+    >
       <textarea
         className={styles["form-input"]}
         value={messageText}
@@ -92,7 +115,11 @@ export function MessageForm({ chatId, onMessageSend }) {
           <img src="/images/send-icon.svg" alt="Отправить" />
         </button>
       </div>
-      {attachedFile && <div className={styles["attached-file"]}>Файл: {attachedFile.name}</div>}
+      {attachedFile && (
+        <div className={styles["attached-file"]}>
+          Файл: {attachedFile.name}
+        </div>
+      )}
     </form>
   );
 }

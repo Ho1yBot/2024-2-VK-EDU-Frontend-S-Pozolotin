@@ -69,7 +69,7 @@ export const fetchChatMessages = async () => {
     const response = await fetch(`${API_URL}/messages/`, {
         headers: getAuthHeaders(),
     });
-    // const data = await 
+    
     return response.json();
 };
 
@@ -100,8 +100,8 @@ export const getAllChats = async (page, page_size, search) =>{
             headers: getAuthHeaders()
         }
     )
-    // const data = await ;
-    return response.json()
+    const data = await response.json();
+    return [data]
 }
 
 // Удаление сообщения
@@ -117,44 +117,50 @@ export const getAllChats = async (page, page_size, search) =>{
 // };
 
 // Отправка сообщения на сервер
-// export const sendMessageToBackend = async (chat, text = null, files = [], voice = null) => {
-//     const formData = new FormData();
-//     formData.append('chat', chat);
-//     if (text) formData.append('text', text);
-//     if (voice) formData.append('voice', voice);
-//     if (files.length > 0) {
-//         files.forEach((file) => formData.append('files', file));
-//     }
+export const sendMessageToBackend = async (chat, text = null, files = [], voice = null) => {
+    const formData = new FormData();
+    formData.append('chat', chat);
+    if (text) formData.append('text', text);
+    if (files.length > 0) {
+        files.forEach((file) => formData.append('files', file));
+    }
+    if (voice) formData.append('voice', voice);
+    
+    const Data = {
+        "chat": chat,
+        "voice": voice,
+        "text": text,
+        "files": files,
+    }
 
-//     const response = await fetch(`${API_URL}/messages/`, {
-//         method: 'POST',
-//         // headers: {
-//         //     Authorization: `Bearer ${localStorage.getItem('accessToken')}`, // Только заголовок авторизации
-//         // },
-//         headers: getAuthHeaders(),
-//         body: formData,
-//     });
+    const response = await fetch(`${API_URL}/messages/`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(Data),
+        // body: formData
+    });
 
-//     if (!response.ok) {
-//         throw new Error('Failed to send message');
-//     }
+    if (!response.ok) {
+        throw new Error('Failed to send message');
+    }
 
-//     return response.json(); // Возвращает объект сообщения
-// };
+    return response.json();
+};
 
 
 // Загрузка сообщений с сервера
-// export const fetchMessagesFromBackend = async (chat, page = 1, pageSize = 20) => {
-//     
-//     const response = await fetch(`${API_URL}/messages/?chat=${chat}`, {
-//         method: 'GET',
-//         headers: getAuthHeaders(),
-//     });
+export const fetchMessagesFromBackend = async (chat, page = 1, pageSize = 20) => {
+    
+    const response = await fetch(`${API_URL}/messages/?chat=${chat}&page=${page}&pageSize=${pageSize}`, {
+        method: 'GET',
+        headers: getAuthHeaders(),
+    });
 
-//     if (!response.ok) {
-//         throw new Error('Failed to fetch messages');
-//     }
 
-//     return response.json(); // Возвращает объект с count, next, previous, results
-// };
+    if (!response.ok) {
+        throw new Error('Failed to fetch messages');
+    }
+    
+    return response.json();
+};
 
