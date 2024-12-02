@@ -143,6 +143,15 @@ header button:hover {
     transform: scale(1.02);
 }
 
+.chat-item {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.chat-item:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.02);
+}
+
 .chat-item img {
     border-radius: 50%;
     width: 40px;
@@ -283,6 +292,38 @@ header button:hover {
     }
 }
 
+.floating-button:hover{
+    transform: scale(1.1);
+    animation: pulse 2s infinite;
+}
+
+
+@-webkit-keyframes pulse {
+    0% {
+      -webkit-box-shadow: 0 0 0 0 rgba(142, 36, 170, 0.4);
+    }
+    70% {
+        -webkit-box-shadow: 0 0 0 10px rgba(142, 36, 170, 0);
+    }
+    100% {
+        -webkit-box-shadow: 0 0 0 0 rgba(142, 36, 170, 0);
+    }
+  }
+  @keyframes pulse {
+    0% {
+      -moz-box-shadow: 0 0 0 0 rgba(142, 36, 170, 0.4);
+      box-shadow: 0 0 0 0 rgba(142, 36, 170, 0.4);
+    }
+    70% {
+        -moz-box-shadow: 0 0 0 10px rgba(142, 36, 170, 0);
+        box-shadow: 0 0 0 10px rgba(142, 36, 170, 0);
+    }
+    100% {
+        -moz-box-shadow: 0 0 0 0 rgba(142, 36, 170, 0);
+        box-shadow: 0 0 0 0 rgba(142, 36, 170, 0);
+    }
+  }
+
 .floating-button img {
     display: block;
 }
@@ -354,7 +395,6 @@ header button:hover {
         opacity: 0;
         transform: translateX(100%);
     }
-
     100% {
         opacity: 1;
         transform: translateX(0);
