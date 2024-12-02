@@ -9,6 +9,8 @@ export function ChatList() {
     const chatContainer = document.createElement('div');
     chatContainer.classList.add('chat-container');
 
+    let attachedFile = null; // Переменная для хранения прикрепленного файла
+
     const chats = [
         {
             id: 1,
