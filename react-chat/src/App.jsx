@@ -27,19 +27,18 @@ const App = () => {
       console.log(`Messages cleared for chat ID ${currentChatId}`);
     }
   };
-
   return (
     <div className="app-container">
       <Header
         currentChatTitle={currentChatTitle}
         chatId={currentChatId}
-        onBackClick={closeChat}
-        onClearMessages={handleClearMessages} 
+        backClick={closeChat}
+        clearMessages={handleClearMessages} 
       />
       <ChatList 
         currentChatId={currentChatId}
-        onOpenChat={openChat}
-        onClearMessages={clearTrigger} 
+        openChat={openChat}
+        clearMessages={clearTrigger} 
       />
       {/* FloatingButton отображается только если нет открытого чата */}
       {!currentChatId && <FloatingButton />}

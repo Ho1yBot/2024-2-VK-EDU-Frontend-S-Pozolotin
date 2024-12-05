@@ -1,18 +1,17 @@
 import React, { useRef } from "react";
 
-const FileUpload = ({ onFileSelect }) => {
+const FileUpload = ({ fileSelect }) => {
   const fileInputRef = useRef(null);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       console.log('Файл загружен:', file.name);
-      onFileSelect(file);
+      fileSelect(file);
     }
   };
 
   const handleButtonClick = () => {
-    // Программно вызываем клик по скрытому инпуту
     fileInputRef.current.click();
   };
 
