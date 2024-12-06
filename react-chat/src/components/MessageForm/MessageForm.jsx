@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { saveMessage } from "./../Storage/Storage";
-import AttachFile from "./../AttachFile/AttachFile";
+import { saveMessage } from "../Storage/Storage";
+import AttachFile from "../AttachFile/AttachFile";
 import styles from "./MessageForm.module.scss";
 
-export function MessageForm({ chatId, onMessageSend }) {
+export function MessageForm({ chatId, messageSend }) {
   const [messageText, setMessageText] = useState("");
   const [attachedFile, setAttachedFile] = useState(null);
 
@@ -19,7 +19,7 @@ export function MessageForm({ chatId, onMessageSend }) {
     };
 
     saveMessage(chatId, message);
-    onMessageSend(message);
+    messageSend(message);
 
     setMessageText("");
     setAttachedFile(null);
@@ -61,7 +61,7 @@ export function MessageForm({ chatId, onMessageSend }) {
       // Отправка файла сразу в чат
       sendMessage(
         "",
-        isImage ? { type: "image", content: fileContent } : { type: "file", content: fileContent, name: file.name }
+        isImage ? { type: "image", content: fileContent, name: file.name } : { type: "file", content: fileContent, name: file.name }
       );
     };
 
@@ -91,7 +91,7 @@ export function MessageForm({ chatId, onMessageSend }) {
         </div>
       )}
       <div className={styles["form-buttons"]}>
-        <AttachFile onFileSelect={handleFileSelect} />
+        <AttachFile fileSelect={handleFileSelect} />
         <button type="submit" className={styles["send-button"]}>
           <img src="/images/send-icon.svg" alt="Отправить сообщение" />
         </button>

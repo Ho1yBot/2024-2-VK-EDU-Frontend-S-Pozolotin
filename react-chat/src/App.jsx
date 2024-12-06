@@ -59,8 +59,8 @@ const AppContent = () => {
         <Header
           currentChatTitle={currentChatTitle}
           chatId={currentChatId}
-          onBackClick={closeChat}
-          onClearMessages={handleClearMessages}
+          backClick={closeChat}
+          clearMessages={handleClearMessages}
           onOpenProfile={openProfile}
         />
       )}
@@ -74,9 +74,9 @@ const AppContent = () => {
           element={
             <ChatList
               currentChatId={currentChatId}
-              onOpenChat={openChat}
+              openChat={openChat}
               onOpenProfile={openProfile} // Передаём функцию для открытия профиля
-              onClearMessages={clearTrigger}
+              clearMessages={clearTrigger}
             />
           }
         />

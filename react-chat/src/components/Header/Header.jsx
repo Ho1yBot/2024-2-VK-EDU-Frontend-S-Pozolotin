@@ -1,9 +1,11 @@
 // components/Header/Header.jsx
 import React, { useState, useEffect } from "react";
 import styles from "./Header.module.scss";
-import Menu from "./../Menu/Menu";
+import Menu from "../Menu/Menu";
+import SearchIcon from '@mui/icons-material/Search';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 
-const Header = ({ currentChatTitle, chatId, onBackClick, onClearMessages, onOpenProfile }) => {
+const Header = ({ currentChatTitle, chatId, backClick, clearMessages, onOpenProfile }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -34,13 +36,19 @@ const Header = ({ currentChatTitle, chatId, onBackClick, onClearMessages, onOpen
       </button>
       <nav className={styles.header__nav}>
         <button className={styles["header__nav-searchButton"]}>
-          <img src="/images/search-icon.svg" alt="Search" />
+          {/* <img src="./images/search-icon.svg" alt="Search" /> */}
+          <SearchIcon sx={{ color: '#fff' }}/>
         </button>
-        {currentChatTitle && <Menu chatId={chatId} onClearMessages={onClearMessages} />}
+
+        {/* Передаем onClearMessages в Menu */}
+        {currentChatTitle && (
+          <Menu chatId={chatId} clearMessages={clearMessages} />
+        )}
       </nav>
       {currentChatTitle && (
-        <button className={styles.back_button} onClick={onBackClick}>
-          <img src="/images/arrow-back.svg" alt="Back to chat list" />
+        <button className={styles.back_button} onClick={backClick}>
+          {/* <img src="./images/arrow-back.svg" alt="Back to chat list" /> */}
+          <KeyboardBackspaceIcon sx={{color: "#8e24aa"}}/>
         </button>
       )}
     </header>

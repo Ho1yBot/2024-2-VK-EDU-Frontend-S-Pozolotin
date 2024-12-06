@@ -156,12 +156,15 @@ export function ChatList() {
         const chatListComponent = document.getElementById('chat-list-component');
         chatListComponent.style.display = 'flex';
 
+        // Возвращаем заголовок обратно на "Messenger"
         const headerTitle = document.querySelector('.header_title-text');
         headerTitle.textContent = 'Messenger';
 
+        // Скрываем кнопку меню
         const menuButton = document.getElementById('menu-button');
         menuButton.style.display = 'none';
 
+        // Показываем кнопку добавления чата при возврате к списку чатов
         const addChatButton = document.getElementById('floating-button-component');
         if (addChatButton) {
             addChatButton.style.display = 'block';

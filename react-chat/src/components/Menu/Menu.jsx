@@ -1,8 +1,9 @@
 // components/Menu/Menu.jsx
 import React, { useState, useEffect, useRef } from "react";
 import styles from "./Menu.module.scss";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-const Menu = ({ chatId, onClearMessages }) => {
+const Menu = ({ chatId, clearMessages }) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -11,7 +12,7 @@ const Menu = ({ chatId, onClearMessages }) => {
   };
 
   const handleClearMessages = () => {
-    onClearMessages(); 
+    clearMessages(); // Вызываем функцию очистки сообщений
     toggleMenu(); 
     
   };
@@ -37,7 +38,8 @@ const Menu = ({ chatId, onClearMessages }) => {
   return (
     <div className={styles["header_menu"]} ref={menuRef}>
       <button onClick={toggleMenu}>
-        <img src="/images/menu-dots.svg" alt="Меню чата" />
+        {/* <img src="./images/menu-dots.svg" alt="Меню чата" /> */}
+        <MoreVertIcon sx={{color: '#fff'}}/>
       </button>
       {isOpen && (
         <div className={styles.menu}>
