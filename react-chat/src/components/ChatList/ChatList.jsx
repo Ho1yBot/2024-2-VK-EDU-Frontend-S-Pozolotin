@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
 import styles from "./ChatList.module.scss";
 import { loadMessages } from "../Storage/Storage";
 import { Messages } from "../Message/Messages";
@@ -11,7 +10,7 @@ const ChatList = ({ currentChatId, openChat, clearMessages }) => {
   const chats = [
     {
       id: 1,
-      title: "Chat with Andrew",
+      title: "Andrew",
       lastMessage: "Last message...",
       time: "14:23",
       isRead: true,
@@ -19,7 +18,7 @@ const ChatList = ({ currentChatId, openChat, clearMessages }) => {
     },
     {
       id: 2,
-      title: "Chat with Max",
+      title: "Max",
       lastMessage: "Last message...",
       time: "16:27",
       isRead: true,
@@ -30,10 +29,9 @@ const ChatList = ({ currentChatId, openChat, clearMessages }) => {
   useEffect(() => {
     if (currentChatId) {
       const loadedMessages = loadMessages(currentChatId);
-      console.log(loadedMessages);
       setMessages(loadedMessages);
-      const chat = chats.find((c) => c.id === Number(chatId));
-      if (chat) onOpenChat(chat.id, chat.title);
+      const chat = chats.find((c) => c.id === Number(currentChatId));
+      if (chat) openChat(chat.id, chat.title);
     }
   }, [currentChatId]);
 
@@ -48,7 +46,6 @@ const ChatList = ({ currentChatId, openChat, clearMessages }) => {
         {chats.map((chat) => {
           const messagesOfChat = JSON.parse(localStorage.getItem(`messages_${chat.id}`))
           const lastMessage = messagesOfChat ? messagesOfChat[messagesOfChat.length - 1] : { text: "No messages", time: "" };
-          console.log(lastMessage);
 
           return (
             <button key={chat.id} className={styles["chat-item"]} onClick={() => openChat(chat.id, chat.title)}>

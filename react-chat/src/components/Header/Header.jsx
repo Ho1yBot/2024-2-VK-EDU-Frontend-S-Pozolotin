@@ -5,7 +5,7 @@ import Menu from "../Menu/Menu";
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 
-const Header = ({ currentChatTitle, chatId, backClick, clearMessages, onOpenProfile }) => {
+const Header = ({ currentChatTitle, chatId, backClick, clearMessages, openProfile }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -17,8 +17,8 @@ const Header = ({ currentChatTitle, chatId, backClick, clearMessages, onOpenProf
   }, [currentChatTitle]);
 
   const handleTitleClick = () => {
-    if (currentChatTitle && onOpenProfile) {
-      onOpenProfile(chatId); // Открываем профиль для текущего чата
+    if (currentChatTitle && openProfile) {
+      openProfile(chatId); // Открываем профиль для текущего чата
     }
   };
 
@@ -36,18 +36,16 @@ const Header = ({ currentChatTitle, chatId, backClick, clearMessages, onOpenProf
       </button>
       <nav className={styles.header__nav}>
         <button className={styles["header__nav-searchButton"]}>
-          {/* <img src="./images/search-icon.svg" alt="Search" /> */}
           <SearchIcon sx={{ color: '#fff' }}/>
         </button>
 
-        {/* Передаем onClearMessages в Menu */}
+        {/* Передаем clearMessages в Menu */}
         {currentChatTitle && (
           <Menu chatId={chatId} clearMessages={clearMessages} />
         )}
       </nav>
       {currentChatTitle && (
         <button className={styles.back_button} onClick={backClick}>
-          {/* <img src="./images/arrow-back.svg" alt="Back to chat list" /> */}
           <KeyboardBackspaceIcon sx={{color: "#8e24aa"}}/>
         </button>
       )}

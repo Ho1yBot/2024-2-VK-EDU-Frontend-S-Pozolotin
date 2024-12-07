@@ -38,7 +38,6 @@ const Menu = ({ chatId, clearMessages }) => {
   return (
     <div className={styles["header_menu"]} ref={menuRef}>
       <button onClick={toggleMenu}>
-        {/* <img src="./images/menu-dots.svg" alt="Меню чата" /> */}
         <MoreVertIcon sx={{color: '#fff'}}/>
       </button>
       {isOpen && (

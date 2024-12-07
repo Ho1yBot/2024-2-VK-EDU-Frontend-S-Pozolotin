@@ -31,7 +31,7 @@ const AppContent = () => {
     setCurrentChatId(null);
     setCurrentChatTitle("");
     setSelectedChat(null); // Сбрасываем выбранный чат
-    navigate("/"); // Возвращаемся к списку чатов
+    // navigate("/"); // Возвращаемся к списку чатов
   };
 
   const handleClearMessages = () => {
@@ -61,13 +61,13 @@ const AppContent = () => {
           chatId={currentChatId}
           backClick={closeChat}
           clearMessages={handleClearMessages}
-          onOpenProfile={openProfile}
+          openProfile={openProfile}
         />
       )}
       <Routes>
         <Route
           path="/"
-          element={<ChatList currentChatId={null} onOpenChat={openChat} />}
+          element={<ChatList currentChatId={null} openChat={openChat} />}
         />
         <Route
           path="/chat/:chatId"
@@ -75,7 +75,7 @@ const AppContent = () => {
             <ChatList
               currentChatId={currentChatId}
               openChat={openChat}
-              onOpenProfile={openProfile} // Передаём функцию для открытия профиля
+              openProfile={openProfile} // Передаём функцию для открытия профиля
               clearMessages={clearTrigger}
             />
           }
