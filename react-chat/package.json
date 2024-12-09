@@ -12,11 +12,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "centrifuge": "^5.2.2",
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
+    "@ffmpeg/ffmpeg": "^0.12.10",
     "@mui/icons-material": "^6.1.10",
     "@mui/material": "^6.1.10",
+    "centrifuge": "^5.2.2",
     "gh-pages": "^6.2.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

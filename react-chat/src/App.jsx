@@ -32,7 +32,7 @@ const AppContent = () => {
     setCurrentChatId(null);
     setCurrentChatTitle("");
     setSelectedChat(null); // Сбрасываем выбранный чат
-    // navigate("/"); // Возвращаемся к списку чатов
+    navigate("/"); // Возвращаемся к списку чатов
   };
 
   const handleClearMessages = () => {

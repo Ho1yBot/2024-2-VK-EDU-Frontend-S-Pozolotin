@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import styles from "./FileUpload.module.scss";
 
-const FileUpload = ({ onFileSelect }) => {
+const FileUpload = ({ fileSelect }) => {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -9,7 +9,7 @@ const FileUpload = ({ onFileSelect }) => {
     const file = e.target.files[0];
     if (file) {
       console.log("Файл загружен через input:", file.name);
-      onFileSelect(file);
+      fileSelect(file);
     }
   };
 
@@ -29,7 +29,7 @@ const FileUpload = ({ onFileSelect }) => {
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       const file = e.dataTransfer.files[0];
       console.log("Файл загружен через Drop:", file.name);
-      onFileSelect(file);
+      fileSelect(file);
       e.dataTransfer.clearData();
     }
   };
@@ -40,7 +40,7 @@ const FileUpload = ({ onFileSelect }) => {
 
   return (
     <div
-      className={`${styles.fileUpload} ${isDragging ? styles.dragging : ""}`}
+      className={`${styles.fileUpload}`}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
@@ -52,7 +52,7 @@ const FileUpload = ({ onFileSelect }) => {
         style={{ display: "none" }}
         onChange={handleFileChange}
       />
-      {isDragging && <div className={styles.dragOverlay}>Отпустите файл для загрузки</div>}
+      {/* {isDragging && <div className={styles.dragOverlay}>Отпустите файл для загрузки</div>} */}
     </div>
   );
 };

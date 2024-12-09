@@ -1,16 +1,18 @@
 // src/components/ChatList/ChatList.jsx
 import React, { useState, useEffect } from "react";
 import styles from "./ChatList.module.scss";
-import { loadMessages } from "./../Storage/Storage";
-import { Messages } from "../Message/Message";
+import { Messages } from "../Messages/Messages";
 import { MessageForm } from "../MessageForm/MessageForm";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import useWebSocket from "../../hooks/useWebSocket";
 import { getAuthHeaders, getAllChats, fetchMessagesFromBackend } from "../../utils/api";
 import FloatingButton from "../FloatingButton/FloatingButton";
+import { useParams, useNavigate } from "react-router-dom";
 
 
 const ChatList = ({ currentChatId, openChat, clearMessages }) => {
+  const { chatId } = useParams();
+  const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [chats, setChats] = useState(JSON.parse(localStorage.getItem("friendsChat")) || []);
   const [allChats, setAllChats] = useState([]);
@@ -55,10 +57,10 @@ const ChatList = ({ currentChatId, openChat, clearMessages }) => {
     if (chatId && allChats[0]?.results.length > 0) {
       const chat = allChats[0]?.results.find((c) => c.id === chatId);
       if (chat) {
-        onOpenChat(chat.id, chat.title);
+        openChat(chat.id, chat.title);
       }
     }
-  }, [chatId, allChats, onClearMessages]);
+  }, [chatId, allChats, clearMessages]);
 
   // Добавляем новые сообщения из WebSocket в список сообщений
   useEffect(() => {
@@ -80,13 +82,6 @@ const ChatList = ({ currentChatId, openChat, clearMessages }) => {
     if (chatId) {
       loadChatMessages();
     }
-  }, [currentChatId]);
-
-  useEffect(() => {
-    // Очищаем список сообщений после вызова onClearMessages
-    setMessages([]);
-  }, [clearMessages]);
-
   }, [chatId]);
 
   return (
@@ -125,7 +120,7 @@ const ChatList = ({ currentChatId, openChat, clearMessages }) => {
               <MessageForm
                 chatId={currentChatId}
                 droppedFile={droppedFile} // Передаём файл в MessageForm
-                onMessageSend={(newMessage) => setMessages((prevMessages) => [...prevMessages, newMessage])} // Обновляем состояние
+                messageSend={(newMessage) => setMessages((prevMessages) => [...prevMessages, newMessage])} // Обновляем состояние
               />
               {dragging && <div className={styles["drag-overlay"]}>Отпустите файл для загрузки</div>}
             </div>

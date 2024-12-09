@@ -9,7 +9,6 @@ export function Messages({ messages }) {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-  console.log(messages);
   
   return (
     <div className={styles["messages-container"]}>
@@ -25,6 +24,12 @@ export function Messages({ messages }) {
               message.text
             )}
           </div>
+          {message.voice && (
+            <audio controls className={styles["voice-message"]}>
+              <source src={message.voice} type="audio/webm" />
+              Ваш браузер не поддерживает аудио.
+            </audio>
+          )}
           {message.files && message.files[0]?.item && (
             <>
               {(message.files[0].item.includes(".png") || message.files[0].item.includes(".jpg")) && (

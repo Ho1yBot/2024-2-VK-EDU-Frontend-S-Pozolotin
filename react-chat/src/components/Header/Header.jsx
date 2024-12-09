@@ -38,10 +38,10 @@ const Header = ({ currentChatTitle, chatId, backClick, clearMessages, openProfil
         <button className={styles["header__nav-searchButton"]}>
           <SearchIcon sx={{ color: '#fff' }}/>
         </button>
-        {chatId && <Menu chatId={chatId} onClearMessages={onClearMessages} />}
+        {chatId && <Menu chatId={chatId} clearMessages={clearMessages} />}
       </nav>
       {chatId && (
-        <button className={styles.back_button} onClick={onBackClick}>
+        <button className={styles.back_button} onClick={backClick}>
           <KeyboardBackspaceIcon sx={{color: "#8e24aa"}}/>
         </button>
       )}
