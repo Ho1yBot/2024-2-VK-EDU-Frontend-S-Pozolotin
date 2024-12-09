@@ -125,6 +125,7 @@ export const sendMessageToBackend = async (chat, text = null, files = [], voice 
         files.forEach((file) => formData.append('files', file));
     }
     if (voice) formData.append('voice', voice);
+    formData.forEach((s) => console.log(typeof s))
     
     const Data = {
         "chat": chat,
@@ -135,9 +136,9 @@ export const sendMessageToBackend = async (chat, text = null, files = [], voice 
 
     const response = await fetch(`${API_URL}/messages/`, {
         method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify(Data),
-        // body: formData
+        headers: {'Authorization': `Bearer ${localStorage.getItem('accessToken')}`},
+        // body: JSON.stringify(Data),
+        body: formData
     });
 
     if (!response.ok) {
