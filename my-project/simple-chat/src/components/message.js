@@ -15,10 +15,13 @@ export function handleSubmit(event) {
     event.preventDefault();
     const input = document.querySelector('.form-input');
     const messageText = input.value.trim();
-    const fileInput = document.querySelector('.file-input'); // Поле для выбора файла
-    const attachedFile = fileInput.files[0]; // Получаем прикрепленный файл
+    if (!messageText) return;
 
-    if (!messageText && !attachedFile) return; // Если нет текста и файла, не отправляем
+    const message = {
+        text: messageText,
+        sender: 'Вы',
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
 
     const chatId = localStorage.getItem('currentChat');
     saveMessage(chatId, message);
@@ -121,8 +124,10 @@ export function addMessageToDOM(message) {
     messageElement.appendChild(timeElement);
 
     messagesDiv.appendChild(messageElement);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    messagesDiv.scrollTop = messagesDiv.scrollHeight; // Прокрутка к последнему сообщению
 }
+
+
 
 
 

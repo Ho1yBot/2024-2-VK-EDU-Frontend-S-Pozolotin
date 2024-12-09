@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
-import styles from "./Message.module.scss";
+import styles from "./Messages.module.scss";
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 
 export function Messages({ messages }) {
   const messagesEndRef = useRef(null);
@@ -9,6 +10,7 @@ export function Messages({ messages }) {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
   console.log(messages);
+  
   return (
     <div className={styles["messages-container"]}>
       {messages.map((message, index) => (

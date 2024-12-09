@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import AttachFile from "./../AttachFile/AttachFile";
+import AttachFile from "../AttachFile/AttachFile";
 import styles from "./MessageForm.module.scss";
-import { sendMessageToBackend } from "../../utils/api";
+import { sendMessageToBackend } from "../utils/api";
 
 export function MessageForm({ chatId, droppedFile, onMessageSend }) {
   const [messageText, setMessageText] = useState("");

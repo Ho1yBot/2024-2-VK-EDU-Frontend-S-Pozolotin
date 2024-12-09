@@ -1,16 +1,16 @@
 // src/components/ChatList/ChatList.jsx
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
 import styles from "./ChatList.module.scss";
-import { Messages } from "./../Message/Message";
-import { MessageForm } from "./../MessageForm/MessageForm";
+import { loadMessages } from "./../Storage/Storage";
+import { Messages } from "../Message/Message";
+import { MessageForm } from "../MessageForm/MessageForm";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import useWebSocket from "../../hooks/useWebSocket";
 import { getAuthHeaders, getAllChats, fetchMessagesFromBackend } from "../../utils/api";
 import FloatingButton from "../FloatingButton/FloatingButton";
 
-const ChatList = ({ currentChatId, onOpenChat, onClearMessages }) => {
-  const { chatId } = useParams();
-  const navigate = useNavigate();
+
+const ChatList = ({ currentChatId, openChat, clearMessages }) => {
   const [messages, setMessages] = useState([]);
   const [chats, setChats] = useState(JSON.parse(localStorage.getItem("friendsChat")) || []);
   const [allChats, setAllChats] = useState([]);
@@ -80,6 +80,13 @@ const ChatList = ({ currentChatId, onOpenChat, onClearMessages }) => {
     if (chatId) {
       loadChatMessages();
     }
+  }, [currentChatId]);
+
+  useEffect(() => {
+    // Очищаем список сообщений после вызова onClearMessages
+    setMessages([]);
+  }, [clearMessages]);
+
   }, [chatId]);
 
   return (
