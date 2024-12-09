@@ -144,3 +144,13 @@
   pointer-events: none;
   transition: ease 0.2s;
 }
+
+.notification{
+  &-container{
+    position: absolute;
+    top: 0;
+    display: flex;
+    gap: 5px;
+    padding: 5px;
+  }
+}

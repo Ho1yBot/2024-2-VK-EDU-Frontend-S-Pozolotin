@@ -4,7 +4,6 @@ import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 
 export function Messages({ messages }) {
   const messagesEndRef = useRef(null);
-  console.log(messages);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

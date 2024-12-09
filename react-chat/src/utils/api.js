@@ -69,7 +69,7 @@ export const fetchChatMessages = async () => {
     const response = await fetch(`${API_URL}/messages/`, {
         headers: getAuthHeaders(),
     });
-    
+
     return response.json();
 };
 
@@ -93,7 +93,7 @@ export const createChat = async (data) => {
     return response.json();
 };
 
-export const getAllChats = async (page, page_size, search) =>{
+export const getAllChats = async (page, page_size, search) => {
     const response = await fetch(`${API_URL}/chats/`,
         {
             method: 'GET',
@@ -125,19 +125,10 @@ export const sendMessageToBackend = async (chat, text = null, files = [], voice 
         files.forEach((file) => formData.append('files', file));
     }
     if (voice) formData.append('voice', voice);
-    formData.forEach((s) => console.log(typeof s))
-    
-    const Data = {
-        "chat": chat,
-        "voice": voice,
-        "text": text,
-        "files": files,
-    }
 
     const response = await fetch(`${API_URL}/messages/`, {
         method: 'POST',
-        headers: {'Authorization': `Bearer ${localStorage.getItem('accessToken')}`},
-        // body: JSON.stringify(Data),
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('accessToken')}` },
         body: formData
     });
 
@@ -151,7 +142,7 @@ export const sendMessageToBackend = async (chat, text = null, files = [], voice 
 
 // Загрузка сообщений с сервера
 export const fetchMessagesFromBackend = async (chat, page = 1, pageSize = 20) => {
-    
+
     const response = await fetch(`${API_URL}/messages/?chat=${chat}&page=${page}&pageSize=${pageSize}`, {
         method: 'GET',
         headers: getAuthHeaders(),
@@ -161,7 +152,19 @@ export const fetchMessagesFromBackend = async (chat, page = 1, pageSize = 20) =>
     if (!response.ok) {
         throw new Error('Failed to fetch messages');
     }
-    
+
     return response.json();
 };
 
+// получение последних сообщений из всех чатов
+export const fetchChatsWithLastMessages = async () => {
+    const response = await fetch(`${API_URL}/chats/`, {
+        method: 'GET',
+        headers: getAuthHeaders(),
+    });
+    if (!response.ok) {
+        throw new Error('Failed to fetch chats');
+    }
+    
+    return response.json();
+};

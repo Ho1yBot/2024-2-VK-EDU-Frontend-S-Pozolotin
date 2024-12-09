@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import AttachFile from "../AttachFile/AttachFile";
 import styles from "./MessageForm.module.scss";
 import { sendMessageToBackend } from "../../utils/api";
-import { createFFmpeg, fetchFile } from "@ffmpeg/ffmpeg";
+import KeyboardVoiceIcon from "@mui/icons-material/KeyboardVoice";
 
 export function MessageForm({ chatId, droppedFile, messageSend }) {
   const [messageText, setMessageText] = useState("");
@@ -12,7 +12,6 @@ export function MessageForm({ chatId, droppedFile, messageSend }) {
   const [isRecording, setIsRecording] = useState(false); // Состояние для записи голоса
   const [audioBlob, setAudioBlob] = useState(null);
   const [mediaRecorder, setMediaRecorder] = useState(null);
-  const [isConverting, setIsConverting] = useState(false); // Для отображения статуса преобразования
 
   useEffect(() => {
     if (droppedFile) {
@@ -29,7 +28,19 @@ export function MessageForm({ chatId, droppedFile, messageSend }) {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const recorder = new MediaRecorder(stream);
-      recorder.ondataavailable = (event) => setAudioBlob(event.data);
+      const audioChunks = [];
+
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunks.push(event.data);
+        }
+      };
+
+      recorder.onstop = () => {
+        const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
+        setAudioBlob(audioBlob);
+      };
+
       recorder.start();
       setMediaRecorder(recorder);
       setIsRecording(true);
@@ -46,31 +57,8 @@ export function MessageForm({ chatId, droppedFile, messageSend }) {
     }
   };
 
-  const convertAudio = async (blob) => {
-    setIsConverting(true);
-    const ffmpeg = createFFmpeg({ log: true });
-    await ffmpeg.load();
-
-    const inputFile = "input.webm";
-    const outputFile = "output.mp3";
-
-    // Загружаем файл в FFmpeg
-    ffmpeg.FS("writeFile", inputFile, await fetchFile(blob));
-
-    // Конвертируем в mp3
-    await ffmpeg.run("-i", inputFile, outputFile);
-
-    // Получаем результат
-    const data = ffmpeg.FS("readFile", outputFile);
-    setIsConverting(false);
-
-    // Создаем файл mp3
-    return new File([data.buffer], "voice-message.mp3", { type: "audio/mpeg" });
-  };
-
   const sendMessage = async (chatId, text, file, voice) => {
     const files = file ? [file] : [];
-    console.log(voice);
     try {
       const newMessage = await sendMessageToBackend(chatId, text, files, voice);
       setMessageText("");
@@ -111,7 +99,7 @@ export function MessageForm({ chatId, droppedFile, messageSend }) {
         }
         console.error("Error getting location:", error);
         alert(errorMessage);
-      },
+      }
     );
   };
 
@@ -123,10 +111,10 @@ export function MessageForm({ chatId, droppedFile, messageSend }) {
     event.preventDefault();
     if (!messageText && !attachedFile && !audioBlob) return;
 
-    let voice = null;
-    if (audioBlob) {
-      voice = await convertAudio(audioBlob);
-    }
+    const voice = audioBlob
+      ? new File([audioBlob], "voice-message.wav", { type: "audio/wav" })
+      : null;
+
     sendMessage(chatId, messageText, attachedFile, voice);
     setRenderMessages();
   };
@@ -171,7 +159,7 @@ export function MessageForm({ chatId, droppedFile, messageSend }) {
         </button>
         {!isRecording ? (
           <button type="button" onClick={startRecording}>
-            <img src="/images/mic-icon.svg" alt="Начать запись" />
+            <KeyboardVoiceIcon sx={{ color: "#8e24aa" }} />
           </button>
         ) : (
           <button type="button" onClick={stopRecording}>
@@ -183,8 +171,7 @@ export function MessageForm({ chatId, droppedFile, messageSend }) {
           <img src="/images/send-icon.svg" alt="Отправить" />
         </button>
       </div>
-      {isConverting && <p>Идет преобразование аудио...</p>}
-      {audioBlob && !isConverting && <p>Голосовое сообщение готово к отправке.</p>}
+      {audioBlob && <p>Голосовое сообщение готово к отправке.</p>}
       {attachedFile && <div className={styles["attached-file"]}>Файл: {attachedFile.name}</div>}
     </form>
   );
