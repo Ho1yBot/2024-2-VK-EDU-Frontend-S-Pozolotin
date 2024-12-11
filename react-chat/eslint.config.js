@@ -12,12 +12,15 @@ export default [
   pluginJs.configs.recommended, // Используем рекомендации для JavaScript
   pluginReact.configs.recommended, // Используем рекомендации для React
   {
-    // Ваши кастомные правила
+    settings: {
+      react: {
+        version: "detect", // Автоматически определяет версию React
+      },
+    },
     rules: {
-      // Пример: не использовать console.log
-      "no-console": "warn",
+      // Ваши кастомные правила
+      "no-console": "warn", // Пример: не использовать console.log
       "react/prop-types": "off", // Отключаем правило проверки prop-types (если не используете)
-      // Добавьте другие правила по мере необходимости
     },
   },
 ];
