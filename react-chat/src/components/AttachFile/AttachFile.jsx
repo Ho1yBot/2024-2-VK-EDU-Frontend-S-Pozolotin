@@ -28,7 +28,7 @@ const AttachFile = ({ fileSelect }) => {
               <FileUpload fileSelect={(file) => { fileSelect(file); toggleAttach(); }} />
             </li>
           </ul>
-        </div>gh
+        </div>g
       )}
     </div>
   );
