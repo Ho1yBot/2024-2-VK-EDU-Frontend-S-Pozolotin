@@ -8,6 +8,7 @@ import Profile from "./components/Profile/Profile";
 import { clearMessages } from "./components/Storage/Storage";
 import styles from "./App.module.scss";
 import { LoginPage } from "./components/LoginPage/LoginPage";
+import { requestNotificationPermission } from "./utils/notifications";
 
 const AppContent = () => {
   const navigate = useNavigate();
@@ -16,6 +17,10 @@ const AppContent = () => {
   const [currentChatTitle, setCurrentChatTitle] = useState("");
   const [clearTrigger, setClearTrigger] = useState(false);
   const [selectedChat, setSelectedChat] = useState(null); // Добавляем состояние для выбранного чата
+  
+  useEffect(() => {
+    requestNotificationPermission();
+  }, []);
 
   const openChat = (chatId, chatTitle) => {
     setCurrentChatId(chatId);
@@ -79,21 +84,21 @@ const AppContent = () => {
         <Header
           currentChatTitle={currentChatTitle}
           chatId={currentChatId}
-          onBackClick={closeChat}
-          onClearMessages={handleClearMessages}
-          onOpenProfile={openProfile}
+          backClick={closeChat}
+          clearMessages={handleClearMessages}
+          openProfile={openProfile}
         />
       )}
       <Routes>
-        <Route path="/" element={<ChatList currentChatId={null} onOpenChat={openChat} />} />
+        <Route path="/" element={<ChatList currentChatId={null} openChat={openChat} />} />
         <Route
           path="/chat/:chatId"
           element={
             <ChatList
               currentChatId={currentChatId}
-              onOpenChat={openChat}
-              onOpenProfile={openProfile} // Передаём функцию для открытия профиля
-              onClearMessages={clearTrigger}
+              openChat={openChat}
+              openProfile={openProfile} // Передаём функцию для открытия профиля
+              clearMessages={clearTrigger}
             />
           }
         />
