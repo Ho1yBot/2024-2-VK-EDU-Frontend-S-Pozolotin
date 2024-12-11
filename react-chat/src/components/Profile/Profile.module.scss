@@ -1,0 +1,131 @@
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ffffff;
+    height: 100%;
+    overflow: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-height: 580px;
+  
+    // Добавляем внутреннюю обертку для контента с отступом
+    .content {
+      padding: 0 10px; // Отступ для всех элементов, кроме header
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-sizing: border-box;
+    }
+  
+    .profile-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      background-color: #9c27b0;
+      color: #fff;
+      padding: 10px;
+      margin-top: 20px;
+      position: relative;
+      box-sizing: border-box;
+  
+      &-title {
+        font-size: 16px;
+        font-weight: bold;
+        margin: 0;
+        color: #ffffff;
+      }
+  
+      .back-button,
+      .save-button {
+        background: white;
+        width: 40px;
+        border: 1px solid #9c27b0;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .save-button {
+        color: #fff;
+        background: none;
+        border: 1px solid #fff;
+        height: 25.6px;
+        font-size: 20px;
+      }
+    }
+  
+    .profile-picture {
+      position: relative;
+      margin-top: 20px;
+  
+      img {
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        object-fit: cover;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+  
+      .edit-picture-button {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 24px;
+        height: 24px;
+        background-color: #9c27b0;
+        border: none;
+        border-radius: 50%;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 14px;
+      }
+    }
+  
+    .profile-input {
+      width: 100%;
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      
+  
+      label {
+        font-size: 12px;
+        color: #757575;
+      }
+  
+      input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 4px;
+        background-color: #f5f5f5;
+        border: none;
+        outline: none;
+        font-size: 16px;
+        color: #333;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+  
+      small {
+        font-size: 10px;
+        color: #757575;
+        margin-top: 4px;
+      }
+  
+      & + .profile-input {
+        margin-top: 16px;
+      }
+    }
+  }
+  
