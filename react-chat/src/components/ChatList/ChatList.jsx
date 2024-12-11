@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import styles from "./ChatList.module.scss";
 import { Messages } from "../Messages/Messages";
 import { MessageForm } from "../MessageForm/MessageForm";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import useWebSocket from "../../hooks/useWebSocket";
 import { getAuthHeaders, getAllChats, fetchMessagesFromBackend, fetchChatsWithLastMessages } from "../../utils/api";
 import FloatingButton from "../FloatingButton/FloatingButton";

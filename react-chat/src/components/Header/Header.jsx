@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Menu from "../Menu/Menu";
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import MenuIcon from '@mui/icons-material/Menu';
 
 const Header = ({ currentChatTitle, chatId, backClick, clearMessages, openProfile }) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -34,7 +35,8 @@ const Header = ({ currentChatTitle, chatId, backClick, clearMessages, openProfil
       {!chatId && (
         <>
           <button className={styles["header__burger-menu"]} onClick={toggleMenu}>
-            <img src="/images/burger-menu.svg" alt="Кнопка меню" />
+            {/* <img src="/images/burger-menu.svg" alt="Кнопка меню" /> */}
+            <MenuIcon sx={{color: "#fff"}}/>
           </button>
           <div className={`${styles["burger-menu-container"]} ${menuOpen ? styles.open : ""}`}>
             <button className={styles["burger-menu"]} onClick={LogOut}>

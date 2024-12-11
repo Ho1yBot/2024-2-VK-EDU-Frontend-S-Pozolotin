@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Profile.module.scss";
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 
 const Profile = ({ selectedChat }) => {
   const navigate = useNavigate();
@@ -13,11 +14,9 @@ const Profile = ({ selectedChat }) => {
     <div className={styles["profile-container"]}>
       <header className={styles["profile-header"]}>
         <button className={styles["back-button"]} onClick={handleBackClick}>
-          <img src="/images/arrow-back.svg" alt="Back to chat list" />
+          <KeyboardBackspaceIcon sx={{ color: "#8e24aa" }} />
         </button>
-        <p className={styles["profile-title"]}>
-          {selectedChat?.chatTitle || "No Name"}
-        </p>
+        <p className={styles["profile-title"]}>{selectedChat?.chatTitle || "No Name"}</p>
         <button className={styles["save-button"]}>✔</button>
       </header>
       <div className={styles["content"]}>
@@ -27,11 +26,7 @@ const Profile = ({ selectedChat }) => {
         </div>
         <div className={styles["profile-input"]}>
           <label>Full name</label>
-          <input
-            type="text"
-            value={selectedChat?.chatTitle || "No Name"}
-            readOnly
-          />
+          <input type="text" value={selectedChat?.chatTitle || "No Name"} readOnly />
         </div>
         <div className={styles["profile-input"]}>
           <label>Chat ID</label>

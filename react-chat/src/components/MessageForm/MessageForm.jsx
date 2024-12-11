@@ -3,6 +3,9 @@ import AttachFile from "../AttachFile/AttachFile";
 import styles from "./MessageForm.module.scss";
 import { sendMessageToBackend } from "../../utils/api";
 import KeyboardVoiceIcon from "@mui/icons-material/KeyboardVoice";
+import SendIcon from "@mui/icons-material/Send";
+import PlaceIcon from "@mui/icons-material/Place";
+import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 
 export function MessageForm({ chatId, droppedFile, messageSend }) {
   const [messageText, setMessageText] = useState("");
@@ -99,7 +102,7 @@ export function MessageForm({ chatId, droppedFile, messageSend }) {
         }
         console.error("Error getting location:", error);
         alert(errorMessage);
-      }
+      },
     );
   };
 
@@ -111,9 +114,7 @@ export function MessageForm({ chatId, droppedFile, messageSend }) {
     event.preventDefault();
     if (!messageText && !attachedFile && !audioBlob) return;
 
-    const voice = audioBlob
-      ? new File([audioBlob], "voice-message.wav", { type: "audio/wav" })
-      : null;
+    const voice = audioBlob ? new File([audioBlob], "voice-message.wav", { type: "audio/wav" }) : null;
 
     sendMessage(chatId, messageText, attachedFile, voice);
     setRenderMessages();
@@ -155,23 +156,24 @@ export function MessageForm({ chatId, droppedFile, messageSend }) {
       />
       <div className={styles["form-buttons"]}>
         <button type="button" onClick={handleLocationClick}>
-          Отправить локацию
+          <PlaceIcon sx={{ color: "#8e24aa" }} />
         </button>
         {!isRecording ? (
           <button type="button" onClick={startRecording}>
             <KeyboardVoiceIcon sx={{ color: "#8e24aa" }} />
           </button>
         ) : (
-          <button type="button" onClick={stopRecording}>
-            <img src="/images/stop-icon.svg" alt="Остановить запись" />
+          <button className={styles["recording"]} type="button" onClick={stopRecording}>
+            <RadioButtonCheckedIcon sx={{ color: "#FF0000" }} />
           </button>
         )}
         <AttachFile fileSelect={handleFileSelect} />
         <button type="submit" className={styles["send-button"]}>
-          <img src="/images/send-icon.svg" alt="Отправить" />
+          {/* <img src="/images/send-icon.svg" alt="Отправить" /> */}
+          <SendIcon sx={{ color: "#8e24aa" }} />
         </button>
       </div>
-      {audioBlob && <p>Голосовое сообщение готово к отправке.</p>}
+      {audioBlob && <p className={styles["send-record"]}>Голосовое сообщение готово к отправке.</p>}
       {attachedFile && <div className={styles["attached-file"]}>Файл: {attachedFile.name}</div>}
     </form>
   );
