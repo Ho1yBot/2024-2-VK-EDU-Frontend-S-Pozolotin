@@ -3,10 +3,10 @@ import styles from "./ChatList.module.scss";
 import { Messages } from "../Messages/Messages";
 import { MessageForm } from "../MessageForm/MessageForm";
 import useWebSocket from "../../hooks/useWebSocket";
-import { getAllChats, fetchMessagesFromBackend, fetchChatsWithLastMessages } from "../../utils/api";
+import { getAllChats, fetchMessagesFromBackend } from "../../utils/api";
 import FloatingButton from "../FloatingButton/FloatingButton";
 import { useParams, useNavigate } from "react-router-dom";
-import { showNotification, playNotificationSound, requestNotificationPermission } from "../../utils/notifications";
+import { requestNotificationPermission } from "../../utils/notifications";
 
 const ChatList = ({ currentChatId, openChat, clearMessages }) => {
   const { chatId } = useParams();
@@ -16,7 +16,7 @@ const ChatList = ({ currentChatId, openChat, clearMessages }) => {
   const [allChats, setAllChats] = useState([]);
   const [dragging, setDragging] = useState(false);
   const [droppedFile, setDroppedFile] = useState(null);
-  const [lastMessages, setLastMessages] = useState({}); // Хранит последние сообщения из чатов
+  // const [lastMessages, setLastMessages] = useState({}); // Хранит последние сообщения из чатов
   // Запрашиваем разрешение на уведомления
   useEffect(() => {
     requestNotificationPermission();
