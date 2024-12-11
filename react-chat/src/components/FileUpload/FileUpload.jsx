@@ -1,8 +1,8 @@
-import React, { useRef, useState } from "react";
+import React, { useRef} from "react";
 import styles from "./FileUpload.module.scss";
 
 const FileUpload = ({ fileSelect }) => {
-  const [isDragging, setIsDragging] = useState(false);
+  // const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
 
   const handleFileChange = (e) => {
@@ -15,17 +15,14 @@ const FileUpload = ({ fileSelect }) => {
 
   const handleDragOver = (e) => {
     e.preventDefault();
-    setIsDragging(true); // Показываем визуальный эффект
   };
 
   const handleDragLeave = (e) => {
     e.preventDefault();
-    setIsDragging(false); // Убираем визуальный эффект
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
-    setIsDragging(false); // Убираем визуальный эффект
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       const file = e.dataTransfer.files[0];
       console.log("Файл загружен через Drop:", file.name);

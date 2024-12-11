@@ -1,5 +1,5 @@
 // src/components/LoginPage/LoginPage.jsx
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { registerUser, loginUser } from './../../utils/api';
 import styles from './LoginPage.module.scss'
 

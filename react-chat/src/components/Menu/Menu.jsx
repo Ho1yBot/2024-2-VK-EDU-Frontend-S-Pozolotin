@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import styles from "./Menu.module.scss";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-const Menu = ({ chatId, clearMessages }) => {
+const Menu = ({ clearMessages }) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
 

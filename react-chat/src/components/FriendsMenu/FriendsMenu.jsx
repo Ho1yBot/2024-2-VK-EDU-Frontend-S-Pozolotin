@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styles from "./FriendsMenu.module.scss";
-import { createChat, getAuthHeaders, getCurrentUser } from "../../utils/api";
+import { createChat, getAuthHeaders } from "../../utils/api";
 
-const FriendsMenu = ({ chats, setChats }) => {
+const FriendsMenu = ({ setChats }) => {
   const [listFriends, setListFriends] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -36,12 +36,6 @@ const FriendsMenu = ({ chats, setChats }) => {
   const addChat = (friend) => {
     setChats((prevChats) => [friend, ...prevChats]);
   };
-
-  const getCurrentUserId = async () => {
-    const myId = await getCurrentUser();
-    
-    return myId.id
-  }
 
   return (
     <article className={styles["friends-menu"]}>

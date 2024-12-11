@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { HashRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import ChatList from "./components/ChatList/ChatList";
 import Header from "./components/Header/Header";
-import FloatingButton from "./components/FloatingButton/FloatingButton";
 import Profile from "./components/Profile/Profile";
 import { clearMessages } from "./components/Storage/Storage";
 import styles from "./App.module.scss";

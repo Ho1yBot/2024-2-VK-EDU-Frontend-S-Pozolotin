@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styles from "./FloatingButton.module.scss";
 import FriendsMenu from "../FriendsMenu/FriendsMenu";
 import AddIcon from '@mui/icons-material/Add';

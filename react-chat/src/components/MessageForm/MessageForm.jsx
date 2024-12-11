@@ -11,7 +11,7 @@ export function MessageForm({ chatId, droppedFile, messageSend }) {
   const [messageText, setMessageText] = useState("");
   const [attachedFile, setAttachedFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false); // Состояние для отображения эффекта перетаскивания
-  const [renderMessages, setRenderMessages] = useState();
+  // const [renderMessages, setRenderMessages] = useState();
   const [isRecording, setIsRecording] = useState(false); // Состояние для записи голоса
   const [audioBlob, setAudioBlob] = useState(null);
   const [mediaRecorder, setMediaRecorder] = useState(null);
@@ -117,7 +117,6 @@ export function MessageForm({ chatId, droppedFile, messageSend }) {
     const voice = audioBlob ? new File([audioBlob], "voice-message.wav", { type: "audio/wav" }) : null;
 
     sendMessage(chatId, messageText, attachedFile, voice);
-    setRenderMessages();
   };
 
   // Drag-and-drop event handlers

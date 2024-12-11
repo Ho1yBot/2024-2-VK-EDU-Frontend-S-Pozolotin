@@ -18,5 +18,9 @@ export default [
   },
   pluginJs.configs.recommended,
   pluginReact.configs.flat.recommended,
-  
+  {
+    rules: {
+      "react/prop-types": "off", // Отключаем правило пропсов
+    },
+  },
 ];

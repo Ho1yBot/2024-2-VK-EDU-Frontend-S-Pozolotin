@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import styles from "./Messages.module.scss";
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 
 export function Messages({ messages }) {
   const messagesEndRef = useRef(null);

@@ -3,7 +3,7 @@ import styles from "./ChatList.module.scss";
 import { Messages } from "../Messages/Messages";
 import { MessageForm } from "../MessageForm/MessageForm";
 import useWebSocket from "../../hooks/useWebSocket";
-import { getAuthHeaders, getAllChats, fetchMessagesFromBackend, fetchChatsWithLastMessages } from "../../utils/api";
+import { getAllChats, fetchMessagesFromBackend, fetchChatsWithLastMessages } from "../../utils/api";
 import FloatingButton from "../FloatingButton/FloatingButton";
 import { useParams, useNavigate } from "react-router-dom";
 import { showNotification, playNotificationSound, requestNotificationPermission } from "../../utils/notifications";
@@ -22,44 +22,44 @@ const ChatList = ({ currentChatId, openChat, clearMessages }) => {
     requestNotificationPermission();
   }, []);
 
-  useEffect(() => {
-    const checkForNewMessages = async () => {
-      try {
-        const chatData = await fetchChatsWithLastMessages();
-        setChats(chatData.results);
+  // useEffect(() => {
+  //   const checkForNewMessages = async () => {
+  //     try {
+  //       const chatData = await fetchChatsWithLastMessages();
+  //       setChats(chatData.results);
 
-        // Проверяем новые сообщения
-        chatData.results.forEach((chat) => {
-          const previousMessage = lastMessages[chat.id]?.id;
-          const latestMessage = chat.last_message;
+  //       // Проверяем новые сообщения
+  //       chatData.results.forEach((chat) => {
+  //         const previousMessage = lastMessages[chat.id]?.id;
+  //         const latestMessage = chat.last_message;
 
-          if (
-            latestMessage &&
-            latestMessage.id !== previousMessage &&
-            chat.id !== currentChatId // Уведомления только для неактивных чатов
-          ) {
-            setLastMessages((prev) => {
-              return ({
-              ...prev,
-              [chat.id]: latestMessage,
-            })});
+  //         if (
+  //           latestMessage &&
+  //           latestMessage.id !== previousMessage &&
+  //           chat.id !== currentChatId // Уведомления только для неактивных чатов
+  //         ) {
+  //           setLastMessages((prev) => {
+  //             return ({
+  //             ...prev,
+  //             [chat.id]: latestMessage,
+  //           })});
 
-            // Показ уведомления и воспроизведение звука
-            showNotification(`Новое сообщение в чате ${chat.title}`, {
-              body: latestMessage.text || "Новое сообщение",
-              icon: chat.avatar || "/default-icon.png",
-            });
-            playNotificationSound();
-          }
-        });
-      } catch (error) {
-        console.error("Ошибка при проверке новых сообщений:", error);
-      }
-    };
+  //           // Показ уведомления и воспроизведение звука
+  //           showNotification(`Новое сообщение в чате ${chat.title}`, {
+  //             body: latestMessage.text || "Новое сообщение",
+  //             icon: chat.avatar || "/default-icon.png",
+  //           });
+  //           playNotificationSound();
+  //         }
+  //       });
+  //     } catch (error) {
+  //       console.error("Ошибка при проверке новых сообщений:", error);
+  //     }
+  //   };
 
     // const interval = setInterval(checkForNewMessages, 5000); // Проверяем каждые 5 секунд
     // return () => clearInterval(interval);
-  }, [currentChatId, lastMessages]);
+  // }, [currentChatId, lastMessages]);
 
   useEffect(() => {
     const checkChats = async () => {
