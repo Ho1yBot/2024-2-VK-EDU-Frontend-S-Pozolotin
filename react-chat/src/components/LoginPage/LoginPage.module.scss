@@ -1,0 +1,39 @@
+.login, .reg{
+    &-container{
+        display: flex;
+        flex-direction: column;
+        margin: 30px auto;
+        gap: 10px;
+        max-width: 400px;
+
+        input {
+            padding: 5px;
+            border-radius: 5px
+        };
+
+        button {
+            margin: 0 auto;
+            padding: 10px;
+            display: flex;
+            min-width: 100px;
+            justify-content: center;
+            border-radius: 10px;
+        };
+    }
+
+    &-title{
+        display: flex;
+        justify-content: center;
+    }
+    
+
+    &-to-reg{
+        display: flex;
+        gap: 5px;
+    }
+}
+
+.login-to-reg button{
+    padding: 2px;
+    border-radius: 5px;
+}

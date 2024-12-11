@@ -1,0 +1,59 @@
+{
+  "name": "react-chat",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "homepage": "https://ho1ybot.github.io/2024-2-VK-EDU-Frontend-S-Pozolotin/",
+  "scripts": {
+    "dev": "vite",
+    "deploy": "gh-pages -d dist",
+    "predeploy": "npm run build",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "prepare": "husky install",
+    "lint-staged": "lint-staged"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.13.5",
+    "@emotion/styled": "^11.13.5",
+    "@ffmpeg/ffmpeg": "^0.12.10",
+    "@mui/icons-material": "^6.1.10",
+    "@mui/material": "^6.1.10",
+    "centrifuge": "^5.2.2",
+    "pre-commit": "^1.2.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.27.0",
+    "recorder-js": "^1.0.7",
+    "rollup": "^4.28.1",
+    "sass": "^1.80.4"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.6.0",
+    "@commitlint/config-conventional": "^19.6.0",
+    "@eslint/js": "^9.16.0",
+    "@types/react": "^18.3.10",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^8.18.0",
+    "@typescript-eslint/parser": "^8.18.0",
+    "@vitejs/plugin-react": "^4.3.2",
+    "eslint": "^8.57.1",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.6.0",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "^0.4.12",
+    "gh-pages": "^6.2.0",
+    "globals": "^15.13.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.11",
+    "prettier": "^3.3.3",
+    "vite": "^5.4.8"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": "eslint --fix"
+  }
+}
