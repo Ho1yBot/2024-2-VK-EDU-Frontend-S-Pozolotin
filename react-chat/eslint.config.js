@@ -6,21 +6,17 @@ export default [
   {
     files: ["**/*.{js,mjs,cjs,jsx,ts,tsx}"],
     languageOptions: {
-      globals: globals.browser, // добавляем глобальные переменные для браузера
-    },
-  },
-  pluginJs.configs.recommended, // Используем рекомендации для JavaScript
-  pluginReact.configs.recommended, // Используем рекомендации для React
-  {
-    settings: {
-      react: {
-        version: "detect", // Автоматически определяет версию React
+      globals: globals.browser, // добавлены глобальные переменные для браузера
+      parserOptions: {
+        ecmaVersion: 2021, // настройка для современных фич ECMAScript
+        sourceType: "module", // поддержка модулей
+        ecmaFeatures: {
+          jsx: true, // поддержка JSX
+        },
       },
     },
-    rules: {
-      // Ваши кастомные правила
-      "no-console": "warn", // Пример: не использовать console.log
-      "react/prop-types": "off", // Отключаем правило проверки prop-types (если не используете)
-    },
   },
+  pluginJs.configs.recommended,
+  pluginReact.configs.flat.recommended,
+  
 ];

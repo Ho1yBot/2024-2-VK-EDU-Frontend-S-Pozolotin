@@ -14,6 +14,6 @@ export const showNotification = (title, options = {}) => {
 };
 
 export const playNotificationSound = () => {
-    const audio = new Audio("/sounds/new_message_tone.mp3"); 
+    // const audio = new Audio("/sounds/new_message_tone.mp3"); 
     // audio.play();
 };

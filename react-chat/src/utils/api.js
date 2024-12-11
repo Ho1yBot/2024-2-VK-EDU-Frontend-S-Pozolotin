@@ -94,6 +94,7 @@ export const createChat = async (data) => {
 };
 
 export const getAllChats = async (page, page_size, search) => {
+    console.log(page, page_size, search);
     const response = await fetch(`${API_URL}/chats/`,
         {
             method: 'GET',

@@ -1,5 +1,6 @@
 name: GitHub Pages
 run-name: ${{ github.actor }} is rolling out a new version of the app 🚀
+
 on:
   workflow_dispatch:
   push:
@@ -8,20 +9,36 @@ on:
   pull_request:
     branches:
       - master
+
 jobs:
   Build-and-Deploy:
     runs-on: ubuntu-latest
+
     steps:
+      # Шаг 1: Checkout репозитория
       - uses: actions/checkout@v3
+
+      # Шаг 2: Установка Node.js
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+
+      # Шаг 3: Установка зависимостей
       - name: Install npm deps
         working-directory: react-chat
         run: npm i
+
+      # Шаг 4: Линтинг кода
+      - name: Lint Code
+        working-directory: react-chat
+        run: npm run lint
+
+      # Шаг 5: Сборка приложения
       - name: Build app
         working-directory: react-chat
         run: npm run build
+
+      # Шаг 6: Деплой на GitHub Pages
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
