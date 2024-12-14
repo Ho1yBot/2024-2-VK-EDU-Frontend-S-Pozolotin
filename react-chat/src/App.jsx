@@ -8,21 +8,24 @@ import { clearMessages } from "./components/Storage/Storage";
 import styles from "./App.module.scss";
 import { LoginPage } from "./components/LoginPage/LoginPage";
 import { requestNotificationPermission } from "./utils/notifications";
+import { useSelector, useDispatch } from "react-redux";
+import { setCurrentChatId, clearCurrentChatId } from "../src/store/actions/currentChatIdActions";
 
 const AppContent = () => {
+  const dispatch = useDispatch();
+  const currentChatId = useSelector((state) => state.chat.currentChatId); 
   const navigate = useNavigate();
   const location = useLocation();
-  const [currentChatId, setCurrentChatId] = useState(null);
   const [currentChatTitle, setCurrentChatTitle] = useState("");
   const [clearTrigger, setClearTrigger] = useState(false);
   const [selectedChat, setSelectedChat] = useState(null); // Добавляем состояние для выбранного чата
-  
+
   useEffect(() => {
     requestNotificationPermission();
   }, []);
 
   const openChat = (chatId, chatTitle) => {
-    setCurrentChatId(chatId);
+    dispatch(setCurrentChatId(chatId))
     setCurrentChatTitle(chatTitle);
     setSelectedChat({ chatId, chatTitle }); // Сохраняем данные о выбранном чате
     navigate(`/chat/${chatId}`); // Меняем URL при открытии чата
@@ -33,7 +36,7 @@ const AppContent = () => {
   };
 
   const closeChat = () => {
-    setCurrentChatId(null);
+    dispatch(clearCurrentChatId(null))
     setCurrentChatTitle("");
     setSelectedChat(null); // Сбрасываем выбранный чат
     navigate("/"); // Возвращаемся к списку чатов
@@ -82,7 +85,6 @@ const AppContent = () => {
       {!isProfilePage && (
         <Header
           currentChatTitle={currentChatTitle}
-          chatId={currentChatId}
           backClick={closeChat}
           clearMessages={handleClearMessages}
           openProfile={openProfile}
@@ -94,7 +96,6 @@ const AppContent = () => {
           path="/chat/:chatId"
           element={
             <ChatList
-              currentChatId={currentChatId}
               openChat={openChat}
               openProfile={openProfile} // Передаём функцию для открытия профиля
               clearMessages={clearTrigger}

@@ -7,8 +7,12 @@ import { getAllChats, fetchMessagesFromBackend } from "../../utils/api";
 import FloatingButton from "../FloatingButton/FloatingButton";
 import { useParams, useNavigate } from "react-router-dom";
 import { requestNotificationPermission } from "../../utils/notifications";
+import { useSelector, useDispatch } from "react-redux";
+import { setCurrentChatId, clearCurrentChatId } from "../../store/actions/currentChatIdActions" 
 
-const ChatList = ({ currentChatId, openChat, clearMessages }) => {
+const ChatList = ({ openChat, clearMessages }) => {
+  const dispatch = useDispatch();
+  const currentChatId = useSelector((state) => state.chat.currentChatId); // Получаем текущий ID чата
   const { chatId } = useParams();
   const navigate = useNavigate("/");
   const [messages, setMessages] = useState([]);
@@ -17,10 +21,20 @@ const ChatList = ({ currentChatId, openChat, clearMessages }) => {
   const [dragging, setDragging] = useState(false);
   const [droppedFile, setDroppedFile] = useState(null);
   // const [lastMessages, setLastMessages] = useState({}); // Хранит последние сообщения из чатов
+
   // Запрашиваем разрешение на уведомления
   useEffect(() => {
     requestNotificationPermission();
   }, []);
+
+  useEffect(() => {
+    if (chatId) {
+      dispatch(setCurrentChatId(chatId)); // Устанавливаем ID чата через экшен
+    } else {
+      dispatch(clearCurrentChatId()); // Сбрасываем ID чата
+    }
+  }, [chatId, dispatch]);
+
 
   // useEffect(() => {
   //   const checkForNewMessages = async () => {
@@ -138,7 +152,6 @@ const ChatList = ({ currentChatId, openChat, clearMessages }) => {
             style={{ display: currentChatId ? "none" : "flex" }}
           >
             {allChats[0]?.results.map((chat) => {
-              console.log(chat.last_message)
             return (
               <button
                 key={chat.id}

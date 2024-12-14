@@ -5,8 +5,10 @@ import Menu from "../Menu/Menu";
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import MenuIcon from '@mui/icons-material/Menu';
+import { useSelector } from "react-redux";
 
-const Header = ({ currentChatTitle, chatId, backClick, clearMessages, openProfile }) => {
+const Header = ({ currentChatTitle, backClick, clearMessages, openProfile }) => {
+  const currentChatId = useSelector((state) => state.chat.currentChatId);
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -16,11 +18,11 @@ const Header = ({ currentChatTitle, chatId, backClick, clearMessages, openProfil
 
   useEffect(() => {
     setMenuOpen(false);
-  }, [chatId]);
+  }, [currentChatId]);
 
   const handleTitleClick = () => {
     if (currentChatTitle && openProfile) {
-      openProfile(chatId); // Открываем профиль для текущего чата
+      openProfile(currentChatId); // Открываем профиль для текущего чата
     }
   };
 
@@ -32,7 +34,7 @@ const Header = ({ currentChatTitle, chatId, backClick, clearMessages, openProfil
 
   return (
     <header className={styles.header}>
-      {!chatId && (
+      {!currentChatId && (
         <>
           <button className={styles["header__burger-menu"]} onClick={toggleMenu}>
             {/* <img src="/images/burger-menu.svg" alt="Кнопка меню" /> */}
@@ -46,15 +48,15 @@ const Header = ({ currentChatTitle, chatId, backClick, clearMessages, openProfil
         </>
       )}
       <button className={styles.header__title} onClick={handleTitleClick}>
-        <div className={styles["header__title-text"]}>{chatId ? `Chat with ${currentChatTitle}` : "Messenger"}</div>
+        <div className={styles["header__title-text"]}>{currentChatId ? `Chat with ${currentChatTitle}` : "Messenger"}</div>
       </button>
       <nav className={styles.header__nav}>
         <button className={styles["header__nav-searchButton"]}>
           <SearchIcon sx={{ color: '#fff' }}/>
         </button>
-        {chatId && <Menu chatId={chatId} clearMessages={clearMessages} />}
+        {currentChatId && <Menu currentChatId={currentChatId} clearMessages={clearMessages} />}
       </nav>
-      {chatId && (
+      {currentChatId && (
         <button className={styles.back_button} onClick={backClick}>
           <KeyboardBackspaceIcon sx={{color: "#8e24aa"}}/>
         </button>
