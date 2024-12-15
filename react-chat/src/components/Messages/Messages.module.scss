@@ -124,3 +124,12 @@
   margin-top: 10px;
   width: 100%;
 }
+
+.lazy-image {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+img:not(.lazy-image) {
+  opacity: 1;
+}

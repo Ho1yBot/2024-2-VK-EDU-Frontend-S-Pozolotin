@@ -8,7 +8,7 @@ import FloatingButton from "../FloatingButton/FloatingButton";
 import { useParams, useNavigate } from "react-router-dom";
 import { requestNotificationPermission } from "../../utils/notifications";
 import { useSelector, useDispatch } from "react-redux";
-import { setCurrentChatId, clearCurrentChatId } from "../../store/actions/currentChatIdActions" 
+import { setCurrentChatId, clearCurrentChatId } from "../../store/actions/currentChatIdActions";
 
 const ChatList = ({ openChat, clearMessages }) => {
   const dispatch = useDispatch();
@@ -34,7 +34,6 @@ const ChatList = ({ openChat, clearMessages }) => {
       dispatch(clearCurrentChatId()); // Сбрасываем ID чата
     }
   }, [chatId, dispatch]);
-
 
   // useEffect(() => {
   //   const checkForNewMessages = async () => {
@@ -71,8 +70,8 @@ const ChatList = ({ openChat, clearMessages }) => {
   //     }
   //   };
 
-    // const interval = setInterval(checkForNewMessages, 5000); // Проверяем каждые 5 секунд
-    // return () => clearInterval(interval);
+  // const interval = setInterval(checkForNewMessages, 5000); // Проверяем каждые 5 секунд
+  // return () => clearInterval(interval);
   // }, [currentChatId, lastMessages]);
 
   useEffect(() => {
@@ -135,50 +134,68 @@ const ChatList = ({ openChat, clearMessages }) => {
     }
   }, [chatId]);
 
+  useEffect(() => {
+    if (allChats.length === 0) return; // Ждем, пока чаты загрузятся
+  
+    const lazyImages = document.querySelectorAll("img.lazy-image");
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          img.src = img.dataset.src;
+          img.classList.remove("lazy-image");
+          observer.unobserve(img);
+        }
+      });
+    });
+  
+    lazyImages.forEach((img) => observer.observe(img));
+  
+    return () => {
+      lazyImages.forEach((img) => observer.unobserve(img));
+    };
+  }, [allChats]); // Зависимость от allChats
+  
+
   return (
-    <div
-      className={styles["chat-container"]}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
-    >
+    <div className={styles["chat-container"]} onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
       {allChats.length === 0 ? (
         <div>Loading...</div>
       ) : (
         <>
-          <div
-            id="chat-list-component"
-            className={styles["chat-list-component"]}
-            style={{ display: currentChatId ? "none" : "flex" }}
-          >
+          <div id="chat-list-component" className={styles["chat-list-component"]} style={{ display: currentChatId ? "none" : "flex" }}>
             {allChats[0]?.results.map((chat) => {
-            return (
-              <button
-                key={chat.id}
-                className={styles["chat-item"]}
-                onClick={() => {
-                  navigate(`/chat/${chat.id}`);
-                }}
-              >
-                <div className={styles["chat-info-wrp"]}>
-                  <img src={chat.avatar || "./images/user-icon.svg"} alt="Avatar" />
-                  <div className={styles["chat-info"]}>
-                    <h3>{chat.title}</h3>
-                    <p>{chat.last_message?.text || chat.last_message?.files[0]?.item.split("/").pop() || chat.last_message?.voice.split("voices/").pop() || "Нет сообщений"}</p>
+              return (
+                <button
+                  key={chat.id}
+                  className={styles["chat-item"]}
+                  onClick={() => {
+                    navigate(`/chat/${chat.id}`);
+                  }}
+                >
+                  <div className={styles["chat-info-wrp"]}>
+                    {/* <img src={chat.avatar || "./images/user-icon.svg"} alt="Avatar" /> */}
+                    <img data-src={chat.avatar || "./images/user-icon.svg"} alt="Avatar" className={`${styles["lazy-image"]} lazy-image`} />
+
+                    <div className={styles["chat-info"]}>
+                      <h3>{chat.title}</h3>
+                      <p>
+                        {chat.last_message?.text ||
+                          chat.last_message?.files[0]?.item.split("/").pop() ||
+                          chat.last_message?.voice.split("voices/").pop() ||
+                          "Нет сообщений"}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className={styles["chat-time"]}>
-                  <span>{chat.last_message?.timestamp || ""}</span>
-                </div>
-              </button>
-            )})}
+                  <div className={styles["chat-time"]}>
+                    <span>{chat.last_message?.timestamp || ""}</span>
+                  </div>
+                </button>
+              );
+            })}
           </div>
           {chats.map((chat) => (
-            <div
-              className={styles["notification-container"]}
-              key={chat.id}
-              onClick={() => openChat(chat.id, chat.title)}
-            >
+            <div className={styles["notification-container"]} key={chat.id} onClick={() => openChat(chat.id, chat.title)}>
               <h3 className={styles["notification-title"]}>{chat.title}</h3>
               <p className={styles["notification-text"]}>{chat.lastMessage}</p>
             </div>
@@ -190,9 +207,7 @@ const ChatList = ({ openChat, clearMessages }) => {
               <MessageForm
                 chatId={currentChatId}
                 droppedFile={droppedFile}
-                messageSend={(newMessage) =>
-                  setMessages((prevMessages) => [...prevMessages, newMessage])
-                }
+                messageSend={(newMessage) => setMessages((prevMessages) => [...prevMessages, newMessage])}
               />
               {dragging && <div className={styles["drag-overlay"]}>Отпустите файл для загрузки</div>}
             </div>

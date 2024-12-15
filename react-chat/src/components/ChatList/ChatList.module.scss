@@ -155,3 +155,13 @@
     padding: 5px;
   }
 }
+
+.lazy-image {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+img:not(.lazy-image) {
+  opacity: 1;
+}
+
