@@ -4,6 +4,7 @@ import styles from "./Header.module.scss";
 import Menu from "../Menu/Menu";
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import MenuIcon from '@mui/icons-material/Menu';
 
 const Header = ({ currentChatTitle, chatId, backClick, clearMessages }) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -20,7 +21,7 @@ const Header = ({ currentChatTitle, chatId, backClick, clearMessages }) => {
     <header className={styles.header}>
       {!currentChatTitle && (
         <button className={styles["header__burger-menu"]} id="menu-button" onClick={toggleMenu}>
-          <img src="./images/burger-menu.svg" alt="Кнопка меню" />
+          <MenuIcon sx={{color: "#fff"}} />
         </button>
       )}
 
@@ -32,7 +33,6 @@ const Header = ({ currentChatTitle, chatId, backClick, clearMessages }) => {
 
       <nav className={styles.header__nav}>
         <button className={styles["header__nav-searchButton"]}>
-          {/* <img src="./images/search-icon.svg" alt="Search" /> */}
           <SearchIcon sx={{ color: '#fff' }}/>
         </button>
 
@@ -44,7 +44,6 @@ const Header = ({ currentChatTitle, chatId, backClick, clearMessages }) => {
 
       {currentChatTitle && (
         <button className={styles.back_button} onClick={backClick}>
-          {/* <img src="./images/arrow-back.svg" alt="Back to chat list" /> */}
           <KeyboardBackspaceIcon sx={{color: "#8e24aa"}}/>
         </button>
       )}

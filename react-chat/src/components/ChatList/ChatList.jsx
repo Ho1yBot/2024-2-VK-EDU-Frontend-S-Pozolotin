@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from "react";
 import styles from "./ChatList.module.scss";
 import { loadMessages } from "../Storage/Storage";
-import { Messages } from "../Message/Messages";
+import { Messages } from "../Messages/Messages";
 import { MessageForm } from "../MessageForm/MessageForm";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
-const ChatList = ({ currentChatId, openChat, clearMessages }) => {
+const ChatList = ({ currentChatId, openChat, clearMessages, setClearTrigger }) => {
   const [messages, setMessages] = useState([]);
   const chats = [
     {
@@ -28,7 +28,6 @@ const ChatList = ({ currentChatId, openChat, clearMessages }) => {
   useEffect(() => {
     if (currentChatId) {
       const loadedMessages = loadMessages(currentChatId);
-      console.log(loadedMessages);
       setMessages(loadedMessages);
     }
   }, [currentChatId]);
@@ -44,7 +43,6 @@ const ChatList = ({ currentChatId, openChat, clearMessages }) => {
         {chats.map((chat) => {
           const messagesOfChat = JSON.parse(localStorage.getItem(`messages_${chat.id}`))
           const lastMessage = messagesOfChat ? messagesOfChat[messagesOfChat.length - 1] : { text: "No messages", time: "" };
-          console.log(lastMessage);
 
           return (
             <button key={chat.id} className={styles["chat-item"]} onClick={() => openChat(chat.id, chat.title)}>
@@ -66,7 +64,7 @@ const ChatList = ({ currentChatId, openChat, clearMessages }) => {
 
       {currentChatId && (
         <div className={styles["chat-window"]}>
-          <Messages messages={messages} />
+          <Messages messages={messages} setClearTrigger={setClearTrigger} />
           <MessageForm
             chatId={currentChatId}
             messageSend={(newMessage) => {

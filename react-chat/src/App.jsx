@@ -23,8 +23,7 @@ const App = () => {
   const handleClearMessages = () => {
     if (currentChatId) {
       clearMessages(currentChatId); 
-      setClearTrigger((prev) => !prev); // Обновление триггера
-      console.log(`Messages cleared for chat ID ${currentChatId}`);
+      setClearTrigger(true) // Обновление триггера
     }
   };
   return (
@@ -38,7 +37,8 @@ const App = () => {
       <ChatList 
         currentChatId={currentChatId}
         openChat={openChat}
-        clearMessages={clearTrigger} 
+        clearMessages={clearTrigger}
+        setClearTrigger={setClearTrigger} 
       />
       {/* FloatingButton отображается только если нет открытого чата */}
       {!currentChatId && <FloatingButton />}
