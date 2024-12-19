@@ -20,3 +20,6 @@ dist/
 *.ntvs*
 *.njsproj
 *.sln
+
+# JS files from TS
+/ts/utils/*.js
