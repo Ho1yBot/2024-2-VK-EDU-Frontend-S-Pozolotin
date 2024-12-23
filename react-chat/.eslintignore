@@ -3,3 +3,8 @@
 **/build/
 **/assets/
 /index-CakRuesa.js/
+/src/ts/utils/*.js
+public/images/*.svg
+*.css
+*.svg
+*.json
