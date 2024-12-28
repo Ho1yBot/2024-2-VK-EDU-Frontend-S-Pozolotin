@@ -5,6 +5,7 @@
 }
 
 body {
+  padding-top: 20px;
   margin: 0 auto;
   min-width: 320px;
   min-height: 100vh;
@@ -19,9 +20,6 @@ button{
   cursor: pointer;
 }
 
-button:hover {
-  border-color: #646cff;
-}
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;

@@ -5,10 +5,10 @@
     align-items: center;
     max-width: 900px;
     width: 100%;
-    background-color: #fff;
+    background-color: #FAFAFA;
     border: 1px solid #ddd;
     border-radius: 8px;
-    padding: 20px;
+    padding-bottom: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin: 0 auto;
 }
@@ -29,18 +29,22 @@
     padding: 10px;
 }
 
-.textarea-wrapper{
+.textarea-wrapper {
     display: flex;
     gap: 10px;
     align-items: center;
 }
 
-.translator-header{
+.translator-header {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    max-width: 810px;
     align-items: center;
+    margin-bottom: 21px;
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+    padding: 0 20px;
+    box-sizing:border-box;
 }
 
 .input-container {
@@ -59,6 +63,10 @@
     box-sizing: border-box;
 }
 
+.input-text:focus, .language-selector:focus {
+    outline: 2px solid #007bff;
+}
+
 .language-selectors {
     display: flex;
     justify-content: space-between;
@@ -67,14 +75,20 @@
     max-width: 735px;
 }
 
-.translator-history{
-    width: 40px;
-    height: 40px;
+.translator-history {
+    width: 34px;
+    height: 34px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color:transparent;
-    border-radius: 10px
+    background-color: transparent;
+    border-radius: 30px;
+    border: none;
+    position: relative;
+}
+
+.translator-history:focus{
+    outline: 2px solid #007bff;
 }
 
 .language-selector {
@@ -83,12 +97,15 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+    cursor: pointer;
 }
 
 .swap-icon {
     font-size: 24px;
-    margin: 0 10px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .translate-button {
@@ -109,7 +126,6 @@
 .title {
     font-size: 24px;
     font-weight: bold;
-    margin-bottom: 20px;
     text-align: center;
     color: #333;
 }

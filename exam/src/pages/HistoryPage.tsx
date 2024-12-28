@@ -1,35 +1,34 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../store';
-import { useNavigate } from 'react-router-dom';
-import "./HistoryPage.css"
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../store";
+import { useNavigate } from "react-router-dom";
+import "./HistoryPage.css";
+import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 
 const HistoryPage: React.FC = () => {
-  const history = useSelector((state: RootState) => state.translation); 
+  const history = useSelector((state: RootState) => state.translation);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const clearHistory = () => {
-    localStorage.removeItem('translationHistory'); 
-    dispatch({ type: 'translation/resetHistory' });
+    localStorage.removeItem("translationHistory");
+    dispatch({ type: "translation/resetHistory" });
   };
 
   const goBack = () => {
-    navigate(-1); 
+    navigate(-1);
   };
-
   return (
     <div className="history-page">
       <header className="history-header">
-        <h1 className="history-title">Translation History</h1>
+        <h1 className="history-title">History</h1>
         <button className="back-button" onClick={goBack}>
-          <ArrowBackIcon /> Back
-        </button>
-        <button className="clear-button" onClick={clearHistory}>
-          Clear History
+          <ArrowLeftIcon sx={{color: "rgb(95,99,104)"}}/> Back
         </button>
       </header>
+      <button className="clear-button" onClick={clearHistory}>
+        Clear all history
+      </button>
       <section className="history-content">
         {history.length === 0 ? (
           <p className="no-history">No translation history available.</p>
