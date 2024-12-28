@@ -114,9 +114,9 @@ const HomePage: React.FC = () => {
           <textarea className="input-text" value={text} onKeyDown={handleKeyDown} onChange={(e) => setText(e.target.value)} placeholder="Enter text" />
           <textarea className="translation-result input-text" value={translation} readOnly placeholder="Translation" />
         </div>
-        {/* <button className="translate-button" onClick={handleTranslate}>
+        <button className="translate-button" onClick={handleTranslate}>
           Translate
-        </button> */}
+        </button>
       </div>
     </main>
   );
