@@ -6,6 +6,7 @@ export interface TranslationRequest {
 }
 
 export interface TranslationResponse {
+  originalText: string,
   translatedText: string;
   sourceLanguage?: string;
   toLanguage: string;

@@ -18,12 +18,13 @@ const HistoryPage: React.FC = () => {
   const goBack = () => {
     navigate(-1);
   };
+
   return (
     <div className="history-page">
       <header className="history-header">
         <h1 className="history-title">History</h1>
         <button className="back-button" onClick={goBack}>
-          <ArrowLeftIcon sx={{color: "rgb(95,99,104)"}}/> Back
+          <ArrowLeftIcon sx={{color: "rgb(95,99,104)"}} /> Back
         </button>
       </header>
       <button className="clear-button" onClick={clearHistory}>
@@ -36,12 +37,12 @@ const HistoryPage: React.FC = () => {
           <ul className="history-list">
             {history.map((item, index) => (
               <li key={index} className="history-item">
-                <p className="translated-text">{item.translatedText}</p>
+                <p className="recieved-text">{item.originalText} → {item.translatedText}</p>
                 <span className="languages">
                   ({item.sourceLanguage} → {item.toLanguage})
                 </span>
               </li>
-            ))}
+            )).reverse()}
           </ul>
         )}
       </section>

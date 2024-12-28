@@ -8,13 +8,13 @@ export async function translate({ text, fromLanguage, toLanguage, autoDetect = f
     const cachedTranslation = getFromCache(cacheKey);
     if (cachedTranslation) {
       console.log("Cache hit");
-      return { translatedText: cachedTranslation, sourceLanguage: sourceLang, toLanguage };
+      return {originalText:text, translatedText: cachedTranslation, sourceLanguage: sourceLang, toLanguage };
     }
   
     return handleErrors(async () => {
       const translatedText = await fetchTranslation(text, sourceLang, toLanguage);
       setToCache(cacheKey, translatedText);
-      return { translatedText, sourceLanguage: sourceLang, toLanguage };
+      return { originalText: text, translatedText, sourceLanguage: sourceLang, toLanguage };
     });
   }
   

@@ -20,9 +20,15 @@ const HomePage: React.FC = () => {
     const result = await translate({ text, fromLanguage, toLanguage });
     if (result) {
       setTranslation(result.translatedText);
-      dispatch(addTranslation(result));
+      dispatch(addTranslation({
+        originalText: text, 
+        translatedText: result.translatedText,
+        sourceLanguage: fromLanguage,
+        toLanguage: toLanguage
+      }));
     }
   };
+  
 
   const swapLanguages = () => {
     setFromLanguage(toLanguage);
