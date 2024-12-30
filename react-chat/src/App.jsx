@@ -1,6 +1,6 @@
 // App.jsx
 import React, { useState, useEffect } from "react";
-import {HashRouter, Routes, Route, Navigate, useNavigate, useLocation} from "react-router-dom";
+import { HashRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import ChatList from "./components/ChatList/ChatList";
 import Header from "./components/Header/Header";
 import FloatingButton from "./components/FloatingButton/FloatingButton";
@@ -37,7 +37,7 @@ const AppContent = () => {
   const handleClearMessages = () => {
     if (currentChatId) {
       clearMessages(currentChatId);
-      setClearTrigger((prev) => !prev);
+      setClearTrigger(true); // Обновление триггера
     }
   };
 
@@ -55,20 +55,9 @@ const AppContent = () => {
   return (
     <div className={styles["app-container"]}>
       {/* Показ Header только если это не страница профиля */}
-      {!isProfilePage && (
-        <Header
-          currentChatTitle={currentChatTitle}
-          chatId={currentChatId}
-          backClick={closeChat}
-          clearMessages={handleClearMessages}
-          openProfile={openProfile}
-        />
-      )}
+      {!isProfilePage && <Header currentChatTitle={currentChatTitle} chatId={currentChatId} backClick={closeChat} clearMessages={handleClearMessages} openProfile={openProfile} />}
       <Routes>
-        <Route
-          path="/"
-          element={<ChatList currentChatId={null} openChat={openChat} />}
-        />
+        <Route path="/" element={<ChatList currentChatId={null} openChat={openChat} />} />
         <Route
           path="/chat/:chatId"
           element={
@@ -77,6 +66,7 @@ const AppContent = () => {
               openChat={openChat}
               openProfile={openProfile} // Передаём функцию для открытия профиля
               clearMessages={clearTrigger}
+              setClearTrigger={setClearTrigger}
             />
           }
         />
@@ -86,6 +76,8 @@ const AppContent = () => {
         />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
+
+      {/* FloatingButton отображается только если нет открытого чата */}
       {!currentChatId && <FloatingButton />}
     </div>
   );

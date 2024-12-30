@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { saveMessage } from "../Storage/Storage";
 import AttachFile from "../AttachFile/AttachFile";
 import styles from "./MessageForm.module.scss";
+import SendIcon from '@mui/icons-material/Send';
 
 export function MessageForm({ chatId, messageSend }) {
   const [messageText, setMessageText] = useState("");
@@ -23,6 +24,7 @@ export function MessageForm({ chatId, messageSend }) {
 
     setMessageText("");
     setAttachedFile(null);
+
   };
 
   // Отправка сообщения при отправке формы
@@ -93,7 +95,7 @@ export function MessageForm({ chatId, messageSend }) {
       <div className={styles["form-buttons"]}>
         <AttachFile fileSelect={handleFileSelect} />
         <button type="submit" className={styles["send-button"]}>
-          <img src="/images/send-icon.svg" alt="Отправить сообщение" />
+          <SendIcon sx={{color: "#8e24aa"}} />
         </button>
       </div>
     </form>

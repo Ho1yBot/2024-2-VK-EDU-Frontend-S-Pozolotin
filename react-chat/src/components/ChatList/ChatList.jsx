@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styles from "./ChatList.module.scss";
 import { loadMessages } from "../Storage/Storage";
-import { Messages } from "../Message/Messages";
+import { Messages } from "../Messages/Messages";
 import { MessageForm } from "../MessageForm/MessageForm";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
-const ChatList = ({ currentChatId, openChat, clearMessages }) => {
+const ChatList = ({ currentChatId, openChat, clearMessages, setClearTrigger }) => {
   const [messages, setMessages] = useState([]);
   const chats = [
     {
@@ -66,7 +66,7 @@ const ChatList = ({ currentChatId, openChat, clearMessages }) => {
       </div>
       {currentChatId && (
         <div className={styles["chat-window"]}>
-          <Messages messages={messages} />
+          <Messages messages={messages} setClearTrigger={setClearTrigger} />
           <MessageForm
             chatId={currentChatId}
             messageSend={(newMessage) => {

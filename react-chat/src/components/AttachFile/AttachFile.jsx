@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import FileUpload from "../FileUpload/FileUpload";
 import styles from "./AttachFile.module.scss"
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 
 const AttachFile = ({ fileSelect }) => {
   const [isAttachOpen, setIsAttachOpen] = useState(false);
@@ -11,7 +12,7 @@ const AttachFile = ({ fileSelect }) => {
 
   return (
     <div>
-      <button className={styles.attach} onClick={(e) => { e.preventDefault(); toggleAttach(); }}><img src="/images/attach-file-icon.svg" alt="Прикрепить файл" /></button>
+      <button className={styles.attach} onClick={(e) => { e.preventDefault(); toggleAttach(); }}><AttachFileIcon sx={{color: "#8e24aa"}} /></button>
       {isAttachOpen && (
         <div className={styles.attach_container}>
           <ul className="attach_list">

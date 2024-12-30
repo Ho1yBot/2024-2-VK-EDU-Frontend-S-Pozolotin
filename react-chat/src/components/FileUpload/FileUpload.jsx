@@ -6,7 +6,6 @@ const FileUpload = ({ fileSelect }) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      console.log('Файл загружен:', file.name);
       fileSelect(file);
     }
   };

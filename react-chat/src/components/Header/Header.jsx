@@ -4,6 +4,7 @@ import styles from "./Header.module.scss";
 import Menu from "../Menu/Menu";
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import MenuIcon from '@mui/icons-material/Menu';
 
 const Header = ({ currentChatTitle, chatId, backClick, clearMessages, openProfile }) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -25,8 +26,8 @@ const Header = ({ currentChatTitle, chatId, backClick, clearMessages, openProfil
   return (
     <header className={styles.header}>
       {!currentChatTitle && (
-        <button className={styles["header__burger-menu"]} onClick={toggleMenu}>
-          <img src="/images/burger-menu.svg" alt="Кнопка меню" />
+        <button className={styles["header__burger-menu"]} id="menu-button" onClick={toggleMenu}>
+          <MenuIcon sx={{color: "#fff"}} />
         </button>
       )}
       <button className={styles.header__title} onClick={handleTitleClick}>
