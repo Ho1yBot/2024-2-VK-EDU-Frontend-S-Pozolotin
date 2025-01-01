@@ -24,7 +24,6 @@ export function MessageForm({ chatId, messageSend }) {
 
     setMessageText("");
     setAttachedFile(null);
-
   };
 
   // Отправка сообщения при отправке формы
@@ -38,7 +37,7 @@ export function MessageForm({ chatId, messageSend }) {
       reader.onload = () => {
         const fileContent = reader.result;
         const isImage = attachedFile.type.startsWith("image/");
-        
+
         // Проверка, является ли файл изображением или обычным файлом
         sendMessage(
           messageText,
@@ -59,7 +58,7 @@ export function MessageForm({ chatId, messageSend }) {
     reader.onload = () => {
       const fileContent = reader.result;
       const isImage = file.type.startsWith("image/");
-      
+
       // Отправка файла сразу в чат
       sendMessage(
         "",

@@ -1,0 +1,17 @@
+.chat {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .messages-container {
+    flex: 1;
+    overflow-y: auto;
+  }
+  
+  .form {
+    padding: 10px;
+    background: #f8f8f8;
+    border-top: 1px solid #ddd;
+  }
+  

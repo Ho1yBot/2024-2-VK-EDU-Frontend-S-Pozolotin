@@ -125,8 +125,6 @@ export function addMessageToDOM(message) {
 
     messagesDiv.appendChild(messageElement);
     messagesDiv.scrollTop = messagesDiv.scrollHeight; // Прокрутка к последнему сообщению
-    messagesDiv.appendChild(messageElement);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 
 
