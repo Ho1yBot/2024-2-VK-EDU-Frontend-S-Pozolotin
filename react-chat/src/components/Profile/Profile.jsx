@@ -4,6 +4,7 @@ import styles from "./Profile.module.scss";
 
 const Profile = ({ selectedChat }) => {
   const navigate = useNavigate();
+  console.log(selectedChat);
 
   const handleBackClick = () => {
     navigate(-1); // Возвращает на предыдущую страницу, т.е. в чат

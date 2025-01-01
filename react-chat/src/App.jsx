@@ -1,43 +1,44 @@
-// App.jsx
 import React, { useState, useEffect } from "react";
-import { HashRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
+import { HashRouter, Routes, Route, Navigate, useNavigate, useLocation, useParams } from "react-router-dom";
 import ChatList from "./components/ChatList/ChatList";
+import Chat from "./components/Chat/Chat";
 import Header from "./components/Header/Header";
 import FloatingButton from "./components/FloatingButton/FloatingButton";
 import Profile from "./components/Profile/Profile";
-import { clearMessages } from "./components/Storage/Storage";
+import { clearMessages, loadMessages } from "./components/Storage/Storage";
 import styles from "./App.module.scss";
 
 const AppContent = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [currentChatId, setCurrentChatId] = useState(null);
-  const [currentChatTitle, setCurrentChatTitle] = useState("");
-  const [clearTrigger, setClearTrigger] = useState(false);
-  const [selectedChat, setSelectedChat] = useState(null); // Добавляем состояние для выбранного чата
-
+  const [currentChatTitle, setCurrentChatTitle] = useState(localStorage.getItem("currentChatTitle"));
+  const [messages, setMessages] = useState([]);
+  const [selectedChat, setSelectedChat] = useState(JSON.parse(localStorage.getItem("selectedChat")) || null);
+  
   const openChat = (chatId, chatTitle) => {
+    const chatData = { chatId, chatTitle };
     setCurrentChatId(chatId);
     setCurrentChatTitle(chatTitle);
-    setSelectedChat({ chatId, chatTitle }); // Сохраняем данные о выбранном чате
-    navigate(`/chat/${chatId}`); // Меняем URL при открытии чата
-  };
-
-  const openProfile = (userId) => {
-    navigate(`/profile/${userId}`); // Переход в профиль пользователя
+    setSelectedChat(chatData);
+    localStorage.setItem("currentChatTitle", chatTitle);
+    localStorage.setItem("selectedChat", JSON.stringify(chatData));
+    navigate(`/chat/${chatId}`);
   };
 
   const closeChat = () => {
     setCurrentChatId(null);
     setCurrentChatTitle("");
-    setSelectedChat(null); // Сбрасываем выбранный чат
-    // navigate("/"); // Возвращаемся к списку чатов
+    setSelectedChat(null);
+    localStorage.removeItem('currentChatTitle');
+    localStorage.removeItem("selectedChat");
+    navigate("/");
   };
 
   const handleClearMessages = () => {
-    if (currentChatId) {
-      clearMessages(currentChatId);
-      setClearTrigger(true); // Обновление триггера
+    if (chatId) {
+      clearMessages(chatId);
+      setMessages([]);
     }
   };
 
@@ -45,40 +46,39 @@ const AppContent = () => {
     if (location.pathname === "/") {
       setCurrentChatId(null);
       setCurrentChatTitle("");
-      setSelectedChat(null); // Сбрасываем выбранный чат при возврате на главную
+      setSelectedChat(null);
     }
   }, [location]);
 
-  // Проверка, находится ли пользователь на странице профиля
+  useEffect(() => {
+    if (currentChatId) {
+      const loadedMessages = loadMessages(currentChatId);
+      setMessages(loadedMessages || []);
+    }
+  }, [currentChatId]);
+
   const isProfilePage = location.pathname.startsWith("/profile");
+  const match = location.pathname.match(/\/chat\/(\d+)/);
+  const chatId = match ? match[1] : null;
 
   return (
     <div className={styles["app-container"]}>
-      {/* Показ Header только если это не страница профиля */}
-      {!isProfilePage && <Header currentChatTitle={currentChatTitle} chatId={currentChatId} backClick={closeChat} clearMessages={handleClearMessages} openProfile={openProfile} />}
+      {!isProfilePage && (
+        <Header
+          currentChatTitle={currentChatTitle}
+          chatId={chatId}
+          backClick={closeChat}
+          clearMessages={handleClearMessages}
+          setMessages={setMessages}
+        />
+      )}
       <Routes>
-        <Route path="/" element={<ChatList currentChatId={null} openChat={openChat} />} />
-        <Route
-          path="/chat/:chatId"
-          element={
-            <ChatList
-              currentChatId={currentChatId}
-              openChat={openChat}
-              openProfile={openProfile} // Передаём функцию для открытия профиля
-              clearMessages={clearTrigger}
-              setClearTrigger={setClearTrigger}
-            />
-          }
-        />
-        <Route
-          path="/profile/:userId"
-          element={<Profile selectedChat={selectedChat} />} // Передаем выбранный чат в Profile
-        />
+        <Route path="/" element={<ChatList openChat={openChat} />} />
+        <Route path="/chat/:chatId" element={<Chat messages={messages} setMessages={setMessages} />} />
+        <Route path="/profile/:userId" element={<Profile selectedChat={selectedChat} />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-
-      {/* FloatingButton отображается только если нет открытого чата */}
-      {!currentChatId && <FloatingButton />}
+      {!selectedChat && <FloatingButton />}
     </div>
   );
 };

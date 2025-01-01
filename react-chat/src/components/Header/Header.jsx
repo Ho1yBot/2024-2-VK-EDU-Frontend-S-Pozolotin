@@ -1,12 +1,13 @@
-// components/Header/Header.jsx
 import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import styles from "./Header.module.scss";
 import Menu from "../Menu/Menu";
-import SearchIcon from '@mui/icons-material/Search';
-import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-import MenuIcon from '@mui/icons-material/Menu';
+import SearchIcon from "@mui/icons-material/Search";
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
+import MenuIcon from "@mui/icons-material/Menu";
 
-const Header = ({ currentChatTitle, chatId, backClick, clearMessages, openProfile }) => {
+const Header = ({currentChatTitle, chatId, backClick, clearMessages, setMessages }) => {
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -15,7 +16,7 @@ const Header = ({ currentChatTitle, chatId, backClick, clearMessages, openProfil
 
   useEffect(() => {
     setMenuOpen(false);
-  }, [currentChatTitle]);
+  }, [chatId]);
 
   const handleTitleClick = () => {
     if (currentChatTitle && openProfile) {
@@ -23,31 +24,30 @@ const Header = ({ currentChatTitle, chatId, backClick, clearMessages, openProfil
     }
   };
 
+  const openProfile = (userId) => {
+    navigate(`/profile/${userId}`);
+    console.log(userId);
+  };
+
   return (
     <header className={styles.header}>
-      {!currentChatTitle && (
+      {!chatId && (
         <button className={styles["header__burger-menu"]} id="menu-button" onClick={toggleMenu}>
-          <MenuIcon sx={{color: "#fff"}} />
+          <MenuIcon sx={{ color: "#fff" }} />
         </button>
       )}
       <button className={styles.header__title} onClick={handleTitleClick}>
-        <div className={styles["header__title-text"]}>
-          {currentChatTitle ? `Chat with ${currentChatTitle}`: "Messenger"}
-        </div>
+        <div className={styles["header__title-text"]}>{currentChatTitle ? `Chat with ${currentChatTitle}` : "Messenger"}</div>
       </button>
       <nav className={styles.header__nav}>
         <button className={styles["header__nav-searchButton"]}>
-          <SearchIcon sx={{ color: '#fff' }}/>
+          <SearchIcon sx={{ color: "#fff" }} />
         </button>
-
-        {/* Передаем clearMessages в Menu */}
-        {currentChatTitle && (
-          <Menu chatId={chatId} clearMessages={clearMessages} />
-        )}
+        {chatId && <Menu chatId={chatId} clearMessages={clearMessages} setMessages={setMessages} />}
       </nav>
-      {currentChatTitle && (
+      {chatId && (
         <button className={styles.back_button} onClick={backClick}>
-          <KeyboardBackspaceIcon sx={{color: "#8e24aa"}}/>
+          <KeyboardBackspaceIcon sx={{ color: "#8e24aa" }} />
         </button>
       )}
     </header>
