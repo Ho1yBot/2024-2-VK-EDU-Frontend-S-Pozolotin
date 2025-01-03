@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import styles from "./FileUpload.module.scss";
 
-const FileUpload = ({ onFileSelect }) => {
+const FileUpload = ({ fileSelect }) => {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -9,7 +9,7 @@ const FileUpload = ({ onFileSelect }) => {
     const file = e.target.files[0];
     if (file) {
       console.log("Файл загружен через input:", file.name);
-      onFileSelect(file);
+      fileSelect(file);
     }
   };
 

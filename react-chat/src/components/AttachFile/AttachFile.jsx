@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import FileUpload from "./../FileUpload/FileUpload";
+import FileUpload from "../FileUpload/FileUpload";
 import styles from "./AttachFile.module.scss"
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 
-const AttachFile = ({ onFileSelect }) => {
+const AttachFile = ({ fileSelect }) => {
   const [isAttachOpen, setIsAttachOpen] = useState(false);
 
   const toggleAttach = () => {
@@ -11,18 +12,18 @@ const AttachFile = ({ onFileSelect }) => {
 
   return (
     <div>
-      <button className={styles.attach} onClick={(e) => { e.preventDefault(); toggleAttach(); }}><img src="/images/attach-file-icon.svg" alt="Прикрепить файл" /></button>
+      <button className={styles.attach} onClick={(e) => { e.preventDefault(); toggleAttach(); }}><AttachFileIcon sx={{color: "#8e24aa"}} /></button>
       {isAttachOpen && (
         <div className={styles.attach_container}>
           <ul className="attach_list">
             <li className={styles.attach_item}>
-              <button onClick={(e) => { e.preventDefault(); onFileSelect(); }}>Photo or video</button>
+              <button onClick={(e) => { e.preventDefault(); fileSelect(); }}>Photo or video</button>
             </li>
             <li className={styles.attach_item}>
-              <button onClick={(e) => { e.preventDefault(); onFileSelect(); }}>Choose from gallery</button>
+              <button onClick={(e) => { e.preventDefault(); fileSelect(); }}>Choose from gallery</button>
             </li>
             <li className={styles.attach_item}>
-              <FileUpload onFileSelect={(file) => { onFileSelect(file); toggleAttach(); }} />
+              <FileUpload fileSelect={(file) => { fileSelect(file); toggleAttach(); }} />
             </li>
           </ul>
         </div>

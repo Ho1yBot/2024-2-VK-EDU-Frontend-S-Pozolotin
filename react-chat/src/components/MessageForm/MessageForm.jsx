@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import AttachFile from "./../AttachFile/AttachFile";
+import AttachFile from "../AttachFile/AttachFile";
 import styles from "./MessageForm.module.scss";
 import { sendMessageToBackend } from "../../utils/api";
+import SendIcon from "@mui/icons-material/Send";
 
-export function MessageForm({ chatId, droppedFile, onMessageSend }) {
+export function MessageForm({ chatId, droppedFile, messageSend }) {
   const [messageText, setMessageText] = useState("");
   const [attachedFile, setAttachedFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false); // Состояние для отображения эффекта перетаскивания
@@ -37,7 +38,7 @@ export function MessageForm({ chatId, droppedFile, onMessageSend }) {
       (position) => {
         const { latitude, longitude } = position.coords;
         const mapLink = `https://www.openstreetmap.org/#map=18/${latitude}/${longitude}`;
-        sendMessage(chatId, mapLink, attachedFile, null);        
+        sendMessage(chatId, mapLink, attachedFile, null);
       },
       (error) => {
         let errorMessage = "Не удалось получить геолокацию.";
@@ -56,7 +57,7 @@ export function MessageForm({ chatId, droppedFile, onMessageSend }) {
         }
         console.error("Error getting location:", error);
         alert(errorMessage);
-      }
+      },
     );
   };
 
@@ -68,7 +69,7 @@ export function MessageForm({ chatId, droppedFile, onMessageSend }) {
     event.preventDefault();
     if (!messageText && !attachedFile) return;
     sendMessage(chatId, messageText, attachedFile, null);
-    setRenderMessages()
+    setRenderMessages();
   };
 
   // Drag-and-drop event handlers
@@ -111,14 +112,10 @@ export function MessageForm({ chatId, droppedFile, onMessageSend }) {
         </button>
         <AttachFile onFileSelect={handleFileSelect} />
         <button type="submit" className={styles["send-button"]}>
-          <img src="/images/send-icon.svg" alt="Отправить" />
+          <SendIcon sx={{ color: "#8e24aa" }} />
         </button>
       </div>
-      {attachedFile && (
-        <div className={styles["attached-file"]}>
-          Файл: {attachedFile.name}
-        </div>
-      )}
+      {attachedFile && <div className={styles["attached-file"]}>Файл: {attachedFile.name}</div>}
     </form>
   );
 }

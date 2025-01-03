@@ -1,8 +1,8 @@
-// components/Menu/Menu.jsx
 import React, { useState, useEffect, useRef } from "react";
 import styles from "./Menu.module.scss";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-const Menu = ({ chatId, onClearMessages }) => {
+const Menu = ({ clearMessages, setMessages }) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -11,9 +11,9 @@ const Menu = ({ chatId, onClearMessages }) => {
   };
 
   const handleClearMessages = () => {
-    onClearMessages(); 
-    toggleMenu(); 
-    
+    clearMessages();
+    toggleMenu();
+    setMessages([]);
   };
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const Menu = ({ chatId, onClearMessages }) => {
   return (
     <div className={styles["header_menu"]} ref={menuRef}>
       <button onClick={toggleMenu}>
-        <img src="/images/menu-dots.svg" alt="Меню чата" />
+        <MoreVertIcon sx={{color: '#fff'}}/>
       </button>
       {isOpen && (
         <div className={styles.menu}>

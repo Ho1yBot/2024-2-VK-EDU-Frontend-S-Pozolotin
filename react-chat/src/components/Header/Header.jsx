@@ -1,9 +1,13 @@
-// components/Header/Header.jsx
 import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import styles from "./Header.module.scss";
-import Menu from "./../Menu/Menu";
+import Menu from "../Menu/Menu";
+import SearchIcon from "@mui/icons-material/Search";
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
+import MenuIcon from "@mui/icons-material/Menu";
 
-const Header = ({ chatId, currentChatTitle, onBackClick, onClearMessages, onOpenProfile }) => {
+const Header = ({currentChatTitle, chatId, backClick, clearMessages, setMessages }) => {
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -15,16 +19,21 @@ const Header = ({ chatId, currentChatTitle, onBackClick, onClearMessages, onOpen
   }, [chatId]);
 
   const handleTitleClick = () => {
-    if (chatId && onOpenProfile) {
-      onOpenProfile(chatId); // Открываем профиль для текущего чата
+    if (currentChatTitle && openProfile) {
+      openProfile(chatId); // Открываем профиль для текущего чата
     }
+  };
+
+  const openProfile = (userId) => {
+    navigate(`/profile/${userId}`);
+    console.log(userId);
   };
 
   return (
     <header className={styles.header}>
       {!chatId && (
         <button className={styles["header__burger-menu"]} onClick={toggleMenu}>
-          <img src="/images/burger-menu.svg" alt="Кнопка меню" />
+          <MenuIcon sx={{ color: "#fff" }} />
         </button>
       )}
       <button className={styles.header__title} onClick={handleTitleClick}>
@@ -34,13 +43,13 @@ const Header = ({ chatId, currentChatTitle, onBackClick, onClearMessages, onOpen
       </button>
       <nav className={styles.header__nav}>
         <button className={styles["header__nav-searchButton"]}>
-          <img src="/images/search-icon.svg" alt="Search" />
+          <SearchIcon sx={{ color: "#fff" }} />
         </button>
-        {chatId && <Menu chatId={chatId} onClearMessages={onClearMessages} />}
+        {chatId && <Menu chatId={chatId} clearMessages={clearMessages} setMessages={setMessages} />}
       </nav>
       {chatId && (
-        <button className={styles.back_button} onClick={onBackClick}>
-          <img src="/images/arrow-back.svg" alt="Back to chat list" />
+        <button className={styles.back_button} onClick={backClick}>
+          <KeyboardBackspaceIcon sx={{ color: "#8e24aa" }} />
         </button>
       )}
     </header>

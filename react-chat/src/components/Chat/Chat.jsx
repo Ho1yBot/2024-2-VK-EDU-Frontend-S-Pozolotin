@@ -1,43 +1,36 @@
-// src/components/Chat/Chat.jsx
-import { Centrifuge } from 'centrifuge';
-import { getAuthHeaders } from '../utils/api';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import Messages from "../Messages/Messages";
+import MessageForm from "../MessageForm/MessageForm";
+import styles from "./Chat.module.scss";
+import { loadMessages } from "../Storage/Storage";
 
-const connectToWebSocket = (userId) => {
-  console.log('Connecting to WebSocket with userId:', userId); // Проверка перед подключением
+const Chat = ({ messages, setMessages }) => {
+  const { chatId } = useParams(); // Получаем ID чата из URL
+  const [error, setError] = useState(null);
 
-  const centrifuge = new Centrifuge('wss://vkedu-fullstack-div2.ru/connection/websocket/', {
-    getToken: (ctx) => {
-      console.log('Requesting connection token with context:', ctx); // Проверка перед запросом токена
-      return fetch(`${API_URL}/centrifugo/connect/`, {
-        method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify(ctx),
-      }).then((res) => res.json().then((data) => {
-        console.log('Received connection token:', data.token); // Проверка полученного токена
-        return data.token;
-      }));
-    },
-  });
+  useEffect(() => {
+    if (chatId) {
+      try {
+        const loadedMessages = loadMessages(chatId);
+        setMessages(loadedMessages || []);
+      } catch (err) {
+        setError("Failed to load messages");
+      }
+    }
+  }, [chatId, setMessages]);
 
-  const subscription = centrifuge.newSubscription(userId, {
-    getToken: (ctx) => {
-      console.log('Requesting subscription token with context:', ctx); // Проверка перед запросом токена подписки
-      return fetch(`${API_URL}/centrifugo/subscribe/`, {
-        method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify(ctx),
-      }).then((res) => res.json().then((data) => {
-        console.log('Received subscription token:', data.token); // Проверка полученного токена подписки
-        return data.token;
-      }));
-    },
-  });
+  const handleMessageSend = (newMessage) => {
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
+  };
 
-  subscription.on('publication', function (ctx) {
-    console.log('New message received from WebSocket:', ctx.data); // Проверка полученного сообщения
-  });
-
-  subscription.subscribe();
-  centrifuge.connect();
-  console.log('WebSocket connection established');
+  return (
+    <div className={styles.chat}>
+      {error && <div className={styles.error}>{error}</div>}
+      <Messages messages={messages} />
+      <MessageForm chatId={chatId} messageSend={handleMessageSend} />
+    </div>
+  );
 };
+
+export default Chat;

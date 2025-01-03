@@ -7,6 +7,7 @@ import { MessageForm } from "./../MessageForm/MessageForm";
 import useWebSocket from "../../hooks/useWebSocket";
 import { getAuthHeaders, getAllChats, fetchMessagesFromBackend } from "../../utils/api";
 import FloatingButton from "../FloatingButton/FloatingButton";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const ChatList = ({ currentChatId, onOpenChat, onClearMessages }) => {
   const { chatId } = useParams();
@@ -86,15 +87,14 @@ const ChatList = ({ currentChatId, onOpenChat, onClearMessages }) => {
         <>
           <div id="chat-list-component" className={styles["chat-list-component"]} style={{ display: currentChatId ? "none" : "flex" }}>
             {allChats[0].results.map((chat) => (
-              <button
-                key={chat.id}
-                className={styles["chat-item"]}
-                onClick={() => {
-                  navigate(`/chat/${chat.id}`);
-                }}
-              >
+              // <button key={chat.id} className={styles["chat-item"]} onClick={() => {
+              //     navigate(`/chat/${chat.id}`);
+              //   }}>
+              <button key={chat.id} className={styles["chat-item"]} onClick={() => {
+                openChat(chat.id, chat.title);
+                }}>
                 <div className={styles["chat-info-wrp"]}>
-                  <img src={chat.avatar || "./images/user-icon.svg"} alt="Avatar" />
+                <AccountCircleIcon fontSize="large" />
                   <div className={styles["chat-info"]}>
                     <h3>{chat.title}</h3>
                     <p>{chat.lastMessage}</p>
