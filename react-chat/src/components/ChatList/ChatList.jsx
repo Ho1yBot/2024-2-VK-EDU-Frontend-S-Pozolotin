@@ -1,51 +1,126 @@
-import React from "react";
+// src/components/ChatList/ChatList.jsx
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import styles from "./ChatList.module.scss";
+import { Messages } from "./../Message/Message";
+import { MessageForm } from "./../MessageForm/MessageForm";
+import useWebSocket from "../../hooks/useWebSocket";
+import { getAuthHeaders, getAllChats, fetchMessagesFromBackend } from "../../utils/api";
+import FloatingButton from "../FloatingButton/FloatingButton";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
-const ChatList = ({ openChat }) => {
-  const chats = [
-    {
-      id: 1,
-      title: "Andrew",
-      lastMessage: "Last message...",
-      time: "14:23",
-      isRead: true,
-      userId: 101,
-    },
-    {
-      id: 2,
-      title: "Max",
-      lastMessage: "Last message...",
-      time: "16:27",
-      isRead: true,
-      userId: 102,
-    },
-  ];
+const ChatList = ({ currentChatId, onOpenChat, onClearMessages }) => {
+  const { chatId } = useParams();
+  const navigate = useNavigate();
+  const [messages, setMessages] = useState([]);
+  const [chats, setChats] = useState(JSON.parse(localStorage.getItem("friendsChat")) || []);
+  const [allChats, setAllChats] = useState([]);
+  const [dragging, setDragging] = useState(false);
+  const [droppedFile, setDroppedFile] = useState(null);
+  useEffect(() => {
+    const checkChats = async () => {
+      const allChats = await getAllChats();
+      setAllChats(allChats);
+    };
+
+    checkChats();
+  }, []);
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragging(false);
+    if (e.dataTransfer.files.length > 0) {
+      const file = e.dataTransfer.files[0];
+      setDroppedFile(file); // Передаём файл в MessageForm через состояние
+    }
+  };
+
+  // Подключаемся к WebSocket с помощью useWebSocket и получаем новые сообщения
+  const newMessages = useWebSocket(chatId);
+
+  useEffect(() => {
+    if (chatId && allChats[0]?.results.length > 0) {
+      const chat = allChats[0]?.results.find((c) => c.id === chatId);
+      if (chat) {
+        onOpenChat(chat.id, chat.title);
+      }
+    }
+  }, [chatId, allChats, onClearMessages]);
+
+  // Добавляем новые сообщения из WebSocket в список сообщений
+  useEffect(() => {
+    if (newMessages.length > 0) {
+      setMessages((prevMessages) => [...prevMessages, ...newMessages]);
+    }
+  }, [newMessages]);
+
+  useEffect(() => {
+    const loadChatMessages = async () => {
+      try {
+        const response = await fetchMessagesFromBackend(chatId);
+        setMessages(response.results.reverse());
+      } catch (error) {
+        console.error("Error loading messages:", error);
+      }
+    };
+
+    if (chatId) {
+      loadChatMessages();
+    }
+  }, [chatId]);
 
   return (
-    <div className={styles["chat-container"]}>
-      <div id="chat-list-component" className={styles["chat-list-component"]}>
-        {chats.map((chat) => {
-          const messagesOfChat = JSON.parse(localStorage.getItem(`messages_${chat.id}`)) || [];
-          const lastMessage = messagesOfChat.length ? messagesOfChat[messagesOfChat.length - 1] : { text: "No messages", time: "" };
-
-          return (
-            <button key={chat.id} className={styles["chat-item"]} onClick={() => openChat(chat.id, chat.title)}>
-              <div className={styles["chat-info-wrp"]}>
+    <div className={styles["chat-container"]} onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
+      {allChats.length === 0 ? (
+        <div>Loading...</div>
+      ) : (
+        <>
+          <div id="chat-list-component" className={styles["chat-list-component"]} style={{ display: currentChatId ? "none" : "flex" }}>
+            {allChats[0].results.map((chat) => (
+              // <button key={chat.id} className={styles["chat-item"]} onClick={() => {
+              //     navigate(`/chat/${chat.id}`);
+              //   }}>
+              <button key={chat.id} className={styles["chat-item"]} onClick={() => {
+                openChat(chat.id, chat.title);
+                }}>
+                <div className={styles["chat-info-wrp"]}>
                 <AccountCircleIcon fontSize="large" />
-                <div className={styles["chat-info"]}>
-                  <h3>{chat.title}</h3>
-                  <p className={styles["chat-info-last"]}>{lastMessage?.text || lastMessage.file.name}</p>
+                  <div className={styles["chat-info"]}>
+                    <h3>{chat.title}</h3>
+                    <p>{chat.lastMessage}</p>
+                  </div>
                 </div>
-              </div>
-              <div className={styles["chat-time"]}>
-                <span>{lastMessage?.time || ""}</span>
-                {chat.isRead && <span className={styles["read-status"]}>✓✓</span>}
-              </div>
-            </button>
-          );
-        })}
-      </div>
+                <div className={styles["chat-time"]}>
+                  <span>{chat.last_online_at}</span>
+                  {chat.isRead && <span className={styles["read-status"]}>✓✓</span>}
+                </div>
+              </button>
+            ))}
+          </div>
+          {!currentChatId && <FloatingButton chats={allChats} setChats={setChats} />}
+          {currentChatId && (
+            <div className={styles["chat-window"]}>
+              <Messages messages={messages} />
+              <MessageForm
+                chatId={currentChatId}
+                droppedFile={droppedFile} // Передаём файл в MessageForm
+                onMessageSend={(newMessage) => setMessages((prevMessages) => [...prevMessages, newMessage])} // Обновляем состояние
+              />
+              {dragging && <div className={styles["drag-overlay"]}>Отпустите файл для загрузки</div>}
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 };

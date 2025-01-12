@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./FloatingButton.module.scss";
-import AddIcon from '@mui/icons-material/Add';
+import FriendsMenu from "../FriendsMenu/FriendsMenu";
+import AddIcon from "@mui/icons-material/Add";
 
-const FloatingButton = ({ onClick }) => {
+const FloatingButton = ({ chats, setChats }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
-    <button className={styles["floating-button"]} onClick={onClick}>
-      <AddIcon fontSize="large" sx={{ color: "#fff" }}/>
-    </button>
+    <div>
+      <button className={styles["floating-button"]} onClick={toggleMenu}>
+        <AddIcon fontSize="large" sx={{ color: "#fff" }} />
+      </button>
+      {isMenuOpen && <FriendsMenu chats={chats} setChats={setChats} />}
+    </div>
   );
 };
 

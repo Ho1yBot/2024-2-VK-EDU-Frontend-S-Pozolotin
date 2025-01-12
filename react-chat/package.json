@@ -12,6 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "centrifuge": "^5.2.2",
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
     "@mui/icons-material": "^6.1.10",
@@ -32,6 +33,7 @@
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.12",
     "globals": "^15.9.0",
+    "prettier": "^3.3.3",
     "vite": "^5.4.8"
   }
 }

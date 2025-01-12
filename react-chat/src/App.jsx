@@ -7,6 +7,7 @@ import FloatingButton from "./components/FloatingButton/FloatingButton";
 import Profile from "./components/Profile/Profile";
 import { clearMessages, loadMessages } from "./components/Storage/Storage";
 import styles from "./App.module.scss";
+import { LoginPage } from "./components/LoginPage/LoginPage";
 
 const AppContent = () => {
   const navigate = useNavigate();
@@ -61,6 +62,25 @@ const AppContent = () => {
   const match = location.pathname.match(/\/chat\/(\d+)/);
   const chatId = match ? match[1] : null;
 
+  // Обновляем токен при каждом перерендеривании приложения
+  useEffect(() => {
+    fetch(`https://vkedu-fullstack-div2.ru/api/auth/refresh/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ refresh: localStorage.getItem("refreshToken") }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        localStorage.setItem("accessToken", result.access);
+        localStorage.setItem("refreshToken", result.refresh);
+      })
+      .catch((error) => {
+        console.error("Ошибка обновления токена:", error);
+      });
+  }, []);
+
   return (
     <div className={styles["app-container"]}>
       {!isProfilePage && (
@@ -83,10 +103,17 @@ const AppContent = () => {
   );
 };
 
-const App = () => (
-  <HashRouter>
-    <AppContent />
-  </HashRouter>
-);
+const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Проверяем, есть ли токен при загрузке приложения
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken && accessToken !== "undefined") {
+      setIsAuthenticated(true);
+    }
+  }, []);
+  return <HashRouter>{isAuthenticated ? <AppContent /> : <LoginPage onLoginSuccess={() => setIsAuthenticated(true)} />}</HashRouter>;
+};
 
 export default App;

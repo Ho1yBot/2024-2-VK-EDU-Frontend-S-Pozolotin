@@ -1,102 +1,121 @@
-import React, { useState } from "react";
-import { saveMessage } from "../Storage/Storage";
+import React, { useState, useEffect } from "react";
 import AttachFile from "../AttachFile/AttachFile";
 import styles from "./MessageForm.module.scss";
-import SendIcon from '@mui/icons-material/Send';
+import { sendMessageToBackend } from "../../utils/api";
+import SendIcon from "@mui/icons-material/Send";
 
-export function MessageForm({ chatId, messageSend }) {
+export function MessageForm({ chatId, droppedFile, messageSend }) {
   const [messageText, setMessageText] = useState("");
   const [attachedFile, setAttachedFile] = useState(null);
+  const [isDragging, setIsDragging] = useState(false); // Состояние для отображения эффекта перетаскивания
 
-  const sendMessage = (text, file) => {
-    const message = {
-      text: text || "",
-      sender: "Вы",
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      file: file || null,
-    };
+  useEffect(() => {
+    if (droppedFile) {
+      setAttachedFile(droppedFile); // Устанавливаем файл, переданный из `ChatList`
+    }
+  }, [droppedFile]);
 
-    saveMessage(chatId, message);
-    messageSend(message);
+  const sendMessage = async (chatId, text, file, voice) => {
+    const files = file ? [file] : [];
 
-    setMessageText("");
-    setAttachedFile(null);
-  };
-
-  // Отправка сообщения при отправке формы
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (!messageText && !attachedFile) return;
-
-    if (attachedFile) {
-      const reader = new FileReader();
-      reader.readAsDataURL(attachedFile);
-      reader.onload = () => {
-        const fileContent = reader.result;
-        const isImage = attachedFile.type.startsWith("image/");
-
-        // Проверка, является ли файл изображением или обычным файлом
-        sendMessage(
-          messageText,
-          isImage ? { type: "image", content: fileContent } : { type: "file", content: fileContent, name: attachedFile.name }
-        );
-      };
-    } else {
-      sendMessage(messageText);
+    try {
+      const newMessage = await sendMessageToBackend(chatId, text, files, voice);
+      setMessageText("");
+      setAttachedFile(null);
+      onMessageSend(newMessage);
+    } catch (error) {
+      console.error("Error sending message:", error);
     }
   };
 
-  // Обработка выбора файла
-  const handleFileSelect = (file) => {
-    if (!file) return;
+  const handleLocationClick = () => {
+    if (!navigator.geolocation) {
+      alert("Ваш браузер не поддерживает геолокацию.");
+      return;
+    }
 
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      const fileContent = reader.result;
-      const isImage = file.type.startsWith("image/");
-
-      // Отправка файла сразу в чат
-      sendMessage(
-        "",
-        isImage ? { type: "image", content: fileContent, name: file.name } : { type: "file", content: fileContent, name: file.name }
-      );
-    };
-
-    setAttachedFile(null);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        const mapLink = `https://www.openstreetmap.org/#map=18/${latitude}/${longitude}`;
+        sendMessage(chatId, mapLink, attachedFile, null);
+      },
+      (error) => {
+        let errorMessage = "Не удалось получить геолокацию.";
+        switch (error.code) {
+          case 1:
+            errorMessage = "Вы запретили доступ к геолокации.";
+            break;
+          case 2:
+            errorMessage = "Ваше местоположение недоступно.";
+            break;
+          case 3:
+            errorMessage = "Истекло время ожидания ответа от службы геолокации.";
+            break;
+          default:
+            errorMessage = "Произошла неизвестная ошибка при получении геолокации.";
+        }
+        console.error("Error getting location:", error);
+        alert(errorMessage);
+      },
+    );
   };
 
-  // Обработка нажатия Enter для отправки сообщения
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter" && !event.shiftKey) {
-      event.preventDefault();
-      handleSubmit(event);
+  const handleFileSelect = (file) => {
+    setAttachedFile(file);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!messageText && !attachedFile) return;
+    sendMessage(chatId, messageText, attachedFile, null);
+    setRenderMessages();
+  };
+
+  // Drag-and-drop event handlers
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files.length > 0) {
+      const file = e.dataTransfer.files[0];
+      setAttachedFile(file);
     }
   };
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
+    <form
+      className={`${styles.form} ${isDragging ? styles["dragging"] : ""}`} // Добавляем класс при перетаскивании
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+      onSubmit={handleSubmit}
+    >
       <textarea
         className={styles["form-input"]}
         value={messageText}
         onChange={(e) => setMessageText(e.target.value)}
-        onKeyDown={handleKeyDown}
         placeholder="Введите сообщение"
       />
-      {attachedFile && (
-        <div className={styles["attached-file-info"]}>
-          Файл: {attachedFile.name} прикреплен
-        </div>
-      )}
       <div className={styles["form-buttons"]}>
-        <AttachFile fileSelect={handleFileSelect} />
+        <button type="button" onClick={handleLocationClick}>
+          Отправить локацию
+        </button>
+        <AttachFile onFileSelect={handleFileSelect} />
         <button type="submit" className={styles["send-button"]}>
-          <SendIcon sx={{color: "#8e24aa"}} />
+          <SendIcon sx={{ color: "#8e24aa" }} />
         </button>
       </div>
+      {attachedFile && <div className={styles["attached-file"]}>Файл: {attachedFile.name}</div>}
     </form>
   );
 }
