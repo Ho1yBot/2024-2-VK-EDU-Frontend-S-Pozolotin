@@ -13,7 +13,6 @@ export function saveMessage(chatId, message) {
     }
 }
 
-
 // Загружаем все сообщения для указанного чата
 export function loadMessages(chatId) {
     return JSON.parse(localStorage.getItem(`messages_${chatId}`)) || [];

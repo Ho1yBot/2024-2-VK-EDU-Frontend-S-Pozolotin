@@ -1,9 +1,8 @@
-// components/Menu/Menu.jsx
 import React, { useState, useEffect, useRef } from "react";
 import styles from "./Menu.module.scss";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-const Menu = ({ chatId, clearMessages }) => {
+const Menu = ({ clearMessages, setMessages }) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -12,9 +11,9 @@ const Menu = ({ chatId, clearMessages }) => {
   };
 
   const handleClearMessages = () => {
-    clearMessages(); // Вызываем функцию очистки сообщений
-    toggleMenu(); 
-    
+    clearMessages();
+    toggleMenu();
+    setMessages([]);
   };
 
   useEffect(() => {

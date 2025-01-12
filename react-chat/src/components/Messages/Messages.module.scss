@@ -16,6 +16,7 @@
     transform: translateX(100%);
     animation: slideIn 0.5s ease-out forwards;
     gap: 5px;
+    
   }
 
   &-content {
@@ -77,6 +78,7 @@
     overflow-x: hidden;
     box-sizing: border-box;
     overflow-x: none;
+    padding: 0 5px;
 
     &::-webkit-scrollbar {
       width: 10px;

@@ -1,14 +1,12 @@
-// components/Messages/Messages.jsx
 import React, { useEffect, useRef } from "react";
 import styles from "./Messages.module.scss";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 
-export function Messages({ messages, setClearTrigger }) {
+export function Messages({ messages }) {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    setClearTrigger(false);
   }, [messages]);
 
   return (
