@@ -5,7 +5,7 @@ import Chat from "./components/Chat/Chat";
 import Header from "./components/Header/Header";
 import FloatingButton from "./components/FloatingButton/FloatingButton";
 import Profile from "./components/Profile/Profile";
-import { clearMessages, loadMessages } from "./components/Storage/Storage";
+// import { clearMessages, loadMessages } from "./components/Storage/Storage";
 import styles from "./App.module.scss";
 import { LoginPage } from "./components/LoginPage/LoginPage";
 
@@ -16,16 +16,16 @@ const AppContent = () => {
   const [currentChatTitle, setCurrentChatTitle] = useState(localStorage.getItem("currentChatTitle"));
   const [messages, setMessages] = useState([]);
   const [selectedChat, setSelectedChat] = useState(JSON.parse(localStorage.getItem("selectedChat")) || null);
-  
-  const openChat = (chatId, chatTitle) => {
-    const chatData = { chatId, chatTitle };
-    setCurrentChatId(chatId);
-    setCurrentChatTitle(chatTitle);
-    setSelectedChat(chatData);
-    localStorage.setItem("currentChatTitle", chatTitle);
-    localStorage.setItem("selectedChat", JSON.stringify(chatData));
-    navigate(`/chat/${chatId}`);
-  };
+
+  // const openChat = (chatId, chatTitle) => {
+  //   const chatData = { chatId, chatTitle };
+  //   setCurrentChatId(chatId);
+  //   setCurrentChatTitle(chatTitle);
+  //   setSelectedChat(chatData);
+  //   localStorage.setItem("currentChatTitle", chatTitle);
+  //   localStorage.setItem("selectedChat", JSON.stringify(chatData));
+  //   // navigate(`/chat/${chatId}`);
+  // };
 
   const closeChat = () => {
     setCurrentChatId(null);
@@ -51,16 +51,9 @@ const AppContent = () => {
     }
   }, [location]);
 
-  useEffect(() => {
-    if (currentChatId) {
-      const loadedMessages = loadMessages(currentChatId);
-      setMessages(loadedMessages || []);
-    }
-  }, [currentChatId]);
-
   const isProfilePage = location.pathname.startsWith("/profile");
-  const match = location.pathname.match(/\/chat\/(\d+)/);
-  const chatId = match ? match[1] : null;
+  // const match = location.pathname.match(/\/chat\/(\d+)/);
+  // const chatId = match ? match[1] : null;
 
   // Обновляем токен при каждом перерендеривании приложения
   useEffect(() => {
@@ -86,19 +79,19 @@ const AppContent = () => {
       {!isProfilePage && (
         <Header
           currentChatTitle={currentChatTitle}
-          chatId={chatId}
+          chatId={currentChatId}
           backClick={closeChat}
           clearMessages={handleClearMessages}
           setMessages={setMessages}
         />
       )}
       <Routes>
-        <Route path="/" element={<ChatList openChat={openChat} />} />
-        <Route path="/chat/:chatId" element={<Chat messages={messages} setMessages={setMessages} />} />
+        <Route path="/" element={<ChatList />} />
+        <Route path="/chat/:chatId" element={<Chat setCurrentChatId={setCurrentChatId} messages={messages} setMessages={setMessages} />} />
         <Route path="/profile/:userId" element={<Profile selectedChat={selectedChat} />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-      {!selectedChat && <FloatingButton />}
+      {!currentChatId && <FloatingButton />}
     </div>
   );
 };

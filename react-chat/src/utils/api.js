@@ -64,6 +64,16 @@ export const getCurrentUser = async () => {
     return response.json()
 }
 
+// Получаем информацию и пользователе
+export const getUserByID = async (userId) => {
+    console.log(chatId);
+    const response = await fetch(`${API_URL}/user/${userId}/`, {
+        headers: getAuthHeaders()
+    })
+
+    return response.json()
+}
+
 // Получение сообщений из чата
 export const fetchChatMessages = async () => {
     const response = await fetch(`${API_URL}/messages/`, {
@@ -125,19 +135,13 @@ export const sendMessageToBackend = async (chat, text = null, files = [], voice 
         files.forEach((file) => formData.append('files', file));
     }
     if (voice) formData.append('voice', voice);
-    
-    const Data = {
-        "chat": chat,
-        "voice": voice,
-        "text": text,
-        "files": files,
-    }
+
+    formData.forEach((el)=> console.log(el))
 
     const response = await fetch(`${API_URL}/messages/`, {
         method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify(Data),
-        // body: formData
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('accessToken')}` },
+        body: formData
     });
 
     if (!response.ok) {

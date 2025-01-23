@@ -21,8 +21,8 @@ export function MessageForm({ chatId, droppedFile, messageSend }) {
     try {
       const newMessage = await sendMessageToBackend(chatId, text, files, voice);
       setMessageText("");
-      setAttachedFile(null);
-      onMessageSend(newMessage);
+      setAttachedFile(files);
+      messageSend(newMessage);
     } catch (error) {
       console.error("Error sending message:", error);
     }
@@ -69,7 +69,6 @@ export function MessageForm({ chatId, droppedFile, messageSend }) {
     event.preventDefault();
     if (!messageText && !attachedFile) return;
     sendMessage(chatId, messageText, attachedFile, null);
-    setRenderMessages();
   };
 
   // Drag-and-drop event handlers
@@ -95,9 +94,9 @@ export function MessageForm({ chatId, droppedFile, messageSend }) {
   return (
     <form
       className={`${styles.form} ${isDragging ? styles["dragging"] : ""}`} // Добавляем класс при перетаскивании
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
+      dragOver={handleDragOver}
+      dragLeave={handleDragLeave}
+      drop={handleDrop}
       onSubmit={handleSubmit}
     >
       <textarea
@@ -110,7 +109,7 @@ export function MessageForm({ chatId, droppedFile, messageSend }) {
         <button type="button" onClick={handleLocationClick}>
           Отправить локацию
         </button>
-        <AttachFile onFileSelect={handleFileSelect} />
+        <AttachFile fileSelect={handleFileSelect} />
         <button type="submit" className={styles["send-button"]}>
           <SendIcon sx={{ color: "#8e24aa" }} />
         </button>

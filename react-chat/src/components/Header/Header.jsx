@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styles from "./Header.module.scss";
 import Menu from "../Menu/Menu";
 import SearchIcon from "@mui/icons-material/Search";
@@ -19,14 +19,13 @@ const Header = ({currentChatTitle, chatId, backClick, clearMessages, setMessages
   }, [chatId]);
 
   const handleTitleClick = () => {
-    if (currentChatTitle && openProfile) {
+    if (chatId && openProfile) {
       openProfile(chatId); // Открываем профиль для текущего чата
     }
   };
 
   const openProfile = (userId) => {
     navigate(`/profile/${userId}`);
-    console.log(userId);
   };
 
   return (
