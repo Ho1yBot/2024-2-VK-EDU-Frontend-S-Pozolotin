@@ -13,19 +13,35 @@ export function Messages({ messages }) {
     <div className={styles["messages-container"]}>
       {messages.map((message, index) => (
         <div key={index} className={styles["message-container"]}>
-          <div className={styles["message-sender"]}>{message.sender}</div>
-          {message.file?.type === "image" && <img src={message.file.content} alt="picture" className={styles["message-content"]}></img>}
-          {message.file?.type === "file" && <InsertDriveFileIcon sx={{ color: "#8e24aa" }} fontSize="large" />}
-          <div className={styles["message-text"]}>{message.text}</div>
-          <div className={styles["message-time"]}>{message.time}</div>
-          {message.file && (
-            <div className={styles["message-file"]}>
-              <p className={styles["message-file-name"]}>{message.file.name}</p>
-              <a href={message.file.content} download>
-                Скачать файл
+          <div className={styles["message-sender"]}>{`${message.sender.first_name} ${message.sender.last_name}`}</div>
+          <div className={styles["message-text"]}>
+            {message.text?.startsWith("http") ? (
+              <a href={message.text} target="_blank" rel="noopener noreferrer">
+                {message.text}
               </a>
-            </div>
+            ) : (
+              message.text
+            )}
+          </div>
+          {message.voice && (
+            <audio controls className={styles["voice-message"]}>
+              <source src={message.voice} type="audio/webm" />
+              Ваш браузер не поддерживает аудио.
+            </audio>
           )}
+          {message.files && message.files[0]?.item && (
+            <>
+              {(message.files[0].item.includes(".png") || message.files[0].item.includes(".jpg")) && (
+                <img src={message.files[0].item} alt="Отправленное изображение" className={styles["message-image"]} />
+              )}
+
+              <a href={message.files[0].item}>
+                {/* Получаем именно название файла из ссылки */}
+                {decodeURIComponent(message.files[0].item).split("/").pop()}
+              </a>
+            </>
+          )}
+          <div className={styles["message-time"]}>{message.time}</div>
         </div>
       ))}
       <div ref={messagesEndRef} />

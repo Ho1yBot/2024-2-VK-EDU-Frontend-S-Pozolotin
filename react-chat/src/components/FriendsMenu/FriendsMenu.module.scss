@@ -1,0 +1,38 @@
+.friends {
+    &-menu{
+        position: absolute;
+        top: 30%;
+        right: 0px;
+        background-color: aliceblue;
+        border: 1px solid black;
+        max-width: 350px;
+        width: 100%;
+        padding: 10px;
+    }
+
+    &-container{
+        display: flex;
+        max-height: 300px;
+        width: 100%;
+        flex-direction: column;
+        gap: 5px;
+        overflow: auto;
+        overflow-x: none;
+    }
+
+    &-button{
+        width: 100%;
+        border-radius: 10px;
+    }
+}
+
+.friend {
+    &-info{
+        // max-width: 100px;
+
+        img{
+            max-width: 20px;
+            max-height: 100%;
+        }
+    }
+}

@@ -1,10 +1,21 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import styles from "./Profile.module.scss";
+import { getUserByID } from "./../../utils/api";
 
-const Profile = ({ selectedChat }) => {
+const Profile = ({}) => {
+  const chatId = useParams();
   const navigate = useNavigate();
-  console.log(selectedChat);
+  const [selectedChat, onSelectedChat] = useState(null);
+
+  useEffect(() => {
+    const currentUserInfo = async () => {
+      const info = await getUserByID();
+      onSelectedChat(info);
+    };
+
+    currentUserInfo();
+  }, [chatId]);
 
   const handleBackClick = () => {
     navigate(-1); // Возвращает на предыдущую страницу, т.е. в чат
@@ -16,9 +27,7 @@ const Profile = ({ selectedChat }) => {
         <button className={styles["back-button"]} onClick={handleBackClick}>
           <img src="/images/arrow-back.svg" alt="Back to chat list" />
         </button>
-        <p className={styles["profile-title"]}>
-          {selectedChat?.chatTitle || "No Name"}
-        </p>
+        <p className={styles["profile-title"]}>{selectedChat?.chatTitle || "No Name"}</p>
         <button className={styles["save-button"]}>✔</button>
       </header>
       <div className={styles["content"]}>
@@ -28,11 +37,7 @@ const Profile = ({ selectedChat }) => {
         </div>
         <div className={styles["profile-input"]}>
           <label>Full name</label>
-          <input
-            type="text"
-            value={selectedChat?.chatTitle || "No Name"}
-            readOnly
-          />
+          <input type="text" value={selectedChat?.chatTitle || "No Name"} readOnly />
         </div>
         <div className={styles["profile-input"]}>
           <label>Chat ID</label>

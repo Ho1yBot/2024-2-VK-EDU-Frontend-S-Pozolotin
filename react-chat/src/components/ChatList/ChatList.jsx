@@ -1,51 +1,55 @@
-import React from "react";
+// src/components/ChatList/ChatList.jsx
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./ChatList.module.scss";
+import { getAllChats, fetchMessagesFromBackend } from "../../utils/api";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
-const ChatList = ({ openChat }) => {
-  const chats = [
-    {
-      id: 1,
-      title: "Andrew",
-      lastMessage: "Last message...",
-      time: "14:23",
-      isRead: true,
-      userId: 101,
-    },
-    {
-      id: 2,
-      title: "Max",
-      lastMessage: "Last message...",
-      time: "16:27",
-      isRead: true,
-      userId: 102,
-    },
-  ];
+const ChatList = ({ currentChatId }) => {
+  const navigate = useNavigate();
+  // const [chats, setChats] = useState(JSON.parse(localStorage.getItem("friendsChat")) || []);
+  const [allChats, setAllChats] = useState([]);
+  const [userId, setUserId] = useState([])
+
+  useEffect(() => {
+    const checkChats = async () => {
+      const allChats = await getAllChats();
+      console.log(allChats);
+      setAllChats(allChats);
+      setUserId(allChats)
+    };
+
+    checkChats();
+  }, []);  
 
   return (
-    <div className={styles["chat-container"]}>
-      <div id="chat-list-component" className={styles["chat-list-component"]}>
-        {chats.map((chat) => {
-          const messagesOfChat = JSON.parse(localStorage.getItem(`messages_${chat.id}`)) || [];
-          const lastMessage = messagesOfChat.length ? messagesOfChat[messagesOfChat.length - 1] : { text: "No messages", time: "" };
-
-          return (
-            <button key={chat.id} className={styles["chat-item"]} onClick={() => openChat(chat.id, chat.title)}>
-              <div className={styles["chat-info-wrp"]}>
+    <div className={styles["chat-container"]} >
+      {allChats.length === 0 ? (
+        <div>Loading...</div>
+      ) : (
+        <>
+          <div id="chat-list-component" className={styles["chat-list-component"]} style={{ display: currentChatId ? "none" : "flex" }}>
+            {allChats[0].results.map((chat) => (
+              <button key={chat.id} className={styles["chat-item"]} onClick={() => {
+                  navigate(`/chat/${chat.id}`);
+                }}>
+                <div className={styles["chat-info-wrp"]}>
                 <AccountCircleIcon fontSize="large" />
-                <div className={styles["chat-info"]}>
-                  <h3>{chat.title}</h3>
-                  <p className={styles["chat-info-last"]}>{lastMessage?.text || lastMessage.file.name}</p>
+                  <div className={styles["chat-info"]}>
+                    <h3>{chat.title}</h3>
+                    <p>{chat.lastMessage}</p>
+                  </div>
                 </div>
-              </div>
-              <div className={styles["chat-time"]}>
-                <span>{lastMessage?.time || ""}</span>
-                {chat.isRead && <span className={styles["read-status"]}>✓✓</span>}
-              </div>
-            </button>
-          );
-        })}
-      </div>
+                <div className={styles["chat-time"]}>
+                  <span>{chat.last_online_at}</span>
+                  {chat.isRead && <span className={styles["read-status"]}>✓✓</span>}
+                </div>
+              </button>
+            ))}
+          </div>
+          
+        </>
+      )}
     </div>
   );
 };

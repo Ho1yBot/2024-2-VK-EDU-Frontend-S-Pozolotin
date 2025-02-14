@@ -321,6 +321,7 @@ header button:hover {
     margin: 10px 0;
     height: 100%;
     overflow: auto;
+    overflow-x: hidden;
     align-items: flex-end;
     gap: 10px;
 }
